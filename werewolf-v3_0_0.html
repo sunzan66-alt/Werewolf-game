@@ -331,7 +331,7 @@
 </head>
 <body>
 <div class="wrap" id="app"></div>
-<div id="verbadge">v3.1.6</div>
+<div id="verbadge">v3.1.9</div>
 
 <script>
 const ROLES = [
@@ -654,6 +654,7 @@ th:{
   scriptSorcererWake:'"🔮 นางปีศาจ ลืมตา — ชี้ 1 คนที่ต้องการตรวจว่าเป็น Seer ไหม แล้วหลับตา (พยักหน้า/ส่ายหัว)"',
   scriptAlphaWake:'"🩸 หมาป่าจ่าฝูง ลืมตา — คืนแรก: ชี้ 1 คนเพื่อแปลงเป็นหมาป่า (แทนการฆ่า) แล้วหลับตา"',
   scriptWolfWake:'"🐺 หมาป่า ลืมตา — ชี้ 1 คนที่จะฆ่าคืนนี้ แล้วหลับตา"',
+  scriptWolfWakeBonus:'"🐺 หมาป่า ลืมตา — คืนนี้ฆ่าได้ 2 คน (โบนัสลูกหมาป่า) ชี้ 2 คนที่จะฆ่า แล้วหลับตา"',
   scriptSKWake:'"🔪 ฆาตกรโรคจิต ลืมตา — ชี้ 1 คนที่จะฆ่า แล้วหลับตา"',
   scriptSeerWake:'"🔍 เทพพยากรณ์ ลืมตา — ชี้ 1 คนที่ต้องการตรวจ แล้วหลับตา (พยักหน้า = หมาป่า / ส่ายหัว = ไม่ใช่)"',
   scriptBodyguardWake:'"🛡️ บอดี้การ์ด ลืมตา — ชี้ 1 คนที่จะปกป้องคืนนี้ แล้วหลับตา"',
@@ -670,7 +671,7 @@ th:{
   modExpNormal:'⚡ มีประสบการณ์ — ไม่ต้องสคริปต์',
   scriptLineLabel:'📢 พูดว่า:',
   scriptMorningLine:'"เช้าแล้ว ทุกคนลืมตาได้"',
-  scriptMorningDeath:'"เมื่อคืน [ประกาศรายชื่อผู้เสียชีวิต]"',
+  scriptMorningDeath:'"เมื่อคืน {names} เสียชีวิต"',
   scriptMorningPeace:'"เมื่อคืนสงบสุข ไม่มีใครตาย"',
   scriptSilencedLine:'"[name] ห้ามพูดเช้านี้"',
 
@@ -844,6 +845,7 @@ en:{
   scriptSorcererWake:'"🔮 Sorcerer, open your eyes — point to 1 player to check if they are the Seer, then close your eyes (nod / shake head)"',
   scriptAlphaWake:'"🩸 Alpha Wolf, open your eyes — Night 1: point to 1 player to convert into a werewolf instead of killing, then close your eyes"',
   scriptWolfWake:'"🐺 Werewolves, open your eyes — point to 1 player to kill tonight, then close your eyes"',
+  scriptWolfWakeBonus:'"🐺 Werewolves, open your eyes — Wolf Cub bonus: choose 2 players to kill tonight, then close your eyes"',
   scriptSKWake:'"🔪 Serial Killer, open your eyes — point to 1 player to kill, then close your eyes"',
   scriptSeerWake:'"🔍 Seer, open your eyes — point to 1 player to investigate, then close your eyes (nod = werewolf / shake = not)"',
   scriptBodyguardWake:'"🛡️ Bodyguard, open your eyes — point to 1 player to protect tonight, then close your eyes"',
@@ -860,7 +862,7 @@ en:{
   modExpNormal:'⚡ Experienced — no script needed',
   scriptLineLabel:'📢 Say:',
   scriptMorningLine:'"Morning has come. Everyone open your eyes"',
-  scriptMorningDeath:'"Last night… [announce who died]"',
+  scriptMorningDeath:'"Last night… {names} died"',
   scriptMorningPeace:'"Last night was peaceful. No one died"',
   scriptSilencedLine:'"[name] cannot speak this morning"',
 
@@ -1562,7 +1564,7 @@ function activeNightTool(){
 }
 function toolDone(key){
   switch(key){
-    case 'kill': return G.wolfTargets.length>0;
+    case 'kill': return G.wolfTargets.length>=G.wolfKillCount;
     case 'alphaConvert': return G.alphaConvert!=null;
     case 'sorcCheck': return G.sorcUsed;
     case 'seerCheck': return G.seerUsed;
@@ -1666,7 +1668,8 @@ function viewGame(){
   let body='';
   if(G.phase==='cupid'){
     const miniRow=ACT.length?`<div class="mini-row"><button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ <b>${ACT.length}</b></button></div>`:'';
-    body=`<p class="gins">${T('cupidInstruction')}</p>${miniRow}${ggrid()}
+    const cupidScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptCupidWake')}</div></div>`:'';
+    body=`<p class="gins">${T('cupidInstruction')}</p>${cupidScript}${miniRow}${ggrid()}
       <div class="bottombar"><button class="btn ghost" id="gCupidSkip">${T('skipBtn')}</button>
       <button class="btn" id="gCupidOk" ${G.cupidPick.length===2?'':'disabled'}>${T('confirmLoversBtn')}</button></div>`;
   } else if(G.phase==='night'){
@@ -1696,7 +1699,9 @@ function viewGame(){
     const ck=G.check?`<div class="checkbar ${G.check.info?'i':(G.check.green?'g':'r')}">${G.check.name?esc(G.check.name)+' — ':''}${G.check.label}</div>`:'';
     const curLabel=active?(tools.find(t=>t[0]===active)||['',''])[1]:'';
     const stepBlock=active?(()=>{
-      const scriptKey=(S.modLevel==='beginner' && SCRIPT_LINE[active])?T(SCRIPT_LINE[active]):'';
+      const scriptKey=(S.modLevel==='beginner' && SCRIPT_LINE[active])
+        ?(active==='kill'&&G.wolfKillCount>1?T('scriptWolfWakeBonus'):T(SCRIPT_LINE[active]))
+        :'';
       return `<div class="step-block"><div class="step-label">▶️ ${curLabel}</div>${scriptKey?`<div class="step-script">${T('scriptLineLabel')} ${scriptKey}</div>`:''}</div>`;
     })():'';
     const miniRow=(ACT.length||active)?`<div class="mini-row">${ACT.length?`<button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ <b>${ACT.length}</b></button>`:''}${active?`<button class="mini-btn skip" id="gSkipTool" title="${T('skipToolTitle')}">⏭ Skip</button>`:''}</div>`:'';
@@ -1717,7 +1722,8 @@ function viewGame(){
     const noteExtra=notes.length?`<div class="bnotes">${notes.map(n=>`<div class="bnote">${n}</div>`).join('')}</div>`:'';
     // morningScript — แสดงเฉพาะ beginner mode
     const hasDead=G.deaths&&G.deaths.length>0;
-    const morningScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptMorningLine')}</div><div class="step-script">${hasDead?T('scriptMorningDeath'):T('scriptMorningPeace')}</div>${silentAlive?`<div class="step-script">${T('scriptSilencedLine').replace('[name]',esc(S.players[G.silenced]?.name||''))}</div>`:''}</div>`:'';
+    const deadNames=G.deaths.map(idx=>S.players[idx]?.name||'').filter(Boolean).join(', ');
+    const morningScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptMorningLine')}</div><div class="step-script">${hasDead?T('scriptMorningDeath',{names:'<b>'+deadNames+'</b>'}):T('scriptMorningPeace')}</div>${silentAlive?`<div class="step-script">${T('scriptSilencedLine').replace('[name]',esc(S.players[G.silenced]?.name||''))}</div>`:''}</div>`:'';
     // ปุ่มสกิลกลางวัน — เล็ก อยู่แถวเดียวกัน
     const acts=[];
     if(silentAlive) acts.push(`<button class="mini-btn danger" id="gExecSil">${T('executeSilencedBtn')}</button>`);
