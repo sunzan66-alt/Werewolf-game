@@ -334,7 +334,7 @@
 <body>
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
-<div id="verbadge">v3.1.15</div>
+<div id="verbadge">v3.1.16</div>
 
 <script>
 const ROLES = [
@@ -1133,6 +1133,7 @@ function recommendSetup(n, mode){
   let villageSpecials, wolfSpecials=[];
   if(mode==='beginner'){
     villageSpecials=[['seer',5],['bodyguard',6],['hunter',7]];
+    wolfSpecials=[['sorcerer',10]];  // นางปีศาจมาก่อนหมาป่าตัวที่ 3 เสมอ
   } else if(mode==='casual'){
     villageSpecials=[['seer',5],['bodyguard',6],['hunter',7],['spellcaster',8],['cupid',10],['lycan',11],['mayor',12]];
     wolfSpecials=[['sorcerer',9],['wolfcub',13]];
@@ -1143,7 +1144,9 @@ function recommendSetup(n, mode){
   // ฝั่งหมาป่า: รวมบทบาทพิเศษ + หมาป่าธรรมดา ให้อยู่ใน "งบ" เดียว (ไม่นับซ้ำ)
   let wolfUsed=0;
   for(const [id,thr] of wolfSpecials){ if(n>=thr && wolfUsed<wolfBudget-1){ add(id); wolfUsed++; } }
-  const plainWolves=Math.min(2, Math.max(1, wolfBudget-wolfUsed));
+  const plainWolves=(mode==='beginner'&&wolfUsed>0)
+    ? Math.max(1, wolfBudget-wolfUsed)
+    : Math.min(2, Math.max(1, wolfBudget-wolfUsed));
   add('werewolf',plainWolves); wolfUsed+=plainWolves;
   let used=wolfUsed;
   for(const [id,thr] of villageSpecials){ if(n>=thr && used<n-1){ add(id); used++; } }
