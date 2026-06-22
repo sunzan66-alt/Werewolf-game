@@ -127,7 +127,7 @@
   .rd-v{flex:1;color:#d6daf2;line-height:1.5}
   .packbox{margin-top:12px;background:rgba(204,70,68,.14);border:1px solid rgba(204,70,68,.4);border-radius:12px;padding:10px 12px;font-size:14px;color:#f0d6d5;line-height:1.5}
   .packbox b{color:#fff}
-  .ricon{border-radius:50%;object-fit:cover;display:inline-block;vertical-align:middle;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+  .ricon{border-radius:50%;object-fit:cover;object-position:center 15%;display:inline-block;vertical-align:middle;box-shadow:inset 0 0 0 5px rgba(15,20,48,0.55),0 2px 8px rgba(0,0,0,.4)}
   .pill .ricon{margin-right:2px}
   .role .meta{flex:1;min-width:0}
   .role .rn{font-size:15px;font-weight:600}
@@ -222,7 +222,7 @@
   .face.back .tap{color:var(--gold);letter-spacing:.18em;text-transform:uppercase;font-size:12px}
   .face.back .nm{color:var(--muted);font-size:13px;margin-top:6px}
   .face.front{transform:rotateY(180deg);background:linear-gradient(160deg,#1c2456,#0f1430)}
-  .face.front .remj{font-size:62px;line-height:1;margin-bottom:10px}
+  .face.front .remj{font-size:62px;line-height:1;margin-bottom:10px;display:flex;justify-content:center;align-items:center}
   .face.front .rth{font-size:26px;font-weight:800}
   .face.front .ren{font-size:12px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
   .face.front .rdesc{font-size:13px;color:#cdd2f0;margin-top:12px;line-height:1.55}
@@ -253,6 +253,10 @@
   .alivecount{font-size:12px;color:var(--muted);margin-top:2px}
   .exitbtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:7px 11px;font-size:13px;cursor:pointer}
   .gins{font-size:13px;color:var(--muted);text-align:center;margin:8px 0}
+  .step-block{margin:6px 0;padding:8px 12px;background:rgba(224,184,74,.10);border:1px solid rgba(224,184,74,.35);border-radius:10px}
+  .step-label{font-size:.8rem;color:#f0d486;font-weight:600;margin-bottom:2px}
+  .step-script{font-size:.88rem;color:#e8d8ff;font-style:italic;line-height:1.5;margin-top:4px;padding-top:4px;border-top:1px solid rgba(255,255,255,.08)}
+  .script-morning{margin:6px 0 10px;padding:8px 12px;background:rgba(100,60,200,.12);border:1px solid rgba(180,140,255,.25);border-radius:10px}
   .tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 4px}
   .tool{border:1px solid var(--line);background:rgba(10,14,38,.5);color:var(--ink);border-radius:999px;padding:8px 13px;font-size:13px;cursor:pointer}
   .tool.on{background:linear-gradient(180deg,#f4e6b0,#e0b84a);color:#0b1026;font-weight:700;border-color:transparent}
@@ -316,12 +320,18 @@
   .bnote{font-size:12px;color:var(--muted);line-height:1.75}
   .bnote b{color:var(--ink)}
   .hist-row{font-size:13.5px;color:var(--ink);padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);line-height:1.5}
+  .script-phase{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#f0d486;margin:18px 0 8px}
+  .script-line{font-size:14px;color:var(--ink);padding:9px 12px;background:rgba(255,255,255,.05);border-radius:9px;margin-bottom:6px;line-height:1.55}
+  .script-note{font-size:12.5px;color:#f0d486;padding:7px 10px;background:rgba(240,212,70,.08);border-radius:8px;margin-bottom:6px;border-left:2px solid #f0d486}
+  .mod-toggle{display:flex;gap:10px;margin:10px 0}
+  .mod-toggle-btn{flex:1;font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 8px;border-radius:11px;cursor:pointer;border:2px solid var(--line);background:rgba(10,14,38,.5);color:var(--muted);text-align:center;line-height:1.4;transition:.12s}
+  .mod-toggle-btn.on{border-color:#e6bf52;color:#f4e6b0;background:rgba(224,180,60,.12)}
   .hist-row:last-child{border-bottom:none}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
-<div id="verbadge">v3.0.0</div>
+<div id="verbadge">v3.1.6</div>
 
 <script>
 const ROLES = [
@@ -592,6 +602,7 @@ let S={
 S.counts.werewolf=1; S.counts.villager=0;
 S._focusName=true;
 S.timerMin=3;
+S.modLevel=null;
 try{ S.lang=localStorage.getItem('language')||'th'; }catch(e){ S.lang='th'; }
 
 // ===== โครงระบบหลายภาษา (รอบนี้ใส่เฉพาะ label ของ Main Menu / Settings) =====
@@ -624,12 +635,52 @@ th:{
   rulesMod:'ถือมือถือเครื่องเดียวตลอดเกม ทำหน้าที่เรียกแต่ละบทบาทตอนกลางคืน นับโหวตตอนกลางวัน และประกาศผล ผู้เล่นคนอื่นไม่ต้องมีมือถือ',
   rulesNote:'รายละเอียดความสามารถของแต่ละบทบาท ดูได้ตอนเปิดไพ่บทบาทของตัวเอง',
 
+  // ===== Moderator Script + Beginner Toggle (v3.1.0) =====
+  scriptTitle:'📋 สคริปต์ผู้ดำเนินรายการ',
+  scriptSubtitle:'อ่านออกเสียงให้ผู้เล่นฟัง ตามบทบาทที่มีในเกมนี้',
+  scriptBackBtn:'← กลับ',
+  scriptPhaseStart:'🌙 เริ่มต้นคืน',
+  scriptPhaseEnd:'🌅 สรุปกลางคืน / เริ่มกลางวัน',
+  scriptPhaseDay:'☀️ กลางวัน',
+  scriptSleepAll:'"ทุกคนหลับตา และอย่าส่งเสียง"',
+  scriptWakeAll:'"ทุกคนลืมตาได้"',
+  scriptDeathAnnounce:'"เมื่อคืน… [ประกาศรายชื่อผู้เสียชีวิต หรือบอกว่าไม่มีใครตาย]"',
+  scriptDiscuss:'"เริ่มการโต้เถียง ผู้เล่นทุกคนช่วยกันหาหมาป่า"',
+  scriptVote:'"โหวตว่าจะประหารใคร — ผู้ที่ได้คะแนนสูงสุดถูกประหาร"',
+  scriptCupidWake:'"💘 คิวพิด ลืมตา — ชี้ 2 คนที่จะเป็นคู่รัก แล้วหลับตา"',
+  scriptCultWake:'"🟣 ผู้นำลัทธิ ลืมตา — ชี้ 1 คนที่จะชวนเข้าลัทธิ แล้วหลับตา"',
+  scriptVampireWake:'"🧛 แวมไพร์ ลืมตา — ชี้ 1 คนที่จะเปลี่ยนเป็นแวมไพร์ แล้วหลับตา"',
+  scriptShapeshifterWake:'"🎭 หมาป่าจำแลง ลืมตา — ชี้ 1 คนที่จะจำแลงเป็นคืนนี้ แล้วหลับตา"',
+  scriptSorcererWake:'"🔮 นางปีศาจ ลืมตา — ชี้ 1 คนที่ต้องการตรวจว่าเป็น Seer ไหม แล้วหลับตา (พยักหน้า/ส่ายหัว)"',
+  scriptAlphaWake:'"🩸 หมาป่าจ่าฝูง ลืมตา — คืนแรก: ชี้ 1 คนเพื่อแปลงเป็นหมาป่า (แทนการฆ่า) แล้วหลับตา"',
+  scriptWolfWake:'"🐺 หมาป่า ลืมตา — ชี้ 1 คนที่จะฆ่าคืนนี้ แล้วหลับตา"',
+  scriptSKWake:'"🔪 ฆาตกรโรคจิต ลืมตา — ชี้ 1 คนที่จะฆ่า แล้วหลับตา"',
+  scriptSeerWake:'"🔍 เทพพยากรณ์ ลืมตา — ชี้ 1 คนที่ต้องการตรวจ แล้วหลับตา (พยักหน้า = หมาป่า / ส่ายหัว = ไม่ใช่)"',
+  scriptBodyguardWake:'"🛡️ บอดี้การ์ด ลืมตา — ชี้ 1 คนที่จะปกป้องคืนนี้ แล้วหลับตา"',
+  scriptSpellcasterWake:'"🤫 จอมเวท ลืมตา — ชี้ 1 คนที่ห้ามพูดพรุ่งนี้เช้า แล้วหลับตา"',
+  scriptDoppelWake:'"🎭 ผู้เลียนแบบ ลืมตา — ชี้ 1 คนที่ต้องการจับตา แล้วหลับตา (คืนแรกเท่านั้น)"',
+  scriptNoteHunter:'⚠️ ถ้านายพรานถูกฆ่า ให้หยุดก่อนประกาศ แล้วให้นายพรานเลือกยิงใคร',
+  scriptNoteGhost:'⚠️ วิญญาณยังโหวตได้ 1 วันหลังตาย',
+  scriptNotePacifist:'⚠️ นักสันติวิธีสามารถยกเลิกการประหารก่อนจะดำเนินการ',
+  scriptNotePrince:'⚠️ เจ้าชายสามารถเปิดตัวเพื่อรอดจากการประหารครั้งแรก',
+  scriptOpenScript:'📋 ดูสคริปต์ก่อนเริ่ม',
+  scriptBannerTip:'แนะนำ: กดดูสคริปต์ก่อนเริ่มเกม',
+  modExpLevel:'คุณเป็นพิธีกรแบบไหน?',
+  modExpBeginner:'🌱 มือใหม่ — ต้องการสคริปต์ช่วย',
+  modExpNormal:'⚡ มีประสบการณ์ — ไม่ต้องสคริปต์',
+  scriptLineLabel:'📢 พูดว่า:',
+  scriptMorningLine:'"เช้าแล้ว ทุกคนลืมตาได้"',
+  scriptMorningDeath:'"เมื่อคืน [ประกาศรายชื่อผู้เสียชีวิต]"',
+  scriptMorningPeace:'"เมื่อคืนสงบสุข ไม่มีใครตาย"',
+  scriptSilencedLine:'"[name] ห้ามพูดเช้านี้"',
+
   // ===== Game History (Phase B) =====
   historyTitle:'📜 ประวัติเกม', historyEmpty:'ยังไม่มีเหตุการณ์',
   historyBackBtn:'← กลับไปหน้าสรุป',
   backToMenuBtn:'← กลับไปเมนูหลัก',
   actChecked:'{actor} ตรวจ {target}', actProtected:'{actor} ปกป้อง {target}',
   actKilled:'{actor} ฆ่า {target}', actBlocked:'{actor} พยายามฆ่า {target} แต่ถูกป้องกันไว้ได้',
+  actCursedConvert:'🌗➡️🐺 {target} ถูกสาปกลายเป็นหมาป่า',
   actRecruited:'{actor} ชวน {target} เข้าลัทธิ', actBit:'{actor} กัด {target}',
   actConverted:'{actor} เปลี่ยน {target} เป็นหมาป่า', actShapeshifted:'{actor} จำแลงเป็น {target}',
   actMarked:'{actor} จับตา {target}', actPaired:'จับคู่รัก {a} และ {b}',
@@ -774,12 +825,52 @@ en:{
   rulesMod:'Holds the single phone for the whole game — calls each role at night, counts votes during the day, and announces results. Other players don\'t need a phone.',
   rulesNote:'Each role\'s full ability is shown when you open your own role card.',
 
+  // ===== Moderator Script + Beginner Toggle (v3.1.0) =====
+  scriptTitle:'📋 Moderator Script',
+  scriptSubtitle:'Read aloud to players — based on the roles in this game',
+  scriptBackBtn:'← Back',
+  scriptPhaseStart:'🌙 Night begins',
+  scriptPhaseEnd:'🌅 Resolve Night / Start Day',
+  scriptPhaseDay:'☀️ Day Phase',
+  scriptSleepAll:'"Everyone close your eyes and stay quiet"',
+  scriptWakeAll:'"Everyone may open their eyes"',
+  scriptDeathAnnounce:'"Last night… [announce who died, or say no one died]"',
+  scriptDiscuss:'"The debate begins — try to find the werewolves"',
+  scriptVote:'"Vote to eliminate a suspect — the player with the most votes is executed"',
+  scriptCupidWake:'"💘 Cupid, open your eyes — point to 2 players who will be lovers, then close your eyes"',
+  scriptCultWake:'"🟣 Cult Leader, open your eyes — point to 1 player to recruit, then close your eyes"',
+  scriptVampireWake:'"🧛 Vampire, open your eyes — point to 1 player to convert, then close your eyes"',
+  scriptShapeshifterWake:'"🎭 Shapeshifter, open your eyes — point to 1 player to disguise as tonight, then close your eyes"',
+  scriptSorcererWake:'"🔮 Sorcerer, open your eyes — point to 1 player to check if they are the Seer, then close your eyes (nod / shake head)"',
+  scriptAlphaWake:'"🩸 Alpha Wolf, open your eyes — Night 1: point to 1 player to convert into a werewolf instead of killing, then close your eyes"',
+  scriptWolfWake:'"🐺 Werewolves, open your eyes — point to 1 player to kill tonight, then close your eyes"',
+  scriptSKWake:'"🔪 Serial Killer, open your eyes — point to 1 player to kill, then close your eyes"',
+  scriptSeerWake:'"🔍 Seer, open your eyes — point to 1 player to investigate, then close your eyes (nod = werewolf / shake = not)"',
+  scriptBodyguardWake:'"🛡️ Bodyguard, open your eyes — point to 1 player to protect tonight, then close your eyes"',
+  scriptSpellcasterWake:'"🤫 Spellcaster, open your eyes — point to 1 player who cannot speak tomorrow morning, then close your eyes"',
+  scriptDoppelWake:'"🎭 Doppelganger, open your eyes — point to 1 player to mark, then close your eyes (Night 1 only)"',
+  scriptNoteHunter:'⚠️ If the Hunter dies, pause before the announcement and let the Hunter choose who to shoot',
+  scriptNoteGhost:'⚠️ The Ghost may still vote for 1 day after death',
+  scriptNotePacifist:'⚠️ The Pacifist may veto an execution before it happens',
+  scriptNotePrince:'⚠️ The Prince may reveal themselves to survive the first execution',
+  scriptOpenScript:'📋 View Script',
+  scriptBannerTip:'Tip: View the script before starting the game',
+  modExpLevel:'What kind of moderator are you?',
+  modExpBeginner:'🌱 Beginner — I need the script',
+  modExpNormal:'⚡ Experienced — no script needed',
+  scriptLineLabel:'📢 Say:',
+  scriptMorningLine:'"Morning has come. Everyone open your eyes"',
+  scriptMorningDeath:'"Last night… [announce who died]"',
+  scriptMorningPeace:'"Last night was peaceful. No one died"',
+  scriptSilencedLine:'"[name] cannot speak this morning"',
+
   // ===== Game History (Phase B) =====
   historyTitle:'📜 Game History', historyEmpty:'No events yet',
   historyBackBtn:'← Back to summary',
   backToMenuBtn:'← Back to Main Menu',
   actChecked:'{actor} checked {target}', actProtected:'{actor} protected {target}',
   actKilled:'{actor} killed {target}', actBlocked:'{actor} tried to kill {target} but was blocked',
+  actCursedConvert:'🌗➡️🐺 {target} was cursed and became a werewolf',
   actRecruited:'{actor} recruited {target} into the cult', actBit:'{actor} bit {target}',
   actConverted:'{actor} converted {target} into a werewolf', actShapeshifted:'{actor} disguised as {target}',
   actMarked:'{actor} marked {target}', actPaired:'Paired lovers {a} and {b}',
@@ -885,6 +976,19 @@ en:{
   winnerVampire:'🧛 Vampires win!', winnerVillage:'👥 Village wins!', backToSummaryBtn:'Back to summary'
 }
 };
+const SCRIPT_LINE = {
+  cultRecruit:  'scriptCultWake',
+  vampireBite:  'scriptVampireWake',
+  shapeShift:   'scriptShapeshifterWake',
+  sorcCheck:    'scriptSorcererWake',
+  alphaConvert: 'scriptAlphaWake',
+  kill:         'scriptWolfWake',
+  skKill:       'scriptSKWake',
+  seerCheck:    'scriptSeerWake',
+  protect:      'scriptBodyguardWake',
+  silence:      'scriptSpellcasterWake',
+  dopplePick:   'scriptDoppelWake'
+};
 function T(k, vars){
   const L=translations[S.lang]||translations.th;
   let s=(k in L)?L[k]:(translations.th[k]||k);
@@ -944,8 +1048,8 @@ function balanceTune(counts){
       else if(cnt('werewolf')>1){ counts.werewolf--; counts.villager=cnt('villager')+1; }
       else break;
     } else { // ฝั่งหมู่บ้านแรงไป → ลดค่า
-      if(sc>=5 && cnt('villager')>0){ counts.villager--; counts.werewolf=cnt('werewolf')+1; }        // หยาบ -7
-      else if(cnt('villager')>0){ counts.villager--; counts.cursed=cnt('cursed')+1; }                // ละเอียด -3
+      if(sc>=5 && cnt('villager')>0 && cnt('werewolf')<2){ counts.villager--; counts.werewolf=cnt('werewolf')+1; }  // หยาบ -7 (จำกัดหมาป่าไม่เกิน 2)
+      else if(cnt('villager')>0){ counts.villager--; counts.cursed=cnt('cursed')+1; }                               // ละเอียด -3
       else if(cnt('toughguy')>0){ counts.toughguy--; counts.villager=cnt('villager')+1; }
       else break;
     }
@@ -989,20 +1093,22 @@ function mysticSetup(n){
   const cnt=id=>counts[id]||0;
   const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
   let used=0; const left=()=>n-used;
-  // หมาป่า ~27% ของผู้เล่น (อย่างน้อย 1, ไม่เกินครึ่ง)
+  // หมาป่า ~27% ของผู้เล่น — ถ้า budget≥3 ใช้หมาป่า 2 + หมาป่าเดียวดาย 1 แทนหมาป่า 3+
   const wolfBudget=clamp(Math.round(n*0.27),1,Math.floor((n-1)/2));
-  add('werewolf',wolfBudget); used+=wolfBudget;
+  if(wolfBudget>=3){ add('werewolf',2); add('lonewolf',1); used+=3; }
+  else { add('werewolf',wolfBudget); used+=wolfBudget; }
   // Neutral killer เพิ่มทีละตัวตาม threshold เดิม (7/9/10) แต่สูงสุด ~1 ตัวต่อ 8 คน
   const neutralPool=[['serialkiller',7],['vampire',9],['cultleader',10]];
   const maxNeutral=Math.max(1,Math.floor(n/8));
   let neutrals=0;
   for(const [id,thr] of neutralPool){ if(n>=thr && neutrals<maxNeutral && left()>1){ add(id); used++; neutrals++; } }
-  // บทบาทบังคับ: ข้อมูล / ป้องกัน / ผู้นำ
+  // บทบาทบังคับ: ข้อมูล / ป้องกัน / ผู้นำ / จอมเวท
   if(n>=5 && left()>0){ add('seer'); used++; }        // info
   if(n>=6 && left()>0){ add('bodyguard'); used++; }   // protection
-  if(n>=7 && left()>0){ add('mayor'); used++; }       // leadership (mayor/prince)
-  // ที่นั่งที่เหลือ: เติมด้วย village special (ห้าม villager) — mason เป็นคู่ + ทำซ้ำบทบาทพิเศษ
-  const dupPool=['hunter','toughguy','lycan','idiot','spellcaster','bodyguard'];
+  if(n>=7 && left()>0){ add('mayor'); used++; }       // leadership
+  if(n>=10 && left()>0){ add('spellcaster'); used++; } // silence mechanic เพิ่มความสนุก
+  // ที่นั่งที่เหลือ: เติมด้วย village special (ห้าม villager) ลำดับตาม priority
+  const dupPool=['hunter','spellcaster','lycan','toughguy','idiot','bodyguard'];
   let di=0, guard=0;
   while(left()>0 && guard++<300){
     if(left()>=2 && cnt('mason')===0 && n>=8){ add('mason',2); used+=2; continue; }   // คู่ Mason
@@ -1020,16 +1126,16 @@ function recommendSetup(n, mode){
   if(mode==='beginner'){
     villageSpecials=[['seer',5],['bodyguard',6],['hunter',7]];
   } else if(mode==='casual'){
-    villageSpecials=[['seer',5],['bodyguard',6],['hunter',7],['spellcaster',8],['mayor',9],['cupid',10]];
-    wolfSpecials=[['sorcerer',9]];
+    villageSpecials=[['seer',5],['bodyguard',6],['hunter',7],['spellcaster',8],['cupid',10],['lycan',11],['mayor',12]];
+    wolfSpecials=[['sorcerer',9],['wolfcub',13]];
   } else { // advanced — บทบาทเชิงกลยุทธ์ (Alpha/Cupid/Mayor/Prince/Mason/Apprentice) เลี่ยง Expert/Master
     villageSpecials=[['seer',5],['bodyguard',6],['hunter',7],['mayor',8],['apprentice',9],['cupid',10],['prince',11]];
-    wolfSpecials=[['sorcerer',9]];
+    wolfSpecials=[['sorcerer',9],['shapeshifter',12],['minion',16]];
   }
   // ฝั่งหมาป่า: รวมบทบาทพิเศษ + หมาป่าธรรมดา ให้อยู่ใน "งบ" เดียว (ไม่นับซ้ำ)
   let wolfUsed=0;
   for(const [id,thr] of wolfSpecials){ if(n>=thr && wolfUsed<wolfBudget-1){ add(id); wolfUsed++; } }
-  const plainWolves=Math.max(1, wolfBudget-wolfUsed);
+  const plainWolves=Math.min(2, Math.max(1, wolfBudget-wolfUsed));
   add('werewolf',plainWolves); wolfUsed+=plainWolves;
   let used=wolfUsed;
   for(const [id,thr] of villageSpecials){ if(n>=thr && used<n-1){ add(id); used++; } }
@@ -1073,7 +1179,7 @@ function reshuffle(){
 }
 function resetAll(){
   G=null; UNDO=null;
-  S.screen='setup'; S.active=null; S.flipped=false; S.modUnlocked=false;
+  S.screen='setup'; S.active=null; S.flipped=false; S.modUnlocked=false; S.modLevel=null;
   S.players.forEach(p=>{p.role=null;p.revealed=false;});
   render();
 }
@@ -1286,8 +1392,12 @@ function resolveNight(){          // 🌅 เช้าแล้ว
   // Phase B2: entry 'actKilled' คืนนี้ที่ target ไม่ตายจริง (ถูก protect ไว้ได้) → เปลี่ยนเป็น actBlocked
   {
     const deadNames=G.deaths.map(idx=>S.players[idx].name);
+    const convertedNames=(G.justConverts||[]).map(idx=>S.players[idx].name);
     G.history.forEach(h=>{
-      if(h.night===G.nightNo && h.key==='actKilled' && !deadNames.includes(h.vars.target)) h.key='actBlocked';
+      if(h.night===G.nightNo && h.key==='actKilled' && !deadNames.includes(h.vars.target)){
+        if(convertedNames.includes(h.vars.target)) h.key='actCursedConvert';
+        else h.key='actBlocked';
+      }
     });
   }
   finishResolution();
@@ -1585,13 +1695,16 @@ function viewGame(){
     else if(G.tool==='sorcCheck') help=G.sorcUsed?T('helpSorcUsed'):(T('helpSorcCheck')+(sorcCanRepeat()?T('repeatCheckAllowed'):''));
     const ck=G.check?`<div class="checkbar ${G.check.info?'i':(G.check.green?'g':'r')}">${G.check.name?esc(G.check.name)+' — ':''}${G.check.label}</div>`:'';
     const curLabel=active?(tools.find(t=>t[0]===active)||['',''])[1]:'';
-    const stepInfo=active?`<div class="checkbar i" style="background:rgba(224,184,74,.12);border-color:rgba(224,184,74,.4);color:#f0d486">${T('stepInfo',{label:'<b>'+curLabel+'</b>'})}</div>`:'';
+    const stepBlock=active?(()=>{
+      const scriptKey=(S.modLevel==='beginner' && SCRIPT_LINE[active])?T(SCRIPT_LINE[active]):'';
+      return `<div class="step-block"><div class="step-label">▶️ ${curLabel}</div>${scriptKey?`<div class="step-script">${T('scriptLineLabel')} ${scriptKey}</div>`:''}</div>`;
+    })():'';
     const miniRow=(ACT.length||active)?`<div class="mini-row">${ACT.length?`<button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ <b>${ACT.length}</b></button>`:''}${active?`<button class="mini-btn skip" id="gSkipTool" title="${T('skipToolTitle')}">⏭ Skip</button>`:''}</div>`:'';
     const nightBtn=active
       ? `<button class="btn block" disabled style="opacity:.4">${T('morningBtnDisabled')}</button>`
       : `<button class="btn block" id="gNight">${T('morningBtn')}</button>`;
     body=`${bannerHTML(G.banner&&G.banner.type==='exec'?G.banner:null)}
-      <div class="tools">${chips}</div>${stepInfo}<p class="gins">${help}</p>${ck}${miniRow}${ggrid()}
+      <div class="tools">${chips}</div>${stepBlock}<p class="gins">${help}</p>${ck}${miniRow}${ggrid()}
       <div class="bottombar">${nightBtn}</div>`;
   } else if(G.phase==='day'){
     const tm=S.timerMin>0?`<div class="daytimer ${G.timerExpired?'up':''}" id="daytimer">${G.timerExpired?T('timerExpired'):fmtTimer()}</div>`:'';
@@ -1602,13 +1715,16 @@ function viewGame(){
     if(aliveHas('mayor')) notes.push(T('mayorVoteNote'));
     if(G.ghostVoteDay===G.dayNo) notes.push(T('ghostVoteNote'));
     const noteExtra=notes.length?`<div class="bnotes">${notes.map(n=>`<div class="bnote">${n}</div>`).join('')}</div>`:'';
+    // morningScript — แสดงเฉพาะ beginner mode
+    const hasDead=G.deaths&&G.deaths.length>0;
+    const morningScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptMorningLine')}</div><div class="step-script">${hasDead?T('scriptMorningDeath'):T('scriptMorningPeace')}</div>${silentAlive?`<div class="step-script">${T('scriptSilencedLine').replace('[name]',esc(S.players[G.silenced]?.name||''))}</div>`:''}</div>`:'';
     // ปุ่มสกิลกลางวัน — เล็ก อยู่แถวเดียวกัน
     const acts=[];
     if(silentAlive) acts.push(`<button class="mini-btn danger" id="gExecSil">${T('executeSilencedBtn')}</button>`);
     if(aliveHas('pacifist')) acts.push(`<button class="mini-btn ${G.pacifistVeto?'on-pac':'pac'}" id="gPacifist">${T('pacifistBtn')}${G.pacifistVeto?' ✓':''}</button>`);
     const actRow=acts.length?`<div class="day-actions">${acts.join('')}</div>`:'';
     const dayBtnLabel=G.pacifistVeto?T('nightBtnPacifist'):(G.dayVote!=null?T('nightBtnExecute',{name:esc(S.players[G.dayVote].name)}):T('nightBtnNoVote'));
-    body=`${bannerHTML(G.banner, noteExtra)}${tm}${actRow}<p class="gins">${T('dayInstruction')}</p>${ggrid()}
+    body=`${bannerHTML(G.banner, noteExtra)}${morningScript}${tm}${actRow}<p class="gins">${T('dayInstruction')}</p>${ggrid()}
       <div class="bottombar"><button class="btn block" id="gDay">${dayBtnLabel}</button></div>`;
   } else if(G.phase==='hunter'){
     const h=G.hunterQueue[0];
@@ -1802,6 +1918,63 @@ function viewReveal(){
   </div>`;
 }
 
+function viewScript(){
+  // สร้าง script dynamic จาก S.counts
+  const c=S.counts;
+  const has=id=>(c[id]||0)>0;
+  const line=t=>`<div class="script-line">${T(t)}</div>`;
+  const note=t=>`<div class="script-note">${T(t)}</div>`;
+  const phase=t=>`<div class="script-phase">${T(t)}</div>`;
+
+  // ลำดับ role wake ตามสเปก
+  const wakes=[];
+  if(has('cultleader'))    wakes.push('scriptCultWake');
+  if(has('vampire'))       wakes.push('scriptVampireWake');
+  if(has('shapeshifter'))  wakes.push('scriptShapeshifterWake');
+  if(has('sorcerer'))      wakes.push('scriptSorcererWake');
+  if(has('alphawolf'))     wakes.push('scriptAlphaWake');
+  if(has('werewolf')||has('lonewolf')||has('wolfcub')) wakes.push('scriptWolfWake');
+  if(has('serialkiller'))  wakes.push('scriptSKWake');
+  if(has('seer')||has('apprentice')) wakes.push('scriptSeerWake');
+  if(has('bodyguard'))     wakes.push('scriptBodyguardWake');
+  if(has('spellcaster'))   wakes.push('scriptSpellcasterWake');
+  if(has('doppelganger'))  wakes.push('scriptDoppelWake');
+
+  // หมายเหตุพิเศษ
+  const notes=[];
+  if(has('hunter'))   notes.push('scriptNoteHunter');
+  if(has('ghost'))    notes.push('scriptNoteGhost');
+  if(has('pacifist')) notes.push('scriptNotePacifist');
+  if(has('prince'))   notes.push('scriptNotePrince');
+
+  return `<div class="screen-pad">
+    <button class="exitbtn" id="scriptBack" style="border-color:rgba(224,184,74,.5);color:#f0d486">${T('scriptBackBtn')}</button>
+    <h1 class="title" style="font-size:21px;margin-top:14px">${T('scriptTitle')}</h1>
+    <p class="sub" style="margin-bottom:18px">${T('scriptSubtitle')}</p>
+
+    <div class="card">
+      ${phase('scriptPhaseStart')}
+      ${line('scriptSleepAll')}
+      ${wakes.map(k=>line(k)).join('')}
+    </div>
+
+    <div class="card">
+      ${phase('scriptPhaseEnd')}
+      ${line('scriptWakeAll')}
+      ${line('scriptDeathAnnounce')}
+    </div>
+
+    <div class="card">
+      ${phase('scriptPhaseDay')}
+      ${line('scriptDiscuss')}
+      ${line('scriptVote')}
+    </div>
+
+    ${notes.length?`<div class="card">${notes.map(k=>note(k)).join('')}</div>`:''}
+
+    <button class="back-link" id="scriptBack2" style="margin-top:6px">${T('scriptBackBtn')}</button>
+  </div>`;
+}
 function viewMod(){
   if(!S.modUnlocked){
     return `
@@ -1834,6 +2007,15 @@ function viewMod(){
       </div>`;}).join('')}
   </div>
   <button class="btn block" id="startRun">${T('startRunBtn')}</button>
+  <div class="card" style="margin-bottom:10px">
+    <p class="section-label" style="margin-bottom:10px">${T('modExpLevel')}</p>
+    <div class="mod-toggle">
+      <button class="mod-toggle-btn${S.modLevel==='beginner'?' on':''}" id="modBeginner">${T('modExpBeginner')}</button>
+      <button class="mod-toggle-btn${S.modLevel==='normal'?' on':''}" id="modNormal">${T('modExpNormal')}</button>
+    </div>
+    ${S.modLevel==='beginner'?`<p class="footnote" style="color:#f0d486;margin-top:4px;margin-bottom:0">💡 ${T('scriptBannerTip')}</p>`:''}
+  </div>
+  ${S.modLevel!=='normal'?`<button class="btn block ghost" id="scriptBtn" style="margin-bottom:10px">${T('scriptOpenScript')}</button>`:''}
   <button class="btn block ghost" id="reshuffle">${T('reshuffleBtn')}</button>
   <button class="btn block ghost" id="resetAll2">${T('resetAllBtn')}</button>`;
 }
@@ -1906,6 +2088,7 @@ function render(){
   if(S.screen==='menu') html=viewMenu();
   else if(S.screen==='settings') html=viewSettings();
   else if(S.screen==='rules') html=viewRules();
+  else if(S.screen==='script') html=viewScript();
   else if(S.screen==='setup') html=viewSetup();
   else if(S.screen==='list') html=viewList();
   else if(S.screen==='reveal') html=viewReveal();
@@ -1916,7 +2099,7 @@ function render(){
     if(G.phase==='day') ph='phase-day';
     else if(G.phase==='night'||G.phase==='cupid'||G.phase==='hunter') ph='phase-night';
   }
-  const fade = (_prevScreen!==S.screen) && ['menu','setup','settings','rules'].includes(S.screen);
+  const fade = (_prevScreen!==S.screen) && ['menu','setup','settings','rules','script'].includes(S.screen);
   app.className='wrap'+(ph?' '+ph:'')+(fade?' fade-in':'');
   if(fade){ app.style.animation='none'; void app.offsetWidth; app.style.animation=''; }
   _prevScreen=S.screen;
@@ -1975,6 +2158,13 @@ function bind(){
     const sr=$('startRun'); if(sr) sr.onclick=startRun;
     const rs=$('reshuffle'); if(rs) rs.onclick=reshuffle;
     const ra=$('resetAll2'); if(ra) ra.onclick=resetAll;
+    const mb=$('modBeginner'); if(mb) mb.onclick=()=>{S.modLevel='beginner';render();};
+    const mn=$('modNormal'); if(mn) mn.onclick=()=>{S.modLevel='normal';render();};
+    const sb=$('scriptBtn'); if(sb) sb.onclick=()=>{S.scriptFrom='mod';S.screen='script';render();};
+  }
+  else if(S.screen==='script'){
+    const bb=$('scriptBack'); if(bb) bb.onclick=()=>{S.screen=S.scriptFrom||'mod';render();};
+    const bb2=$('scriptBack2'); if(bb2) bb2.onclick=()=>{S.screen=S.scriptFrom||'mod';render();};
   }
 }
 function bindGame(){
