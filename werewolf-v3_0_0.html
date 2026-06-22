@@ -331,7 +331,7 @@
 </head>
 <body>
 <div class="wrap" id="app"></div>
-<div id="verbadge">v3.1.9</div>
+<div id="verbadge">v3.1.12</div>
 
 <script>
 const ROLES = [
@@ -706,6 +706,7 @@ th:{
   players:'ผู้เล่น', playerPlaceholder:'พิมพ์ชื่อ… คั่นด้วย , เพื่อเพิ่มหลายคน', add:'เพิ่ม',
   noPlayersYet:'ยังไม่มีผู้เล่น — เพิ่มอย่างน้อย 3 คน', rolesInGame:'บทบาทในเกม',
   hideExtraRoles:'▲ ซ่อนตัวละครเพิ่มเติม', showMoreRoles:'▼ ตัวละครอื่น ({n})',
+  showAllVillageRoles:'▼ แสดงทั้งหมด ({n} เพิ่มเติม)',
   pairOnlyWarning:'เลือกคู่กับหมาป่าฆ่าได้ตัวอื่นไม่ได้', autofillVillagers:'เติมชาวบ้านให้ครบ',
   rolesCount:'บทบาท', playersCount:'ผู้เล่น', roleCountMismatch:'จำนวนบทบาทต้องเท่ากับจำนวนผู้เล่น',
   rdFaction:'ฝ่าย', rdDifficulty:'ความยาก', rdAbility:'ความสามารถ', rdWinCond:'เงื่อนไขชนะ',
@@ -893,6 +894,7 @@ en:{
   players:'Players', playerPlaceholder:'Type name(s)… separate with , to add multiple', add:'Add',
   noPlayersYet:'No players yet — add at least 3', rolesInGame:'Roles in Game',
   hideExtraRoles:'▲ Hide extra roles', showMoreRoles:'▼ More roles ({n})',
+  showAllVillageRoles:'▼ Show all ({n} more)',
   pairOnlyWarning:'Can only be paired with Werewolf kill, not others', autofillVillagers:'Auto-fill Villagers',
   rolesCount:'Roles', playersCount:'Players', roleCountMismatch:'Role count must equal player count',
   rdFaction:'Faction', rdDifficulty:'Difficulty', rdAbility:'Ability', rdWinCond:'Win Condition',
@@ -1784,7 +1786,14 @@ function viewSetup(){
       if(!all.length) return '';
       let shown=all, hidden=0, expanded=false, key='';
       if(tm==='wolf'){ key='showAllWolf'; expanded=!!S.showAllWolf; if(!expanded){shown=all.slice(0,2);hidden=all.length-2;} }
-      else if(tm==='village'){ key='showAllVillage'; expanded=!!S.showAllVillage; if(!expanded){shown=all.slice(0,6);hidden=all.length-6;} }
+      else if(tm==='village'){
+        key='showAllVillage';
+        const vst=S.showAllVillage||0;
+        if(vst===0){shown=all.slice(0,4);hidden=all.length-4;}
+        else if(vst===1){shown=all.slice(0,11);hidden=all.length-11;} // ถึง cursed (index 10)
+        expanded=(vst===2);
+      }
+      else if(tm==='neutral'){ key='showAllNeutral'; expanded=!!S.showAllNeutral; if(!expanded){shown=all.slice(0,1);hidden=all.length-1;} }
       const rowsHTML=shown.map(r=>`
       <div class="role">
         <div class="role-main" data-info="${r.id}">
@@ -1802,8 +1811,14 @@ function viewSetup(){
         <div class="rd-row"><span class="rd-k">${T('rdAbility')}</span><span class="rd-v">${r.desc}</span></div>
         <div class="rd-row"><span class="rd-k">${T('rdWinCond')}</span><span class="rd-v">${winCond(r)}</span></div>
       </div>`:''}`).join('');
-      const toggleHTML=key?`<button class="role-toggle" data-toggle="${key}">${expanded?T('hideExtraRoles'):T('showMoreRoles',{n:hidden})}</button>`:'';
-      return `<div class="cat-head">${lbl}</div>`+rowsHTML+toggleHTML;
+      let toggleHTML='';
+      if(key==='showAllVillage'){
+        const vst=S.showAllVillage||0;
+        const nl=vst===0?all.length-4:vst===1?all.length-11:0;
+        toggleHTML=`<button class="role-toggle" data-toggle3="showAllVillage">${vst===0?T('showMoreRoles',{n:nl}):vst===1?T('showAllVillageRoles',{n:nl}):T('hideExtraRoles')}</button>`;
+      } else if(key){
+        toggleHTML=`<button class="role-toggle" data-toggle="${key}">${expanded?T('hideExtraRoles'):T('showMoreRoles',{n:hidden})}</button>`;
+      }      return `<div class="cat-head">${lbl}</div>`+rowsHTML+toggleHTML;
     }).join('')}
     <div class="tally">
       <button class="btn ghost" id="autofill" style="padding:8px 12px;font-size:13px">${T('autofillVillagers')}</button>
@@ -2117,9 +2132,9 @@ function render(){
 function bind(){
   const $=id=>document.getElementById(id);
   if(S.screen==='menu'){
-    const st=$('menuStart'); if(st) st.onclick=()=>{S.screen='setup';render();};
-    const se=$('menuSettings'); if(se) se.onclick=()=>{S.screen='settings';render();};
-    const mr=$('menuRules'); if(mr) mr.onclick=()=>{S.screen='rules';render();};
+    const st=$('menuStart'); if(st) st.onclick=()=>{S.screen='setup';requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
+    const se=$('menuSettings'); if(se) se.onclick=()=>{S.screen='settings';requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
+    const mr=$('menuRules'); if(mr) mr.onclick=()=>{S.screen='rules';requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
     return;
   }
   if(S.screen==='rules'){
@@ -2142,6 +2157,7 @@ function bind(){
     document.querySelectorAll('[data-info]').forEach(el=>el.onclick=()=>{S.expandedRole=(S.expandedRole===el.dataset.info)?null:el.dataset.info;render();});
     document.querySelectorAll('[data-timer]').forEach(el=>el.onclick=()=>{S.timerMin=+el.dataset.timer;render();});
     document.querySelectorAll('[data-toggle]').forEach(el=>el.onclick=()=>{const k=el.dataset.toggle;S[k]=!S[k];render();});
+    document.querySelectorAll('[data-toggle3]').forEach(el=>el.onclick=()=>{const k=el.dataset.toggle3;S[k]=((S[k]||0)+1)%3;render();});
     $('autofill').onclick=autoFillVillagers;
     const ar=$('applyRec'); if(ar) ar.onclick=applyRecommendation;
     document.querySelectorAll('[data-recmode]').forEach(el=>el.onclick=()=>{S.recMode=el.dataset.recmode;render();});
