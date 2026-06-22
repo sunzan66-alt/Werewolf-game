@@ -327,11 +327,14 @@
   .mod-toggle-btn{flex:1;font-family:inherit;font-size:13.5px;font-weight:700;padding:10px 8px;border-radius:11px;cursor:pointer;border:2px solid var(--line);background:rgba(10,14,38,.5);color:var(--muted);text-align:center;line-height:1.4;transition:.12s}
   .mod-toggle-btn.on{border-color:#e6bf52;color:#f4e6b0;background:rgba(224,180,60,.12)}
   .hist-row:last-child{border-bottom:none}
+  #loader{display:none;position:fixed;bottom:22px;right:22px;width:28px;height:28px;z-index:9999;border:3px solid rgba(240,210,120,.25);border-top-color:#f0d486;border-radius:50%;animation:loaderSpin .7s linear infinite;pointer-events:none;}
+  @keyframes loaderSpin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
-<div id="verbadge">v3.1.12</div>
+<div id="loader"></div>
+<div id="verbadge">v3.1.15</div>
 
 <script>
 const ROLES = [
@@ -583,7 +586,7 @@ function winCond(r){
   if(r.team==='village') return T('winVillageTeam');
   return T('winNone');
 }
-const UNIQUE=new Set(['seer','sorcerer','cupid','spellcaster','lycan','deceased','beggar','wolfcub','bodyguard','hunter','alphawolf','moderator','serialkiller','cultleader','minion','lonewolf','shapeshifter','apprentice','pacifist','prince','mayor','ghost','drunk','doppelganger','vampire']);
+const UNIQUE=new Set(['seer','sorcerer','cupid','spellcaster','lycan','deceased','beggar','wolfcub','bodyguard','hunter','alphawolf','moderator','serialkiller','cultleader','minion','lonewolf','shapeshifter','apprentice','pacifist','prince','mayor','ghost','drunk','doppelganger','vampire','idiot','cursed','toughguy']);
 ROLES.forEach(r=>{r.max=UNIQUE.has(r.id)?1:99;});
 function iconHTML(r,px){
   if(r.img) return `<img class="ricon" src="${r.img}" alt="" style="width:${px}px;height:${px}px">`;
@@ -1048,12 +1051,12 @@ function balanceTune(counts){
     if(sc>=-2 && sc<=2) break;
     if(sc<-2){ // ฝั่งหมาป่าแรงไป → เพิ่มค่า
       if(sc<=-5 && cnt('werewolf')>1){ counts.werewolf--; counts.villager=cnt('villager')+1; }      // หยาบ +7
-      else if(cnt('villager')>0){ counts.villager--; counts.toughguy=cnt('toughguy')+1; }            // ละเอียด +1
+      else if(cnt('villager')>0 && cnt('toughguy')<1){ counts.villager--; counts.toughguy=cnt('toughguy')+1; }  // ละเอียด +1 (max 1)
       else if(cnt('werewolf')>1){ counts.werewolf--; counts.villager=cnt('villager')+1; }
       else break;
     } else { // ฝั่งหมู่บ้านแรงไป → ลดค่า
       if(sc>=5 && cnt('villager')>0 && cnt('werewolf')<2){ counts.villager--; counts.werewolf=cnt('werewolf')+1; }  // หยาบ -7 (จำกัดหมาป่าไม่เกิน 2)
-      else if(cnt('villager')>0){ counts.villager--; counts.cursed=cnt('cursed')+1; }                               // ละเอียด -3
+      else if(cnt('villager')>0 && cnt('cursed')<1){ counts.villager--; counts.cursed=cnt('cursed')+1; }            // ละเอียด -3 (max 1)
       else if(cnt('toughguy')>0){ counts.toughguy--; counts.villager=cnt('villager')+1; }
       else break;
     }
@@ -1077,6 +1080,7 @@ function mysticBalanceTune(counts){
       if(rem==='werewolf' && cnt('werewolf')<=1) continue;   // เหลือหมาป่าอย่างน้อย 1
       for(const ad of ADD){
         if(ad===rem) continue;
+        if(UNIQUE.has(ad) && cnt(ad)>=1) continue;             // ห้ามเพิ่ม UNIQUE role เกิน 1
         counts[rem]--; counts[ad]=cnt(ad)+1;                  // ลองสลับ
         const a=Math.abs(finalBalance(counts));
         counts[ad]--; if(!counts[ad]) delete counts[ad]; counts[rem]=cnt(rem)+1;  // คืนค่า
@@ -2102,6 +2106,8 @@ function viewSettings(){
     </div>
   </div>`;
 }
+function showLoader(){const l=document.getElementById('loader');if(l)l.style.display='block';}
+function hideLoader(){const l=document.getElementById('loader');if(l)l.style.display='none';}
 function render(){
   const sy=window.scrollY;
   const sameView=(_lastKey===viewKey());
@@ -2124,6 +2130,7 @@ function render(){
   app.className='wrap'+(ph?' '+ph:'')+(fade?' fade-in':'');
   if(fade){ app.style.animation='none'; void app.offsetWidth; app.style.animation=''; }
   _prevScreen=S.screen;
+  hideLoader();
   bind();
   if(sameView) window.scrollTo(0,sy); else window.scrollTo(0,0);
   _lastKey=viewKey();
@@ -2132,7 +2139,7 @@ function render(){
 function bind(){
   const $=id=>document.getElementById(id);
   if(S.screen==='menu'){
-    const st=$('menuStart'); if(st) st.onclick=()=>{S.screen='setup';requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
+    const st=$('menuStart'); if(st) st.onclick=()=>{S.screen='setup';showLoader();requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
     const se=$('menuSettings'); if(se) se.onclick=()=>{S.screen='settings';requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
     const mr=$('menuRules'); if(mr) mr.onclick=()=>{S.screen='rules';requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
     return;
