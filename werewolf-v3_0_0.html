@@ -188,6 +188,13 @@
   .rec-stats b{font-weight:800}
   .timersel{display:flex;flex-wrap:wrap;gap:8px}
   .tchip{flex:1;min-width:60px;border:1px solid var(--line);background:rgba(10,14,38,.5);color:var(--ink);border-radius:10px;padding:10px 6px;font-size:14px;font-weight:600;cursor:pointer}
+  .group-section{margin:10px 0 4px;}
+  .group-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;}
+  .group-chip{display:flex;align-items:center;gap:4px;padding:5px 8px;background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:20px;font-size:13px;cursor:pointer;user-select:none;}
+  .group-chip:active{background:rgba(255,255,255,.14);}
+  .group-count{color:var(--muted);font-size:11px;}
+  .group-del{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:0 2px;line-height:1;}
+  .group-empty{font-size:12px;color:var(--muted);}
   .tchip.on{background:linear-gradient(180deg,#f4e6b0,#e0b84a);color:#0b1026;border-color:transparent}
   .daytimer{text-align:center;font-size:26px;font-weight:800;letter-spacing:.04em;color:var(--gold);background:rgba(224,184,74,.1);border:1px solid rgba(224,184,74,.35);border-radius:14px;padding:12px;margin:6px 0 12px}
   .daytimer.up{color:#f0908e;background:rgba(204,70,68,.16);border-color:rgba(204,70,68,.5);animation:tpulse 1s ease-in-out infinite}
@@ -340,7 +347,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.1.19</div>
+<div id="verbadge">v3.2.0</div>
 
 <script>
 const ROLES = [
@@ -716,6 +723,9 @@ th:{
   // ===== viewSetup =====
   players:'ผู้เล่น', playerPlaceholder:'พิมพ์ชื่อ… คั่นด้วย , เพื่อเพิ่มหลายคน', add:'เพิ่ม',
   noPlayersYet:'ยังไม่มีผู้เล่น — เพิ่มอย่างน้อย 3 คน', rolesInGame:'บทบาทในเกม',
+  savedGroups:'👥 กลุ่มผู้เล่น', noSavedGroups:'ยังไม่มีกลุ่มที่บันทึกไว้',
+  saveGroupBtn:'💾 บันทึกกลุ่มนี้', saveGroupPrompt:'ตั้งชื่อกลุ่ม',
+  saveGroupReplace:'มีกลุ่มชื่อนี้แล้ว ต้องการแทนที่ไหม?',
   hideExtraRoles:'▲ ซ่อนตัวละครเพิ่มเติม', showMoreRoles:'▼ ตัวละครอื่น ({n})',
   showAllVillageRoles:'▼ แสดงทั้งหมด ({n} เพิ่มเติม)',
   pairOnlyWarning:'เลือกคู่กับหมาป่าฆ่าได้ตัวอื่นไม่ได้', autofillVillagers:'เติมชาวบ้านให้ครบ',
@@ -906,6 +916,9 @@ en:{
 
   players:'Players', playerPlaceholder:'Type name(s)… separate with , to add multiple', add:'Add',
   noPlayersYet:'No players yet — add at least 3', rolesInGame:'Roles in Game',
+  savedGroups:'👥 Player Groups', noSavedGroups:'No saved groups yet',
+  saveGroupBtn:'💾 Save this group', saveGroupPrompt:'Name this group',
+  saveGroupReplace:'A group with this name already exists. Replace it?',
   hideExtraRoles:'▲ Hide extra roles', showMoreRoles:'▼ More roles ({n})',
   showAllVillageRoles:'▼ Show all ({n} more)',
   pairOnlyWarning:'Can only be paired with Werewolf kill, not others', autofillVillagers:'Auto-fill Villagers',
@@ -1017,6 +1030,24 @@ function setLang(l){ if(l!=='th'&&l!=='en') return; S.lang=l; try{ localStorage.
 const app=document.getElementById('app');
 const totalRoles=()=>Object.values(S.counts).reduce((a,b)=>a+b,0);
 
+function loadGroups(){
+  try{return JSON.parse(localStorage.getItem('werewolf_groups')||'[]');}
+  catch(e){return [];}
+}
+function saveGroups(g){
+  try{localStorage.setItem('werewolf_groups',JSON.stringify(g));}catch(e){}
+}
+function addGroupPlayers(idx){
+  const g=loadGroups()[idx]; if(!g)return;
+  const existing=new Set(S.players.map(p=>p.name.toLowerCase()));
+  g.players.forEach(name=>{
+    if(!existing.has(name.toLowerCase())){
+      S.players.push({name,role:null,revealed:false});
+      existing.add(name.toLowerCase());
+    }
+  });
+  render();
+}
 function addPlayer(raw){
   const names=(raw||'').split(/[,\n]/).map(s=>s.trim()).filter(Boolean);
   if(!names.length) return;
@@ -1804,6 +1835,18 @@ function viewSetup(){
       : `<p class="empty">${T('noPlayersYet')}</p>`}
   </div>
 
+  ${(()=>{
+    const groups=loadGroups();
+    return `<div class="group-section">
+  <p class="section-label">${T('savedGroups')}</p>
+  <div class="group-chips">
+    ${groups.length?groups.map((g,i)=>`<span class="group-chip" data-gi="${i}">${esc(g.name)}<span class="group-count">(${g.players.length})</span><button class="group-del" data-gd="${i}">✕</button></span>`).join('')
+    :`<span class="group-empty">${T('noSavedGroups')}</span>`}
+  </div>
+  ${S.players.length>0?`<button class="btn ghost small" id="saveGroup">${T('saveGroupBtn')}</button>`:''}
+</div>`;
+  })()}
+
   <div class="card">
     <p class="section-label">${T('rolesInGame')}</p>
     ${[['mod','catMod'],['wolf','catWolf'],['village','catVillage'],['neutral','catNeutral']].map(([tm,catKey])=>{
@@ -2198,6 +2241,26 @@ function bind(){
     const ar=$('applyRec'); if(ar) ar.onclick=applyRecommendation;
     document.querySelectorAll('[data-recmode]').forEach(el=>el.onclick=()=>{S.recMode=el.dataset.recmode;render();});
     $('startBtn').onclick=startGame;
+    // บันทึกกลุ่ม
+    const sg=$('saveGroup');
+    if(sg) sg.onclick=()=>{
+      const nm=prompt(T('saveGroupPrompt')); if(!nm||!nm.trim())return;
+      const gs=loadGroups();
+      const xi=gs.findIndex(g=>g.name===nm.trim());
+      if(xi>=0){ if(!confirm(T('saveGroupReplace')))return; gs[xi]={name:nm.trim(),players:S.players.map(p=>p.name)}; }
+      else gs.push({name:nm.trim(),players:S.players.map(p=>p.name)});
+      saveGroups(gs); render();
+    };
+    // โหลดกลุ่ม
+    document.querySelectorAll('[data-gi]').forEach(el=>el.onclick=e=>{
+      if(e.target.closest('[data-gd]'))return;
+      addGroupPlayers(+el.dataset.gi);
+    });
+    // ลบกลุ่ม
+    document.querySelectorAll('[data-gd]').forEach(el=>el.onclick=e=>{
+      e.stopPropagation();
+      const gs=loadGroups(); gs.splice(+el.dataset.gd,1); saveGroups(gs); render();
+    });
     if(S._focusName){ setTimeout(()=>inp&&inp.focus(),30); S._focusName=false; }
   }
   else if(S.screen==='list'){
