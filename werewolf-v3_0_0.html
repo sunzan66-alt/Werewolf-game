@@ -329,12 +329,18 @@
   .hist-row:last-child{border-bottom:none}
   #loader{display:none;position:fixed;bottom:22px;right:22px;width:28px;height:28px;z-index:9999;border:3px solid rgba(240,210,120,.25);border-top-color:#f0d486;border-radius:50%;animation:loaderSpin .7s linear infinite;pointer-events:none;}
   @keyframes loaderSpin{to{transform:rotate(360deg)}}
+  #flash-overlay{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;}
+  @keyframes flashGold{0%{background:rgba(240,200,70,.5);opacity:1;}100%{background:rgba(240,200,70,0);opacity:0;}}
+  @keyframes flashDark{0%{background:rgba(5,5,15,.88);opacity:1;}100%{background:rgba(5,5,15,0);opacity:0;}}
+  .flash-gold{animation:flashGold .3s ease-out forwards;}
+  .flash-dark{animation:flashDark .3s ease-out forwards;}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
-<div id="verbadge">v3.1.16</div>
+<div id="flash-overlay"></div>
+<div id="verbadge">v3.1.19</div>
 
 <script>
 const ROLES = [
@@ -538,11 +544,11 @@ function balanceInfo(sc){
   if(sc===0) return {txt:'⚖️ สมดุล',en:'Balanced',cls:'b-neutral'};
   const vil=sc>0, a=Math.abs(sc);
   if(a>=6) return vil?{txt:'🏠 หมู่บ้านได้เปรียบขั้นสุด',en:'Villagers Extreme Advantage',cls:'b-navy'}
-                     :{txt:'🐺 หมาป่าได้เปรียบขั้นสุด',en:'Werewolf Extreme Advantage',cls:'b-red'};
+                     :{txt:'🐺 มนุษย์หมาป่าได้เปรียบขั้นสุด',en:'Werewolf Extreme Advantage',cls:'b-red'};
   if(a>=3) return vil?{txt:'🏠 หมู่บ้านได้เปรียบมาก',en:'Villagers Strong Advantage',cls:'b-blue'}
-                     :{txt:'🐺 หมาป่าได้เปรียบมาก',en:'Werewolf Strong Advantage',cls:'b-orange'};
+                     :{txt:'🐺 มนุษย์หมาป่าได้เปรียบมาก',en:'Werewolf Strong Advantage',cls:'b-orange'};
   return vil?{txt:'🏠 หมู่บ้านได้เปรียบเล็กน้อย',en:'Slight Villager Advantage',cls:'b-ltblue'}
-            :{txt:'🐺 หมาป่าได้เปรียบเล็กน้อย',en:'Slight Werewolf Advantage',cls:'b-amber'};
+            :{txt:'🐺 มนุษย์หมาป่าได้เปรียบเล็กน้อย',en:'Slight Werewolf Advantage',cls:'b-amber'};
 }
 // ===== อัตราชนะ จากคะแนนสมดุลสุดท้าย =====
 function winRate(sc){
@@ -615,11 +621,11 @@ th:{
   start:'เริ่มเกม', settings:'ตั้งค่า', language:'ภาษา', save:'บันทึก', cancel:'ยกเลิก', back:'ย้อนกลับ',
 
   // ===== Team labels (TEAM_LABEL) =====
-  teamMod:'ผู้ดำเนินรายการ', teamWolf:'ฝ่ายหมาป่า', teamVillage:'ฝ่ายหมู่บ้าน', teamNeutral:'เป็นกลาง', teamSpecial:'พิเศษ',
+  teamMod:'ผู้ดำเนินรายการ', teamWolf:'ฝ่ายมนุษย์หมาป่า', teamVillage:'ฝ่ายหมู่บ้าน', teamNeutral:'เป็นกลาง', teamSpecial:'พิเศษ',
   backToMenuBtn:'← กลับไปเมนูหลัก',
 
   // ===== role category headers (viewSetup) — เพิ่มรอบ viewSetup =====
-  catMod:'🎙️ ผู้ดำเนินรายการ', catWolf:'🐺 ฝ่ายหมาป่า', catVillage:'🛡️ ฝ่ายชาวบ้าน', catNeutral:'✨ ตัวละครพิเศษ (เป็นกลาง)',
+  catMod:'🎙️ ผู้ดำเนินรายการ', catWolf:'🐺 ฝ่ายมนุษย์หมาป่า', catVillage:'🛡️ ฝ่ายชาวบ้าน', catNeutral:'✨ ตัวละครพิเศษ (เป็นกลาง)',
   // หมายเหตุ: ไฟล์แนบ phase2 เขียนก่อนรอบเปลี่ยนโหมด chaos→mystic จึงเพิ่ม recMystic ให้ตรงกับ REC_MODES ปัจจุบัน
   // และ dynModNote สำหรับข้อความท้าย badge ความยากผู้ดำเนินรายการ (ไม่มี key เดิมรองรับ)
   recMystic:'🔮 ผู้วิเศษ', dynModNote:'ปรับตามบทบาท',
@@ -628,7 +634,7 @@ th:{
   rulesTitle:'📖 วิธีเล่น', rulesBackBtn:'← กลับเมนูหลัก',
   rulesIntro:'เกมนี้เล่นโดยใช้มือถือเครื่องเดียว ส่งต่อกันระหว่างผู้เล่น มีผู้ดำเนินรายการ 1 คนคุมจังหวะเกมทั้งหมด',
   rulesFactionsTitle:'ฝ่ายต่างๆ',
-  rulesFactions:'🐺 ฝ่ายหมาป่า — ชนะเมื่อจำนวนหมาป่าเท่ากับหรือมากกว่าฝ่ายหมู่บ้าน\n🛡️ ฝ่ายหมู่บ้าน — ชนะเมื่อกำจัดภัยคุกคามทั้งหมด\n✨ ตัวละครพิเศษ/เป็นกลาง — มีเงื่อนไขชนะของตัวเอง (ดูรายละเอียดตอนเปิดบทบาท)',
+  rulesFactions:'🐺 ฝ่ายมนุษย์หมาป่า — ชนะเมื่อจำนวนมนุษย์หมาป่าเท่ากับหรือมากกว่าฝ่ายหมู่บ้าน\n🛡️ ฝ่ายหมู่บ้าน — ชนะเมื่อกำจัดภัยคุกคามทั้งหมด\n✨ ตัวละครพิเศษ/เป็นกลาง — มีเงื่อนไขชนะของตัวเอง (ดูรายละเอียดตอนเปิดบทบาท)',
   rulesFlowTitle:'ลำดับการเล่น',
   rulesFlowNight:'🌙 กลางคืน — บทบาทที่มีสกิลตื่นมาทำหน้าที่ทีละคนตามลำดับ (ผู้ดำเนินรายการเป็นคนเรียก)',
   rulesFlowMorning:'🌅 เช้า — ประกาศว่าใครเสียชีวิตเมื่อคืน',
@@ -684,6 +690,8 @@ th:{
   backToMenuBtn:'← กลับไปเมนูหลัก',
   actChecked:'{actor} ตรวจ {target}', actProtected:'{actor} ปกป้อง {target}',
   actKilled:'{actor} ฆ่า {target}', actBlocked:'{actor} พยายามฆ่า {target} แต่ถูกป้องกันไว้ได้',
+  actToughGuyHit:'💪 {target} ได้รับบาดเจ็บจากการถูกมนุษย์หมาป่าเล่นงาน',
+  actToughGuyDeath:'💀 {target} ทนพิษบาดแผลไม่ไหว เสียชีวิต',
   actCursedConvert:'🌗➡️🐺 {target} ถูกสาปกลายเป็นหมาป่า',
   actRecruited:'{actor} ชวน {target} เข้าลัทธิ', actBit:'{actor} กัด {target}',
   actConverted:'{actor} เปลี่ยน {target} เป็นหมาป่า', actShapeshifted:'{actor} จำแลงเป็น {target}',
@@ -692,7 +700,7 @@ th:{
   actHunterNoShot:'นายพรานไม่ยิงใคร', actSkipped:'{actor} ข้ามสกิล',
 
   // ===== faction label (factionLabel) =====
-  facMod:'ผู้ดำเนินรายการ (ไม่ได้เล่นเป็นตัวละคร)', facWolf:'🐺 ฝ่ายหมาป่า', facVillage:'🛡️ ฝ่ายหมู่บ้าน',
+  facMod:'ผู้ดำเนินรายการ (ไม่ได้เล่นเป็นตัวละคร)', facWolf:'🐺 ฝ่ายมนุษย์หมาป่า', facVillage:'🛡️ ฝ่ายหมู่บ้าน',
   facSolo:'🔪 ฝ่ายที่สาม · เดี่ยว', facCult:'🟣 ฝ่ายที่สาม · ลัทธิ', facVampire:'🧛 ฝ่ายที่สาม · แวมไพร์', facNeutral:'✨ เป็นกลาง',
 
   // ===== win conditions (winCond) =====
@@ -700,7 +708,7 @@ th:{
   winCult:'สมาชิกลัทธิมากกว่าทุกฝ่ายรวมกัน', winVampire:'เปลี่ยนคนจนเหลือเฉพาะฝ่ายแวมไพร์',
   winBeggar:'ถูกกำจัด (โหวตออกหรือถูกฆ่า) = ชนะทันที', winDrunk:'ชนะตามบทบาทจริงที่สุ่มได้ (รู้ผลคืนที่ 3)',
   winDoppel:'ชนะตามบทบาทที่ลอกมา (ถ้ายังไม่ลอก = ฝ่ายหมู่บ้าน)',
-  winWolfTeam:'จำนวนหมาป่า ≥ ผู้เล่นฝ่ายอื่น', winVillageTeam:'กำจัดภัยคุกคามทั้งหมด (หมาป่า/ฆาตกร/ลัทธิ) ให้หมด', winNone:'—',
+  winWolfTeam:'จำนวนมนุษย์หมาป่า ≥ ผู้เล่นฝ่ายอื่น', winVillageTeam:'กำจัดภัยคุกคามทั้งหมด (มนุษย์หมาป่า/ฆาตกร/ลัทธิ) ให้หมด', winNone:'—',
 
   // ===== REC_MODES (เพิ่ม EN ให้ปุ่มโหมด) =====
   recBeginner:'😊 มือใหม่', recCasual:'🎲 คลาสสิก', recAdvanced:'🔥 ขั้นสูง', recChaos:'🌀 ปั่นป่วน',
@@ -771,7 +779,7 @@ th:{
   // ===== check bar messages (G.check.label) =====
   chkWolfCantKillOwn:'🐺 หมาป่าฆ่าฝ่ายตัวเอง (หมาป่า/นางปีศาจ) ไม่ได้',
   chkSilenceRepeat:'🤫 ใบ้คนเดิมติดกันไม่ได้ ต้องเว้นอย่างน้อย 1 คืน',
-  chkAlphaWolfOnly:'🩸 แปลงได้เฉพาะคนที่ไม่ใช่ฝ่ายหมาป่า', chkSkSelfKill:'🔪 ฆ่าตัวเองไม่ได้',
+  chkAlphaWolfOnly:'🩸 แปลงได้เฉพาะคนที่ไม่ใช่ฝ่ายมนุษย์หมาป่า', chkSkSelfKill:'🔪 ฆ่าตัวเองไม่ได้',
   chkAlreadyInCult:'🟣 คนนี้อยู่ในลัทธิแล้ว', chkAlreadyVampire:'🧛 คนนี้เป็นแวมไพร์แล้ว',
   chkShapeshiftSelf:'🎭 เลือกร่างเป็นคนอื่น (ไม่ใช่ตัวเอง)', chkDoppleSelf:'🎭 เลือกคนอื่น ไม่ใช่ตัวเอง',
   chkSeerSelf:'🔍 เทพพยากรณ์ตรวจตัวเองไม่ได้', chkSeerUsedNow:'✅ เทพพยากรณ์ใช้ไปแล้วคืนนี้',
@@ -803,7 +811,7 @@ th:{
   pacifistVetoBanner:'🕊️ นักสันติวิธีออกเสียง — การประหารวันนี้ถูกยกเลิก ไม่มีใครตาย',
 
   // ===== game over =====
-  winnerWolf:'🐺 ฝ่ายหมาป่าชนะ!', winnerCult:'🟣 ลัทธิชนะ!', winnerSk:'🔪 ฆาตกรโรคจิตชนะ!',
+  winnerWolf:'🐺 ฝ่ายมนุษย์หมาป่าชนะ!', winnerLoneWolf:'🐺 หมาป่าเดียวดายชนะ!', winnerWolfAndBeggar:'🐺💔 ฝ่ายมนุษย์หมาป่าและยาจกชนะ!', winnerCult:'🟣 ลัทธิชนะ!', winnerSk:'🔪 ฆาตกรโรคจิตชนะ!',
   winnerVampire:'🧛 ฝ่ายแวมไพร์ชนะ!', winnerVillage:'👥 ฝ่ายหมู่บ้านชนะ!', backToSummaryBtn:'กลับไปหน้าสรุป'
 },
 en:{
@@ -876,6 +884,8 @@ en:{
   backToMenuBtn:'← Back to Main Menu',
   actChecked:'{actor} checked {target}', actProtected:'{actor} protected {target}',
   actKilled:'{actor} killed {target}', actBlocked:'{actor} tried to kill {target} but was blocked',
+  actToughGuyHit:'💪 {target} was wounded by the werewolves',
+  actToughGuyDeath:'💀 {target} could not survive the wounds and died',
   actCursedConvert:'🌗➡️🐺 {target} was cursed and became a werewolf',
   actRecruited:'{actor} recruited {target} into the cult', actBit:'{actor} bit {target}',
   actConverted:'{actor} converted {target} into a werewolf', actShapeshifted:'{actor} disguised as {target}',
@@ -979,7 +989,7 @@ en:{
   princeRevealed:'👑 {name} is the Prince! Revealed and survives the first execution',
   pacifistVetoBanner:"🕊️ Pacifist used their veto — today's execution is cancelled, no one dies",
 
-  winnerWolf:'🐺 Werewolves win!', winnerCult:'🟣 Cult wins!', winnerSk:'🔪 Serial Killer wins!',
+  winnerWolf:'🐺 Werewolves win!', winnerLoneWolf:'🐺 Lone Wolf wins!', winnerWolfAndBeggar:'🐺💔 Werewolf Team & Beggar win!', winnerCult:'🟣 Cult wins!', winnerSk:'🔪 Serial Killer wins!',
   winnerVampire:'🧛 Vampires win!', winnerVillage:'👥 Village wins!', backToSummaryBtn:'Back to summary'
 }
 };
@@ -1372,7 +1382,10 @@ function resolveNight(){          // 🌅 เช้าแล้ว
   pushUndo();
   G.deaths=[]; G.hunterQueue=[]; G.afterHunter='day'; G.justConverts=[];
   const victims=[];
-  if(G.toughDieNext!=null && G.alive[G.toughDieNext]) victims.push(G.toughDieNext);
+  if(G.toughDieNext!=null && G.alive[G.toughDieNext]){
+    victims.push(G.toughDieNext);
+    logEvent('actToughGuyDeath',{target:S.players[G.toughDieNext].name});
+  }
   G.toughDieNext=null;
   if(G.infectedNext){ G.infectedNext=false; }
   else if(G.alphaConvert!=null && G.alive[G.alphaConvert] && teamOf(G.alphaConvert)!=='wolf'){
@@ -1400,13 +1413,15 @@ function resolveNight(){          // 🌅 เช้าแล้ว
   else G.justVampires=[];
   G.vampireBite=null;
   killChain(victims);
-  // Phase B2: entry 'actKilled' คืนนี้ที่ target ไม่ตายจริง (ถูก protect ไว้ได้) → เปลี่ยนเป็น actBlocked
+  // Phase B2: entry 'actKilled' คืนนี้ที่ target ไม่ตายจริง → เปลี่ยน key ตาม reason
   {
     const deadNames=G.deaths.map(idx=>S.players[idx].name);
     const convertedNames=(G.justConverts||[]).map(idx=>S.players[idx].name);
     G.history.forEach(h=>{
       if(h.night===G.nightNo && h.key==='actKilled' && !deadNames.includes(h.vars.target)){
+        const tidx=S.players.findIndex(p=>p.name===h.vars.target);
         if(convertedNames.includes(h.vars.target)) h.key='actCursedConvert';
+        else if(tidx>=0 && G.toughDieNext===tidx) h.key='actToughGuyHit';
         else h.key='actBlocked';
       }
     });
@@ -1750,7 +1765,11 @@ function viewGame(){
     if(G.showHistory){
       body=viewHistory();
     } else {
-      const txt=G.winner==='wolf'?T('winnerWolf'):G.winner==='cult'?T('winnerCult'):G.winner==='sk'?T('winnerSk'):G.winner==='vampire'?T('winnerVampire'):T('winnerVillage');
+      const loneWolfOnly=G.winner==='wolf'
+        && S.players.some((p,i)=>G.alive[i]&&p.role==='lonewolf')
+        && !S.players.some((p,i)=>G.alive[i]&&['werewolf','wolfcub','alphawolf','shapeshifter'].includes(p.role));
+      const beggarWon=G.winner==='wolf' && S.players.some((p,i)=>p.role==='beggar'&&!G.alive[i]);
+      const txt=loneWolfOnly?T('winnerLoneWolf'):beggarWon?T('winnerWolfAndBeggar'):G.winner==='wolf'?T('winnerWolf'):G.winner==='cult'?T('winnerCult'):G.winner==='sk'?T('winnerSk'):G.winner==='vampire'?T('winnerVampire'):T('winnerVillage');
       body=`<div class="banner win">${txt}</div>
         <div class="card">${S.players.map((p,i)=>{const r=(G.wolfConverts&&G.wolfConverts.includes(i))?roleById('werewolf'):roleById(p.role);return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':'💀'}</div><div class="rl"><span class="teamtag t-${r.team}" style="margin:0">${roleLabel(r)}</span></div></div>`}).join('')}</div>
         <button class="btn block ghost" id="gHistoryBtn">${T('historyTitle')}</button>
@@ -2111,6 +2130,13 @@ function viewSettings(){
 }
 function showLoader(){const l=document.getElementById('loader');if(l)l.style.display='block';}
 function hideLoader(){const l=document.getElementById('loader');if(l)l.style.display='none';}
+function flashScreen(type){
+  const el=document.getElementById('flash-overlay');
+  if(!el)return;
+  el.className='';
+  void el.offsetWidth;
+  el.className='flash-'+type;
+}
 function render(){
   const sy=window.scrollY;
   const sameView=(_lastKey===viewKey());
@@ -2203,7 +2229,9 @@ function bindGame(){
   const $=id=>document.getElementById(id);
   document.querySelectorAll('[data-gp]').forEach(el=>el.onclick=()=>gameTap(+el.dataset.gp));
   document.querySelectorAll('[data-tool]').forEach(el=>el.onclick=()=>{G.tool=el.dataset.tool;G.check=null;render();});
-  const map={gExit:exitGame,gExit2:exitGame,gNight:resolveNight,gDay:resolveDay,
+  const map={gExit:exitGame,gExit2:exitGame,
+    gNight:()=>{flashScreen('gold');resolveNight();},
+    gDay:()=>{flashScreen('dark');resolveDay();},
     gCupidOk:confirmCupid,gCupidSkip:skipCupid,gHunterSkip:hunterSkip,
     gUndo:doUndo,gExecSil:executeSilenced,gActUndo:doActUndo,
     gSkipTool:()=>{ const b=actBegin(); if(!G.skipped) G.skipped=[]; if(!G.skipped.includes(G.tool)) G.skipped.push(G.tool); actCommit(b); render(); },
