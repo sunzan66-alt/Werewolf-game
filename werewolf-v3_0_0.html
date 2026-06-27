@@ -195,6 +195,8 @@
   .group-count{color:var(--muted);font-size:11px;}
   .group-del{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:0 2px;line-height:1;}
   .group-empty{font-size:12px;color:var(--muted);}
+  .save-group-form{display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap;}
+  .save-group-form .pinput{flex:1;min-width:120px;}
   .tchip.on{background:linear-gradient(180deg,#f4e6b0,#e0b84a);color:#0b1026;border-color:transparent}
   .daytimer{text-align:center;font-size:26px;font-weight:800;letter-spacing:.04em;color:var(--gold);background:rgba(224,184,74,.1);border:1px solid rgba(224,184,74,.35);border-radius:14px;padding:12px;margin:6px 0 12px}
   .daytimer.up{color:#f0908e;background:rgba(204,70,68,.16);border-color:rgba(204,70,68,.5);animation:tpulse 1s ease-in-out infinite}
@@ -347,7 +349,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.2.0</div>
+<div id="verbadge">v3.3.0</div>
 
 <script>
 const ROLES = [
@@ -614,6 +616,7 @@ let S={
   flipped:false,
   modUnlocked:false,
   recMode:'casual',
+  savingGroup:false,
 };
 S.counts.werewolf=1; S.counts.villager=0;
 S._focusName=true;
@@ -726,6 +729,7 @@ th:{
   savedGroups:'👥 กลุ่มผู้เล่น', noSavedGroups:'ยังไม่มีกลุ่มที่บันทึกไว้',
   saveGroupBtn:'💾 บันทึกกลุ่มนี้', saveGroupPrompt:'ตั้งชื่อกลุ่ม',
   saveGroupReplace:'มีกลุ่มชื่อนี้แล้ว ต้องการแทนที่ไหม?',
+  saveGroupName:'ชื่อกลุ่ม', saveGroupConfirm:'บันทึก',
   hideExtraRoles:'▲ ซ่อนตัวละครเพิ่มเติม', showMoreRoles:'▼ ตัวละครอื่น ({n})',
   showAllVillageRoles:'▼ แสดงทั้งหมด ({n} เพิ่มเติม)',
   pairOnlyWarning:'เลือกคู่กับหมาป่าฆ่าได้ตัวอื่นไม่ได้', autofillVillagers:'เติมชาวบ้านให้ครบ',
@@ -765,7 +769,11 @@ th:{
   // ===== night tool chip labels =====
   toolCultLeader:'🟣 ผู้นำลัทธิ (Cult Leader)', toolVampire:'🧛 แวมไพร์ (Vampire)',
   toolShapeshifter:'🎭 หมาป่าจำแลง (Shapeshifter)', toolSorcerer:'🔮 นางปีศาจ (Sorcerer)',
-  toolAlphaWolf:'🩸 หมาป่าจ่าฝูง (Alpha Wolf)', toolWerewolf:'🐺 หมาป่า (Werewolf / Lone Wolf)',
+  toolAlphaWolf:'🩸 หมาป่าจ่าฝูง (Alpha Wolf)', toolWerewolf:'🐺 หมาป่า (Werewolf)',
+  toolLoneWolf:'🌑 หมาป่าเดียวดาย (Lone Wolf)',
+  helpLoneWolfKill:'เลือก 1 คนที่จะฆ่า — รวมหมาป่าตัวอื่นได้ · ฆ่าตัวเองไม่ได้',
+  scriptLoneWolfWake:'"🌑 หมาป่าเดียวดาย ลืมตา — ชี้ 1 คนที่จะฆ่า แล้วหลับตา (เลือกหมาป่าตัวอื่นได้)"',
+  chkLoneWolfSelf:'🌑 ฆ่าตัวเองไม่ได้',
   toolSerialKiller:'🔪 ฆาตกรโรคจิต (Serial Killer)', toolSeer:'🔍 เทพพยากรณ์ (Seer)',
   toolBodyguard:'🛡️ บอดี้การ์ด (Bodyguard)', toolSpellcaster:'🤫 จอมเวท (Spellcaster)',
   toolDoppelganger:'🎭 ผู้เลียนแบบ (จับตาคืนแรก)',
@@ -919,6 +927,7 @@ en:{
   savedGroups:'👥 Player Groups', noSavedGroups:'No saved groups yet',
   saveGroupBtn:'💾 Save this group', saveGroupPrompt:'Name this group',
   saveGroupReplace:'A group with this name already exists. Replace it?',
+  saveGroupName:'Group name', saveGroupConfirm:'Save',
   hideExtraRoles:'▲ Hide extra roles', showMoreRoles:'▼ More roles ({n})',
   showAllVillageRoles:'▼ Show all ({n} more)',
   pairOnlyWarning:'Can only be paired with Werewolf kill, not others', autofillVillagers:'Auto-fill Villagers',
@@ -953,7 +962,11 @@ en:{
 
   toolCultLeader:'🟣 Cult Leader', toolVampire:'🧛 Vampire',
   toolShapeshifter:'🎭 Shapeshifter', toolSorcerer:'🔮 Sorcerer',
-  toolAlphaWolf:'🩸 Alpha Wolf', toolWerewolf:'🐺 Werewolf / Lone Wolf',
+  toolAlphaWolf:'🩸 Alpha Wolf', toolWerewolf:'🐺 Werewolf',
+  toolLoneWolf:'🌑 Lone Wolf',
+  helpLoneWolfKill:'Choose 1 player to kill — can target other werewolves · cannot kill yourself',
+  scriptLoneWolfWake:'"🌑 Lone Wolf, open your eyes — choose 1 player to kill, then close your eyes (can target other werewolves)"',
+  chkLoneWolfSelf:'🌑 Cannot kill yourself',
   toolSerialKiller:'🔪 Serial Killer', toolSeer:'🔍 Seer',
   toolBodyguard:'🛡️ Bodyguard', toolSpellcaster:'🤫 Spellcaster',
   toolDoppelganger:'🎭 Doppelganger (mark on Night 1)',
@@ -1017,7 +1030,8 @@ const SCRIPT_LINE = {
   seerCheck:    'scriptSeerWake',
   protect:      'scriptBodyguardWake',
   silence:      'scriptSpellcasterWake',
-  dopplePick:   'scriptDoppelWake'
+  dopplePick:   'scriptDoppelWake',
+  lonewolfKill: 'scriptLoneWolfWake'
 };
 function T(k, vars){
   const L=translations[S.lang]||translations.th;
@@ -1272,7 +1286,7 @@ function pushUndo(){ UNDO=JSON.parse(JSON.stringify(G)); }
 function doUndo(){ if(UNDO){ G=JSON.parse(JSON.stringify(UNDO)); UNDO=null; render(); } }
 // ===== ย้อนการกระทำทีละก้าว (ระหว่างเฟส cupid/กลางคืน) =====
 let ACT=[];
-function actSig(){ return JSON.stringify([G.wolfTargets,G.protectThis,G.silenced,G.alphaConvert,G.skTarget,G.cultRecruit,G.vampireBite,G.shapeTarget,G.doppleTarget,G.seerUsed,G.sorcUsed,G.seerChecked,G.sorcChecked,G.cupidPick,G.skipped]); }
+function actSig(){ return JSON.stringify([G.wolfTargets,G.loneWolfTarget,G.protectThis,G.silenced,G.alphaConvert,G.skTarget,G.cultRecruit,G.vampireBite,G.shapeTarget,G.doppleTarget,G.seerUsed,G.sorcUsed,G.seerChecked,G.sorcChecked,G.cupidPick,G.skipped]); }
 function actBegin(){ return {sig:actSig(), snap:JSON.stringify(G)}; }
 function actCommit(b){ if(actSig()!==b.sig){ ACT.push(b.snap); if(ACT.length>40) ACT.shift(); } }
 function doActUndo(){ if(ACT.length){ G=JSON.parse(ACT.pop()); render(); } }
@@ -1317,7 +1331,7 @@ function startRun(){
      lovers:null, cupidPick:[], silenced:null,
      protectPrev:null, protectThis:null, silencedPrev:null, wolfTargets:[], wolfKillCount:1,
      cubBonusPending:false, infectedNext:false, dayVote:null,
-     wolfConverts:[], toughWounded:[], toughDieNext:null, justConverts:[],
+     wolfConverts:[], toughWounded:[], toughDieNext:null, justConverts:[], loneWolfTarget:null,
      seerChecked:[], sorcChecked:[], seerUsed:false, sorcUsed:false,
      alphaUsed:false, alphaConvert:null,
      cult:[], skTarget:null, cultRecruit:null, shapeTarget:null,
@@ -1384,7 +1398,7 @@ function checkWin(){
 function enterDay(){
   ACT=[];
   G.protectPrev=G.protectThis; G.protectThis=null;
-  G.wolfTargets=[]; G.check=null; G.dayVote=null; G.wolfKillCount=1;
+  G.wolfTargets=[]; G.check=null; G.dayVote=null; G.wolfKillCount=1; G.loneWolfTarget=null;
   G.dayNo++;
   G.banner={type:'morning',deaths:[...G.deaths],converts:[...(G.justConverts||[])],vampires:[...(G.justVampires||[])]};
   G.phase=checkWin()?'over':'day';
@@ -1397,7 +1411,7 @@ function enterNight(){
   G.wolfKillCount=G.cubBonusPending?2:1; G.cubBonusPending=false;
   G.silencedPrev=G.silenced;   // จดจำคนที่โดนใบ้คืนก่อน (ใบ้ซ้ำติดกันไม่ได้)
   G.wolfTargets=[]; G.protectThis=null; G.silenced=null; G.check=null;
-  G.seerUsed=false; G.sorcUsed=false; G.alphaConvert=null; G.skTarget=null; G.cultRecruit=null; G.shapeTarget=null; G.vampireBite=null; G.skipped=[];
+  G.seerUsed=false; G.sorcUsed=false; G.alphaConvert=null; G.skTarget=null; G.cultRecruit=null; G.shapeTarget=null; G.vampireBite=null; G.skipped=[]; G.loneWolfTarget=null;
   G.dayVote=null; G.tool='kill';
   G.phase=checkWin()?'over':'night';
   render();
@@ -1436,6 +1450,9 @@ function resolveNight(){          // 🌅 เช้าแล้ว
   // ฆาตกรโรคจิตฆ่า (อิสระ · บอดี้การ์ดกันได้)
   if(G.skTarget!=null && G.alive[G.skTarget] && G.skTarget!==G.protectThis && !victims.includes(G.skTarget)) victims.push(G.skTarget);
   G.skTarget=null;
+  // หมาป่าเดียวดายฆ่า (อิสระ · บอดี้การ์ดกันได้)
+  if(G.loneWolfTarget!=null&&G.alive[G.loneWolfTarget]&&G.loneWolfTarget!==G.protectThis&&!victims.includes(G.loneWolfTarget)) victims.push(G.loneWolfTarget);
+  G.loneWolfTarget=null;
   // ผู้นำลัทธิชวนเข้าลัทธิ
   if(G.cultRecruit!=null && G.alive[G.cultRecruit] && !G.cult.includes(G.cultRecruit)) G.cult.push(G.cultRecruit);
   G.cultRecruit=null;
@@ -1507,7 +1524,7 @@ function nightTap(i){
   const b=actBegin();
   const t=G.tool;
   if(t==='kill'){
-    if(teamOf(i)==='wolf'){ G.check={info:true,label:T('chkWolfCantKillOwn')}; render(); return; }
+    if(teamOf(i)==='wolf'&&S.players[i].role!=='lonewolf'){ G.check={info:true,label:T('chkWolfCantKillOwn')}; render(); return; }
     const k=G.wolfTargets.indexOf(i);
     if(k>=0) G.wolfTargets.splice(k,1);
     else if(G.wolfTargets.length<G.wolfKillCount) G.wolfTargets.push(i);
@@ -1528,6 +1545,12 @@ function nightTap(i){
     if(effRole(i)==='serialkiller'){ G.check={info:true,label:T('chkSkSelfKill')}; render(); return; }
     G.skTarget=(G.skTarget===i)?null:i;
     if(G.skTarget===i) logEvent('actKilled',{actor:roleLabel(roleById('serialkiller')),target:S.players[i].name});
+  } else if(t==='lonewolfKill'){
+    const lwIdx=S.players.findIndex((p,j)=>G.alive[j]&&p.role==='lonewolf');
+    if(i===lwIdx){G.check={info:true,label:T('chkLoneWolfSelf')};render();return;}
+    G.loneWolfTarget=G.loneWolfTarget===i?null:i;
+    if(G.loneWolfTarget===i) logEvent('actKilled',{actor:roleLabel(roleById('lonewolf')),target:S.players[i].name});
+    G.check=null;render();return;
   } else if(t==='cultRecruit'){
     if(G.cult.includes(i)){ G.check={info:true,label:T('chkAlreadyInCult')}; render(); return; }
     G.cultRecruit=(G.cultRecruit===i)?null:i;
@@ -1596,7 +1619,7 @@ function gameTap(i){
 }
 function nightTools(){
   const t=[];
-  const KILL_IDS=['werewolf','wolfcub','alphawolf','lonewolf','shapeshifter'];
+  const KILL_IDS=['werewolf','wolfcub','alphawolf','shapeshifter'];
   const killerAlive=S.players.some((p,i)=>G.alive[i]&&(KILL_IDS.includes(p.role)||G.wolfConverts.includes(i)||KILL_IDS.some(id=>isAwakenedAs(i,id))));
   const alphaFirstNight=aliveHas('alphawolf')&&!G.alphaUsed&&G.nightNo===1;
   // ลำดับ: ลัทธิ → แวมไพร์ → จำแลง → นางปีศาจ → หมาป่า(รวมเดียวดาย) → ฆาตกร → เทพพยากรณ์ → บอดี้การ์ด → จอมเวท
@@ -1606,6 +1629,7 @@ function nightTools(){
   if(roleActiveAlive('sorcerer')) t.push(['sorcCheck',T('toolSorcerer')]);
   if(alphaFirstNight) t.push(['alphaConvert',T('toolAlphaWolf')]);   // คืนแรก: แปลงร่างเท่านั้น
   else if(killerAlive) t.push(['kill',T('toolWerewolf')]);
+  if(roleActiveAlive('lonewolf')) t.push(['lonewolfKill',T('toolLoneWolf')]);
   if(roleActiveAlive('serialkiller')) t.push(['skKill',T('toolSerialKiller')]);
   if(roleActiveAlive('seer')||(aliveHas('apprentice')&&seerDied())) t.push(['seerCheck',T('toolSeer')]);
   if(roleActiveAlive('bodyguard')) t.push(['protect',T('toolBodyguard')]);
@@ -1620,6 +1644,7 @@ function activeNightTool(){
 function toolDone(key){
   switch(key){
     case 'kill': return G.wolfTargets.length>=G.wolfKillCount;
+    case 'lonewolfKill': return G.loneWolfTarget!=null;
     case 'alphaConvert': return G.alphaConvert!=null;
     case 'sorcCheck': return G.sorcUsed;
     case 'seerCheck': return G.seerUsed;
@@ -1665,7 +1690,7 @@ function gcell(i){
   const p=S.players[i], conv=G.wolfConverts&&G.wolfConverts.includes(i), r=conv?roleById('werewolf'):roleById(effRole(i)), dead=!G.alive[i];
   let b='';
   if(dead) b+='💀';
-  if(G.phase!=='day'&&G.wolfTargets.includes(i)) b+='🎯';
+  if(G.phase!=='day'&&(G.wolfTargets.includes(i)||G.loneWolfTarget===i)) b+='🎯';
   if(G.phase==='night'&&G.alphaConvert===i) b+='🩸';
   if(G.phase==='night'&&G.skTarget===i) b+='🔪';
   if(G.cult&&G.cult.includes(i)) b+='🟣';
@@ -1685,7 +1710,7 @@ function gcell(i){
   let cls='gcell';
   if(dead) cls+=' dead';
   if((G.phase==='cupid'&&G.cupidPick.includes(i))||(G.phase==='day'&&G.dayVote===i)) cls+=' sel';
-  if(G.phase!=='day'&&G.wolfTargets.includes(i)) cls+=' target';
+  if(G.phase!=='day'&&(G.wolfTargets.includes(i)||G.loneWolfTarget===i)) cls+=' target';
   return `<div class="${cls}" data-gp="${i}">
     ${iconHTML(r,30)}
     <div style="flex:1;min-width:0"><div class="gnm">${esc(p.name)}</div><div class="grole">${roleLabel(r)}</div></div>
@@ -1741,6 +1766,7 @@ function viewGame(){
     }).join('');
     let help='';
     if(G.tool==='kill') help=T('helpKill',{cur:G.wolfTargets.length,max:G.wolfKillCount})+(G.wolfKillCount>1?T('helpKillBonus'):'');
+    else if(G.tool==='lonewolfKill') help=T('helpLoneWolfKill');
     else if(G.tool==='protect') help=G.protectPrev!=null?T('helpProtectRepeat',{name:esc(S.players[G.protectPrev].name)}):T('helpProtect');
     else if(G.tool==='silence') help=T('helpSilence');
     else if(G.tool==='alphaConvert') help=T('helpAlphaConvert');
@@ -1843,7 +1869,14 @@ function viewSetup(){
     ${groups.length?groups.map((g,i)=>`<span class="group-chip" data-gi="${i}">${esc(g.name)}<span class="group-count">(${g.players.length})</span><button class="group-del" data-gd="${i}">✕</button></span>`).join('')
     :`<span class="group-empty">${T('noSavedGroups')}</span>`}
   </div>
-  ${S.players.length>0?`<button class="btn ghost small" id="saveGroup">${T('saveGroupBtn')}</button>`:''}
+  ${S.players.length>0? (!S.savingGroup
+    ? `<button class="btn ghost small" id="saveGroup">${T('saveGroupBtn')}</button>`
+    : `<div class="save-group-form">
+        <input class="pinput" id="saveGroupName" placeholder="${T('saveGroupName')}" maxlength="30" autocomplete="off">
+        <button class="btn small" id="saveGroupOk">${T('saveGroupConfirm')}</button>
+        <button class="btn ghost small" id="saveGroupCancel">${T('cancel')}</button>
+       </div>`
+  ) : ''}
 </div>`;
   })()}
 
@@ -2023,7 +2056,8 @@ function viewScript(){
   if(has('shapeshifter'))  wakes.push('scriptShapeshifterWake');
   if(has('sorcerer'))      wakes.push('scriptSorcererWake');
   if(has('alphawolf'))     wakes.push('scriptAlphaWake');
-  if(has('werewolf')||has('lonewolf')||has('wolfcub')) wakes.push('scriptWolfWake');
+  if(has('werewolf')||has('wolfcub')) wakes.push('scriptWolfWake');
+  if(has('lonewolf')) wakes.push('scriptLoneWolfWake');
   if(has('serialkiller'))  wakes.push('scriptSKWake');
   if(has('seer')||has('apprentice')) wakes.push('scriptSeerWake');
   if(has('bodyguard'))     wakes.push('scriptBodyguardWake');
@@ -2243,14 +2277,23 @@ function bind(){
     $('startBtn').onclick=startGame;
     // บันทึกกลุ่ม
     const sg=$('saveGroup');
-    if(sg) sg.onclick=()=>{
-      const nm=prompt(T('saveGroupPrompt')); if(!nm||!nm.trim())return;
+    if(sg) sg.onclick=()=>{S.savingGroup=true;render();setTimeout(()=>{const i=$('saveGroupName');if(i)i.focus();},50);};
+
+    const sok=$('saveGroupOk');
+    if(sok) sok.onclick=()=>{
+      const nm=($('saveGroupName')||{}).value||''; if(!nm.trim()){S.savingGroup=false;render();return;}
       const gs=loadGroups();
       const xi=gs.findIndex(g=>g.name===nm.trim());
-      if(xi>=0){ if(!confirm(T('saveGroupReplace')))return; gs[xi]={name:nm.trim(),players:S.players.map(p=>p.name)}; }
+      if(xi>=0) gs[xi]={name:nm.trim(),players:S.players.map(p=>p.name)};
       else gs.push({name:nm.trim(),players:S.players.map(p=>p.name)});
-      saveGroups(gs); render();
+      saveGroups(gs); S.savingGroup=false; render();
     };
+
+    const scan=$('saveGroupCancel');
+    if(scan) scan.onclick=()=>{S.savingGroup=false;render();};
+
+    const sni=$('saveGroupName');
+    if(sni) sni.onkeydown=e=>{if(e.key==='Enter') sok&&sok.onclick();};
     // โหลดกลุ่ม
     document.querySelectorAll('[data-gi]').forEach(el=>el.onclick=e=>{
       if(e.target.closest('[data-gd]'))return;
