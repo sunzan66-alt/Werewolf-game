@@ -223,6 +223,9 @@
   .flipcard.flipped .flipinner{transform:rotateY(180deg)}
   @keyframes spinFlip{0%{transform:rotateY(0deg)}50%{transform:rotateY(90deg)}100%{transform:rotateY(0deg)}}
   .flipinner.spinning{animation:spinFlip .7s ease-in-out forwards}
+  .review-confirm{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,38,.97);border-top:1px solid var(--gold);padding:16px;z-index:999;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .review-confirm .rc-name{font-size:17px;font-weight:700;color:var(--gold)}
+  .review-confirm .rc-sub{font-size:13px;color:var(--muted);margin-bottom:4px}
   .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;display:flex;flex-direction:column;
     align-items:center;justify-content:center;padding:20px;text-align:center;border:1px solid var(--line)}
   .face.back{background:
@@ -367,7 +370,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.7.1</div>
+<div id="verbadge">v3.7.2</div>
 
 <script>
 const ROLES = [
@@ -1278,13 +1281,13 @@ function resetAll(){
 }
 function openReveal(i){
   if(S.players[i].revealed){
-    // ดูซ้ำ: แสดงบทบาทตรงๆ ไม่ต้อง spin
-    S.active=i; S.flipped=true; S.spinning=false; S.screen='reveal'; render(); return;
+    // ดูซ้ำ: แสดง confirmation ใน viewList แทน ไม่ข้ามเข้าทันที
+    S.reviewTarget=i; render(); return;
   }
   // เปิดครั้งแรก: spin ก่อนแสดงบทบาท
   S.active=i; S.flipped=false; S.spinning=true; S.screen='reveal';
   render();
-  setTimeout(()=>{ S.spinning=false; S.flipped=true; render(); }, 700);
+  setTimeout(()=>{ S.spinning=false; S.flipped=true; playSound('reveal'); render(); }, 700);
 }
 function confirmReveal(){
   const isLast=S.players.every((p,i)=>i===S.active||p.revealed);
@@ -2091,6 +2094,15 @@ function viewSetup(){
 
 function viewList(){
   const done=S.players.filter(p=>p.revealed).length, all=done===S.players.length;
+  const confirmBar=S.reviewTarget!=null?`
+  <div class="review-confirm">
+    <div class="rc-name">${esc(S.players[S.reviewTarget].name)}</div>
+    <div class="rc-sub">ต้องการดูบทบาทของตัวเองซ้ำไหม?</div>
+    <div style="display:flex;gap:10px;width:100%">
+      <button class="btn ghost block" id="rcCancel" style="flex:1">ยกเลิก</button>
+      <button class="btn block" id="rcConfirm" style="flex:2">ยืนยัน — ดูบทบาท</button>
+    </div>
+  </div>`:'';
   return `
   <p class="eyebrow">Reveal</p>
   <h1 class="title" style="font-size:26px">${T('tapNameToReveal')}</h1>
@@ -2098,14 +2110,15 @@ function viewList(){
   <div class="spacer"></div>
   <div class="grid">
     ${S.players.map((p,i)=>`
-      <div class="pcell ${p.revealed?'done':''}" ${p.revealed?'':`data-open="${i}"`}>
+      <div class="pcell ${p.revealed?'done':''}" ${p.revealed?`data-review="${i}"`:`data-open="${i}"`}>
         ${esc(p.name)}
         <span class="hint">${p.revealed?T('viewed'):T('tapToView')}</span>
       </div>`).join('')}
   </div>
   <p class="progress">${T('viewedProgress',{done,total:S.players.length})}</p>
   ${all? `<button class="btn block" id="toMod">${T('openModSummary')}</button>`:''}
-  <div style="text-align:center"><button class="back-link" id="backSetup">${T('backToSetup')}</button></div>`;
+  <div style="text-align:center"><button class="back-link" id="backSetup">${T('backToSetup')}</button></div>
+  ${confirmBar}`;
 }
 
 function revealPackInfo(selfIdx){
@@ -2604,8 +2617,15 @@ function bind(){
   }
   else if(S.screen==='list'){
     document.querySelectorAll('[data-open]').forEach(el=>el.onclick=()=>openReveal(+el.dataset.open));
+    document.querySelectorAll('[data-review]').forEach(el=>el.onclick=()=>openReveal(+el.dataset.review));
+    const rc=$('rcConfirm');
+    if(rc) rc.onclick=()=>{
+      const i=S.reviewTarget; S.reviewTarget=null;
+      S.active=i; S.flipped=true; S.spinning=false; S.screen='reveal'; render();
+    };
+    const rx=$('rcCancel'); if(rx) rx.onclick=()=>{S.reviewTarget=null;render();};
     const tm=$('toMod'); if(tm) tm.onclick=()=>{S.screen='mod';render();};
-    $('backSetup').onclick=()=>{S.screen='setup';render();};
+    $('backSetup').onclick=()=>{S.screen='setup';S.reviewTarget=null;render();};
   }
   else if(S.screen==='reveal'){
     $('flip').onclick=()=>{ if(!S.flipped){S.flipped=true;playSound('reveal');render();} };
