@@ -221,6 +221,8 @@
   .flipcard{aspect-ratio:3/4;max-height:54vh;margin:0 auto;width:min(78%,300px);perspective:1200px;cursor:pointer}
   .flipinner{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
   .flipcard.flipped .flipinner{transform:rotateY(180deg)}
+  @keyframes spinFlip{0%{transform:rotateY(0deg)}50%{transform:rotateY(90deg)}100%{transform:rotateY(0deg)}}
+  .flipinner.spinning{animation:spinFlip .7s ease-in-out forwards}
   .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;display:flex;flex-direction:column;
     align-items:center;justify-content:center;padding:20px;text-align:center;border:1px solid var(--line)}
   .face.back{background:
@@ -365,7 +367,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.7.0</div>
+<div id="verbadge">v3.7.1</div>
 
 <script>
 const ROLES = [
@@ -1274,11 +1276,21 @@ function resetAll(){
   S.players.forEach(p=>{p.role=null;p.revealed=false;});
   render();
 }
-function openReveal(i){ if(S.players[i].revealed) return; S.active=i; S.flipped=false; S.screen='reveal'; render(); }
+function openReveal(i){
+  if(S.players[i].revealed){
+    // ดูซ้ำ: แสดงบทบาทตรงๆ ไม่ต้อง spin
+    S.active=i; S.flipped=true; S.spinning=false; S.screen='reveal'; render(); return;
+  }
+  // เปิดครั้งแรก: spin ก่อนแสดงบทบาท
+  S.active=i; S.flipped=false; S.spinning=true; S.screen='reveal';
+  render();
+  setTimeout(()=>{ S.spinning=false; S.flipped=true; render(); }, 700);
+}
 function confirmReveal(){
   const isLast=S.players.every((p,i)=>i===S.active||p.revealed);
-  if(isLast&&_bgmOn) stopBGM(true);
-  S.players[S.active].revealed=true; S.active=null; S.screen='list'; render();
+  const wasFirst=!S.players[S.active].revealed;
+  if(isLast&&wasFirst&&_bgmOn) stopBGM(true);
+  S.players[S.active].revealed=true; S.active=null; S.flipped=false; S.spinning=false; S.screen='list'; render();
 }
 
 function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
@@ -1850,7 +1862,7 @@ function viewGame(){
     </div></div>`;
   let body='';
   if(G.phase==='cupid'){
-    const miniRow=ACT.length?`<div class="mini-row"><button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ <b>${ACT.length}</b></button></div>`:'';
+    const miniRow=ACT.length?`<div class="mini-row"><button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ ย้อนกลับ(<b>${ACT.length}</b>)</button></div>`:'';
     const cupidScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptCupidWake')}</div></div>`:'';
     body=`<p class="gins">${T('cupidInstruction')}</p>${cupidScript}${miniRow}${ggrid()}
       <div class="bottombar"><button class="btn ghost" id="gCupidSkip">${T('skipBtn')}</button>
@@ -1888,7 +1900,7 @@ function viewGame(){
         :'';
       return `<div class="step-block"><div class="step-label">▶️ ${curLabel}</div>${scriptKey?`<div class="step-script">${T('scriptLineLabel')} ${scriptKey}</div>`:''}</div>`;
     })():'';
-    const miniRow=(ACT.length||active)?`<div class="mini-row">${ACT.length?`<button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ <b>${ACT.length}</b></button>`:''}${active?`<button class="mini-btn skip" id="gSkipTool" title="${T('skipToolTitle')}">⏭ Skip</button>`:''}</div>`:'';
+    const miniRow=(ACT.length||active)?`<div class="mini-row">${ACT.length?`<button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ ย้อนกลับ(<b>${ACT.length}</b>)</button>`:''}${active?`<button class="mini-btn skip" id="gSkipTool" title="${T('skipToolTitle')}">⏭ Skip</button>`:''}</div>`:'';
     const nightBtn=active
       ? `<button class="btn block" disabled style="opacity:.4">${T('morningBtnDisabled')}</button>`
       : `<button class="btn block" id="gNight">${T('morningBtn')}</button>`;
@@ -1914,7 +1926,7 @@ function viewGame(){
     if(aliveHas('pacifist')) acts.push(`<button class="mini-btn ${G.pacifistVeto?'on-pac':'pac'}" id="gPacifist">${T('pacifistBtn')}${G.pacifistVeto?' ✓':''}</button>`);
     const actRow=acts.length?`<div class="day-actions">${acts.join('')}</div>`:'';
     const dayBtnLabel=G.pacifistVeto?T('nightBtnPacifist'):(G.dayVote!=null?T('nightBtnExecute',{name:esc(S.players[G.dayVote].name)}):T('nightBtnNoVote'));
-    body=`${bannerHTML(G.banner, noteExtra)}${morningScript}${tm}${actRow}<p class="gins">${T('dayInstruction')}</p>${ggrid()}
+    body=`${morningScript}${bannerHTML(G.banner, noteExtra)}${tm}${actRow}<p class="gins">${T('dayInstruction')}</p>${ggrid()}
       <div class="bottombar"><button class="btn block" id="gDay">${dayBtnLabel}</button></div>`;
   } else if(G.phase==='hunter'){
     const h=G.hunterQueue[0];
@@ -2123,7 +2135,7 @@ function viewReveal(){
       <div class="pass">${S.flipped?T('rememberRoleConfirm'):T('tapCardToReveal')}</div>
     </div>
     <div class="flipcard ${S.flipped?'flipped':''}" id="flip">
-      <div class="flipinner">
+      <div class="flipinner${S.spinning?' spinning':''}">
         <div class="face back">
           <div class="seal">🌙</div>
           <div class="tap">${T('tapToOpen')}</div>
@@ -2487,7 +2499,8 @@ function playSound(type){
 }
 function render(){
   const _pg=['menu','setup','list','reveal','mod','settings','rules','script'];
-  if(_pg.includes(S.screen)) startBGM(); else if(_bgmOn) stopBGM(false);
+  const _inGame=G&&G.phase&&G.phase!=='over';
+  if(!_inGame&&_pg.includes(S.screen)) startBGM(); else if(_bgmOn&&_inGame) stopBGM(false);
   const sy=window.scrollY;
   const sameView=(_lastKey===viewKey());
   let html='';
