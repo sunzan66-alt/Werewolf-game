@@ -375,7 +375,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.7.4</div>
+<div id="verbadge">v3.7.6</div>
 
 <script>
 const ROLES = [
@@ -1292,7 +1292,8 @@ function openReveal(i){
   // เปิดครั้งแรก: spin ก่อนแสดงบทบาท
   S.active=i; S.flipped=false; S.spinning=true; S.screen='reveal';
   render();
-  setTimeout(()=>{ S.spinning=false; S.flipped=true; haptic('heavy'); playSound('reveal'); render(); }, 700);
+  setTimeout(()=>{ haptic('heavy'); playSound('reveal'); }, 200); // เสียง+haptic เร็วขึ้น 0.5s
+  setTimeout(()=>{ S.spinning=false; S.flipped=true; render(); }, 700);
 }
 function confirmReveal(){
   const isLast=S.players.every((p,i)=>i===S.active||p.revealed);
@@ -1437,6 +1438,9 @@ function playWinSound(){
   const snd=sndMap[G.winner]||'winVillage';
   const _wdel=Math.max(400,(window._morningEnd||0)-Date.now()+300);
   setTimeout(()=>{ haptic('success'); playSound(snd); },_wdel);
+  // BGM เริ่มหลังเสียงชนะ + 5 วินาที
+  clearTimeout(window._bgmResumeTimer);
+  window._bgmResumeTimer=setTimeout(()=>startBGM(), _wdel+5000);
 }
 function checkWin(){
   const idx=S.players.map((p,i)=>i).filter(i=>G.alive[i]&&teamOf(i)!=='mod');
@@ -2465,7 +2469,7 @@ function playSound(type){
   if(SFX[type]){
     _loadSFX(type,buf=>{
       if(!buf) return;
-      const _VOL={click:0.3,addRole:0.4,removeRole:0.4,error:0.45};
+      const _VOL={click:0.3,addRole:0.4,removeRole:0.4,error:0.45,reveal:1.1};
       const play=()=>{
         const src=_wwaCtx.createBufferSource();
         src.buffer=buf;
@@ -2522,7 +2526,10 @@ function playSound(type){
 function render(){
   const _pg=['menu','setup','list','reveal','mod','settings','rules','script'];
   const _inGame=G&&G.phase&&G.phase!=='over';
-  if(!_inGame&&_pg.includes(S.screen)) startBGM(); else if(_bgmOn&&_inGame) stopBGM(false);
+  const _isOver=G&&G.phase==='over';
+  if(_isOver){ /* BGM รอ 5s หลังเสียงชนะ — จัดการใน playWinSound */ }
+  else if(!_inGame&&_pg.includes(S.screen)) startBGM();
+  else if(_bgmOn&&_inGame) stopBGM(false);
   const sy=window.scrollY;
   const sameView=(_lastKey===viewKey());
   let html='';
