@@ -91,10 +91,15 @@
     padding:12px 14px;border-radius:12px;font-size:16px;outline:none}
   input[type=text]:focus{border-color:var(--gold)}
   .btn{border:none;border-radius:12px;font-size:15px;font-weight:700;padding:12px 16px;cursor:pointer;
-    color:#0b1026;background:linear-gradient(180deg,#f4e6b0,#e0b84a);transition:transform .08s,filter .15s}
+    color:#0b1026;background:linear-gradient(180deg,#f4e6b0,#e0b84a);
+    transition:transform .08s ease-out,box-shadow .08s ease-out,filter .15s}
   .btn:active{transform:translateY(1px)}
   .btn:disabled{opacity:.4;filter:grayscale(.4);cursor:not-allowed}
   .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  /* ── Press animation (global) ── */
+  .ui-pressed{transform:scale(0.96)!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.2)!important;
+    transition:transform .08s ease-out,box-shadow .08s ease-out!important}
   .btn.block{width:100%;padding:16px;font-size:16px;border-radius:14px;margin-top:6px}
   .btn.danger{background:transparent;border:1px solid rgba(204,70,68,.5);color:#ef9a98}
 
@@ -370,7 +375,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.7.2</div>
+<div id="verbadge">v3.7.4</div>
 
 <script>
 const ROLES = [
@@ -1287,7 +1292,7 @@ function openReveal(i){
   // เปิดครั้งแรก: spin ก่อนแสดงบทบาท
   S.active=i; S.flipped=false; S.spinning=true; S.screen='reveal';
   render();
-  setTimeout(()=>{ S.spinning=false; S.flipped=true; playSound('reveal'); render(); }, 700);
+  setTimeout(()=>{ S.spinning=false; S.flipped=true; haptic('heavy'); playSound('reveal'); render(); }, 700);
 }
 function confirmReveal(){
   const isLast=S.players.every((p,i)=>i===S.active||p.revealed);
@@ -1431,7 +1436,7 @@ function playWinSound(){
     serialkiller:'winSK',};
   const snd=sndMap[G.winner]||'winVillage';
   const _wdel=Math.max(400,(window._morningEnd||0)-Date.now()+300);
-  setTimeout(()=>playSound(snd),_wdel);
+  setTimeout(()=>{ haptic('success'); playSound(snd); },_wdel);
 }
 function checkWin(){
   const idx=S.players.map((p,i)=>i).filter(i=>G.alive[i]&&teamOf(i)!=='mod');
@@ -1534,12 +1539,15 @@ function resolveNight(){          // 🌅 เช้าแล้ว
     });
     const _dur={kill:650,blocked:400,transform:900,morning:2000};
     const _chain=[];
-    if(_hasDeath) _chain.push('kill');
-    if(_sndBlocked) _chain.push('blocked');
+    if(_hasDeath){ _chain.push('kill'); haptic('heavy'); }
+    if(_sndBlocked){ _chain.push('blocked'); haptic('medium'); }
     if(_sndTransform) _chain.push('transform');
     _chain.push('morning');
     let _cd=0;
-    _chain.forEach(s=>{setTimeout(()=>playSound(s),_cd);_cd+=(_dur[s]||500);});
+    _chain.forEach(s=>{setTimeout(()=>{
+      if(G.phase==='over'&&s==='morning') return; // จบเกม: ข้าม morning
+      playSound(s);
+    },_cd);_cd+=(_dur[s]||500);});
     window._morningEnd=Date.now()+_cd;
   }
   finishResolution();
@@ -1556,14 +1564,14 @@ function resolveDay(){           // 🌙 มืดแล้ว
       G.princeSaved=true; princeName=S.players[G.dayVote].name;
       setTimeout(()=>playSound('revealRoyal'),200);
     } else {
-      _didExec=true; playSound('execute');
+      _didExec=true; haptic('heavy'); playSound('execute');
       killChain([G.dayVote]);
     }
   }
   G.banner={type:'exec',deaths:[...G.deaths],princeSaved:princeName,pacifistVeto:G.pacifistVeto};
   G.pacifistVeto=false;
   logEvent('actExecuted',{target:G.deaths.length>0?S.players[G.dayVote].name:''});
-  setTimeout(()=>playSound('night'),_didExec?1500:0);
+  setTimeout(()=>{ if(G.phase!=='over') playSound('night'); },_didExec?1500:0);
   finishResolution();
 }
 function executeSilenced(){      // คนโดนใบ้เผลอพูด -> ประหารทันที โหวตต่อได้
@@ -2457,11 +2465,12 @@ function playSound(type){
   if(SFX[type]){
     _loadSFX(type,buf=>{
       if(!buf) return;
+      const _VOL={click:0.3,addRole:0.4,removeRole:0.4,error:0.45};
       const play=()=>{
         const src=_wwaCtx.createBufferSource();
         src.buffer=buf;
         const g=_wwaCtx.createGain();
-        g.gain.value=0.85;
+        g.gain.value=_VOL[type]||0.85;
         src.connect(g); g.connect(_wwaCtx.destination);
         src.start();
       };
@@ -2569,8 +2578,8 @@ function bind(){
     $('addBtn').onclick=()=>{addPlayer(inp.value); };
     inp.onkeydown=e=>{if(e.key==='Enter'){addPlayer(inp.value);}};
     document.querySelectorAll('[data-rm]').forEach(el=>el.onclick=()=>removePlayer(+el.dataset.rm));
-    document.querySelectorAll('[data-inc]').forEach(el=>el.onclick=()=>{playSound('addRole');setCount(el.dataset.inc,1);});
-    document.querySelectorAll('[data-dec]').forEach(el=>el.onclick=()=>{playSound('removeRole');setCount(el.dataset.dec,-1);});
+    document.querySelectorAll('[data-inc]').forEach(el=>el.onclick=()=>{haptic('light');playSound('addRole');setCount(el.dataset.inc,1);});
+    document.querySelectorAll('[data-dec]').forEach(el=>el.onclick=()=>{haptic('light');playSound('removeRole');setCount(el.dataset.dec,-1);});
     document.querySelectorAll('[data-info]').forEach(el=>el.onclick=()=>{S.expandedRole=(S.expandedRole===el.dataset.info)?null:el.dataset.info;render();});
     document.querySelectorAll('[data-timer]').forEach(el=>el.onclick=()=>{S.timerMin=+el.dataset.timer;render();});
     document.querySelectorAll('[data-toggle]').forEach(el=>el.onclick=()=>{const k=el.dataset.toggle;S[k]=!S[k];render();});
@@ -2580,8 +2589,8 @@ function bind(){
     document.querySelectorAll('[data-recmode]').forEach(el=>el.onclick=()=>{S.recMode=el.dataset.recmode;render();});
     $('startBtn').onclick=()=>{
       const tot=totalRoles(),pc=S.players.length;
-      if(tot!==pc||pc<3){playSound('error');return;}
-      playSound('gameStart');
+      if(tot!==pc||pc<3){playSound('error');haptic('error');return;}
+      haptic('medium'); playSound('gameStart');
       startGame();
     };
     // บันทึกกลุ่ม
@@ -2656,7 +2665,7 @@ function bindGame(){
     setTimeout(()=>playSound('wolfWake'),200);
   }
   document.querySelectorAll('[data-tool]').forEach(el=>el.onclick=()=>{
-    if(el.dataset.tool==='kill'||el.dataset.tool==='lonewolfKill') playSound('wolfWake');
+    if(el.dataset.tool==='kill'||el.dataset.tool==='lonewolfKill'){ playSound('wolfWake'); haptic('heavy'); }
     G.tool=el.dataset.tool;G.check=null;render();
   });
   const map={gExit:exitGame,gExit2:exitGame,
@@ -2677,6 +2686,29 @@ function bindGame(){
     };
   });
 }
+
+// ── HAPTIC FEEDBACK ──────────────────────────────────────
+function haptic(type){
+  if(!navigator.vibrate) return;
+  try{
+    const p={light:[10],medium:[25],heavy:[40,30,40],success:[10,60,20],error:[30,20,30,20,60]};
+    navigator.vibrate(p[type]||p.light);
+  }catch(e){}
+}
+
+// ── PRESS ANIMATION (global) ──────────────────────────────
+const _PS='button,.tchip,.mini-btn,.pcell,.group-chip,.back-link,[data-open],[data-review],[data-inc],[data-dec],[data-tool],[data-info],[data-gp]';
+document.addEventListener('pointerdown',e=>{
+  const el=e.target.closest(_PS);
+  if(!el||el.disabled) return;
+  el.classList.add('ui-pressed');
+},true);
+['pointerup','pointercancel','pointerleave'].forEach(ev=>{
+  document.addEventListener(ev,e=>{
+    const el=e.target.closest(_PS);
+    if(el) setTimeout(()=>el.classList.remove('ui-pressed'),100);
+  },true);
+});
 
 render();
 document.addEventListener('click',e=>{
