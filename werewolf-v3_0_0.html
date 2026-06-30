@@ -376,7 +376,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.9.0</div>
+<div id="verbadge">v3.9.2</div>
 
 <script>
 const ROLES = [
@@ -438,7 +438,7 @@ const ROLES = [
    desc:'หมดอาลัยตายอยาก — ชนะทันทีเมื่อถูกกำจัด (โหวตออกหรือถูกฆ่า) ส่วนคนอื่นเล่นต่อตามปกติ'},
   {id:'serialkiller', th:'ฆาตกรโรคจิต', en:'Serial Killer', emj:'🔪', team:'neutral',
    desc:'ตัวละครพิเศษ (เดี่ยว) · ทุกคืนฆ่าผู้เล่นได้ 1 คน ชนะเมื่อเป็นผู้รอดชีวิตคนสุดท้าย'},
-  {id:'cultleader', th:'ผู้นำลัทธิ', en:'Cult Leader', emj:'🟣', team:'neutral',
+  {id:'cultleader', th:'ผู้นำลัทธิ', en:'Cult Leader', emj:'👁️', team:'neutral',
    desc:'ตัวละครพิเศษ · ทุกคืนชักชวนผู้เล่น 1 คนเข้าลัทธิ ชนะเมื่อสมาชิกลัทธิมากกว่าทุกฝ่ายรวมกัน'},
   {id:'vampire', th:'แวมไพร์', en:'Vampire', emj:'🧛', team:'neutral',
    desc:'ตัวละครพิเศษ · ทุกคืนเลือกผู้เล่น 1 คนเปลี่ยนให้เป็นแวมไพร์ (เพิ่มพวกตัวเอง) ชนะเมื่อเหลือเฉพาะฝ่ายแวมไพร์'},
@@ -700,15 +700,15 @@ th:{
   scriptDiscuss:'"เริ่มการโต้เถียง ผู้เล่นทุกคนช่วยกันหาหมาป่า"',
   scriptVote:'"โหวตว่าจะประหารใคร — ผู้ที่ได้คะแนนสูงสุดถูกประหาร"',
   scriptCupidWake:'"💘 คิวพิด ลืมตา — ชี้ 2 คนที่จะเป็นคู่รัก แล้วหลับตา"',
-  scriptCultWake:'"🟣 ผู้นำลัทธิ ลืมตา — ชี้ 1 คนที่จะชวนเข้าลัทธิ แล้วหลับตา"',
+  scriptCultWake:'"👁️ ผู้นำลัทธิ ลืมตา — ชี้ 1 คนที่จะชวนเข้าลัทธิ แล้วหลับตา"',
   scriptVampireWake:'"🧛 แวมไพร์ ลืมตา — ชี้ 1 คนที่จะเปลี่ยนเป็นแวมไพร์ แล้วหลับตา"',
   scriptShapeshifterWake:'"🎭 หมาป่าจำแลง ลืมตา — ชี้ 1 คนที่จะจำแลงเป็นคืนนี้ แล้วหลับตา"',
-  scriptSorcererWake:'"🔮 นางปีศาจ ลืมตา — ชี้ 1 คนที่ต้องการตรวจว่าเป็น Seer ไหม แล้วหลับตา (พยักหน้า/ส่ายหัว)"',
+  scriptSorcererWake:'"🧙 นางปีศาจ ลืมตา — ชี้ 1 คนที่ต้องการตรวจว่าเป็น Seer ไหม แล้วหลับตา (พยักหน้า/ส่ายหัว)"',
   scriptAlphaWake:'"🩸 หมาป่าจ่าฝูง ลืมตา — คืนแรก: ชี้ 1 คนเพื่อแปลงเป็นหมาป่า (แทนการฆ่า) แล้วหลับตา"',
   scriptWolfWake:'"🐺 หมาป่า ลืมตา — ชี้ 1 คนที่จะฆ่าคืนนี้ แล้วหลับตา"',
   scriptWolfWakeBonus:'"🐺 หมาป่า ลืมตา — คืนนี้ฆ่าได้ 2 คน (โบนัสลูกหมาป่า) ชี้ 2 คนที่จะฆ่า แล้วหลับตา"',
   scriptSKWake:'"🔪 ฆาตกรโรคจิต ลืมตา — ชี้ 1 คนที่จะฆ่า แล้วหลับตา"',
-  scriptSeerWake:'"🔍 เทพพยากรณ์ ลืมตา — ชี้ 1 คนที่ต้องการตรวจ แล้วหลับตา (พยักหน้า = หมาป่า / ส่ายหัว = ไม่ใช่)"',
+  scriptSeerWake:'"🔮 เทพพยากรณ์ ลืมตา — ชี้ 1 คนที่ต้องการตรวจ แล้วหลับตา (พยักหน้า = หมาป่า / ส่ายหัว = ไม่ใช่)"',
   scriptBodyguardWake:'"🛡️ บอดี้การ์ด ลืมตา — ชี้ 1 คนที่จะปกป้องคืนนี้ แล้วหลับตา"',
   scriptSpellcasterWake:'"🤫 จอมเวท ลืมตา — ชี้ 1 คนที่ห้ามพูดพรุ่งนี้เช้า แล้วหลับตา"',
   scriptDoppelWake:'"🎭 ผู้เลียนแบบ ลืมตา — ชี้ 1 คนที่ต้องการจับตา แล้วหลับตา (คืนแรกเท่านั้น)"',
@@ -747,7 +747,7 @@ th:{
 
   // ===== faction label (factionLabel) =====
   facMod:'ผู้ดำเนินรายการ (ไม่ได้เล่นเป็นตัวละคร)', facWolf:'🐺 ฝ่ายมนุษย์หมาป่า', facVillage:'🛡️ ฝ่ายหมู่บ้าน',
-  facSolo:'🔪 ฝ่ายที่สาม · เดี่ยว', facCult:'🟣 ฝ่ายที่สาม · ลัทธิ', facVampire:'🧛 ฝ่ายที่สาม · แวมไพร์', facNeutral:'✨ เป็นกลาง',
+  facSolo:'🔪 ฝ่ายที่สาม · เดี่ยว', facCult:'👁️ ฝ่ายที่สาม · ลัทธิ', facVampire:'🧛 ฝ่ายที่สาม · แวมไพร์', facNeutral:'✨ เป็นกลาง',
 
   // ===== win conditions (winCond) =====
   winMod:'ไม่มีเงื่อนไขชนะ — ทำหน้าที่คุมเกม', winSk:'เป็นผู้รอดชีวิตคนสุดท้าย',
@@ -803,14 +803,14 @@ th:{
   confirmLoversBtn:'ยืนยันคู่รัก → คืนที่ 1', undoLastAction:'ย้อนการกระทำล่าสุด',
 
   // ===== night tool chip labels =====
-  toolCultLeader:'🟣 ผู้นำลัทธิ (Cult Leader)', toolVampire:'🧛 แวมไพร์ (Vampire)',
-  toolShapeshifter:'🎭 หมาป่าจำแลง (Shapeshifter)', toolSorcerer:'🔮 นางปีศาจ (Sorcerer)',
+  toolCultLeader:'👁️ ผู้นำลัทธิ (Cult Leader)', toolVampire:'🧛 แวมไพร์ (Vampire)',
+  toolShapeshifter:'🎭 หมาป่าจำแลง (Shapeshifter)', toolSorcerer:'🧙 นางปีศาจ (Sorcerer)',
   toolAlphaWolf:'🩸 หมาป่าจ่าฝูง (Alpha Wolf)', toolWerewolf:'🐺 หมาป่า (Werewolf)',
   toolLoneWolf:'🌑 หมาป่าเดียวดาย (Lone Wolf)',
   helpLoneWolfKill:'เลือก 1 คนที่จะฆ่า — รวมหมาป่าตัวอื่นได้ · ฆ่าตัวเองไม่ได้',
   scriptLoneWolfWake:'"🌑 หมาป่าเดียวดาย ลืมตา — ชี้ 1 คนที่จะฆ่า แล้วหลับตา (เลือกหมาป่าตัวอื่นได้)"',
   chkLoneWolfSelf:'🌑 ฆ่าตัวเองไม่ได้',
-  toolSerialKiller:'🔪 ฆาตกรโรคจิต (Serial Killer)', toolSeer:'🔍 เทพพยากรณ์ (Seer)',
+  toolSerialKiller:'🔪 ฆาตกรโรคจิต (Serial Killer)', toolSeer:'🔮 เทพพยากรณ์ (Seer)',
   toolBodyguard:'🛡️ บอดี้การ์ด (Bodyguard)', toolSpellcaster:'🤫 จอมเวท (Spellcaster)',
   toolDoppelganger:'🎭 ผู้เลียนแบบ (จับตาคืนแรก)',
 
@@ -820,7 +820,7 @@ th:{
   helpSilence:'เลือกคนที่ห้ามพูดเช้าพรุ่งนี้',
   helpAlphaConvert:'🩸 แตะชาวบ้าน 1 คนเพื่อเปลี่ยนเป็นหมาป่า (แทนการฆ่าคืนนี้ · ใช้ได้ครั้งเดียวทั้งเกม)',
   helpSkKill:'🔪 แตะ 1 คนเพื่อฆ่า (ฆาตกรโรคจิตฆ่าได้ทุกคืน อิสระจากหมาป่า)',
-  helpCultRecruit:'🟣 แตะ 1 คนเพื่อชวนเข้าลัทธิ (ชนะเมื่อสมาชิกลัทธิมากกว่าทุกฝ่ายรวมกัน)',
+  helpCultRecruit:'👁️ แตะ 1 คนเพื่อชวนเข้าลัทธิ (ชนะเมื่อสมาชิกลัทธิมากกว่าทุกฝ่ายรวมกัน)',
   helpVampireBite:'🧛 แตะ 1 คนเพื่อเปลี่ยนเป็นแวมไพร์ (ชนะเมื่อทุกคนที่เหลือเป็นแวมไพร์)',
   helpShapeShift:'🎭 แตะ 1 คนเพื่อจำแลงเป็นเขาคืนนี้ (ถ้า Seer ตรวจจำแลง จะเห็นผลของคนนี้แทน)',
   helpDopplePick:'🎭 แตะ 1 คนเพื่อจับตา (ไม่ใช่ตัวเอง) — ถ้าคนนี้ตายเมื่อใด ผู้เลียนแบบจะได้รับบทบาทนั้นทันที',
@@ -834,12 +834,12 @@ th:{
   chkWolfCantKillOwn:'🐺 หมาป่าฆ่าฝ่ายตัวเอง (หมาป่า/นางปีศาจ) ไม่ได้',
   chkSilenceRepeat:'🤫 ใบ้คนเดิมติดกันไม่ได้ ต้องเว้นอย่างน้อย 1 คืน',
   chkAlphaWolfOnly:'🩸 แปลงได้เฉพาะคนที่ไม่ใช่ฝ่ายมนุษย์หมาป่า', chkSkSelfKill:'🔪 ฆ่าตัวเองไม่ได้',
-  chkAlreadyInCult:'🟣 คนนี้อยู่ในลัทธิแล้ว', chkAlreadyVampire:'🧛 คนนี้เป็นแวมไพร์แล้ว',
+  chkAlreadyInCult:'👁️ คนนี้อยู่ในลัทธิแล้ว', chkAlreadyVampire:'🧛 คนนี้เป็นแวมไพร์แล้ว',
   chkShapeshiftSelf:'🎭 เลือกร่างเป็นคนอื่น (ไม่ใช่ตัวเอง)', chkDoppleSelf:'🎭 เลือกคนอื่น ไม่ใช่ตัวเอง',
-  chkSeerSelf:'🔍 เทพพยากรณ์ตรวจตัวเองไม่ได้', chkSeerUsedNow:'✅ เทพพยากรณ์ใช้ไปแล้วคืนนี้',
-  chkSeerCheckedAlready:'🔍 ตรวจ {name} ไปแล้ว เลือกคนอื่น', chkSeerWolf:'🟢 เป็นหมาป่า', chkSeerNotWolf:'🔴 ไม่ใช่หมาป่า',
+  chkSeerSelf:'🔮 เทพพยากรณ์ตรวจตัวเองไม่ได้', chkSeerUsedNow:'✅ เทพพยากรณ์ใช้ไปแล้วคืนนี้',
+  chkSeerCheckedAlready:'🔮 ตรวจ {name} ไปแล้ว เลือกคนอื่น', chkSeerWolf:'🟢 เป็นหมาป่า', chkSeerNotWolf:'🔴 ไม่ใช่หมาป่า',
   chkSorcWolfOnly:'🪄 นางปีศาจใช้กับฝ่ายตัวเองไม่ได้', chkSorcUsedNow:'✅ นางปีศาจใช้ไปแล้วคืนนี้',
-  chkSorcCheckedAlready:'🔮 ตรวจ {name} ไปแล้ว เลือกคนอื่น', chkSorcIsSeer:'🟢 ใช่! คือเทพพยากรณ์ (Seer)', chkSorcNotSeer:'🔴 ไม่ใช่ Seer',
+  chkSorcCheckedAlready:'🧙 ตรวจ {name} ไปแล้ว เลือกคนอื่น', chkSorcIsSeer:'🟢 ใช่! คือเทพพยากรณ์ (Seer)', chkSorcNotSeer:'🔴 ไม่ใช่ Seer',
 
   // ===== step info / mini buttons =====
   stepInfo:'▶️ ถึงคิว: {label} — ใช้สกิล หรือกด "ข้ามสกิลนี้" ก่อนไปตัวถัดไป',
@@ -865,7 +865,7 @@ th:{
   pacifistVetoBanner:'🕊️ นักสันติวิธีออกเสียง — การประหารวันนี้ถูกยกเลิก ไม่มีใครตาย',
 
   // ===== game over =====
-  winnerWolf:'🐺 ฝ่ายมนุษย์หมาป่าชนะ!', winnerLoneWolf:'🐺 หมาป่าเดียวดายชนะ!', winnerWolfAndBeggar:'🐺💔 ฝ่ายมนุษย์หมาป่าและยาจกชนะ!', winnerCult:'🟣 ลัทธิชนะ!', winnerSk:'🔪 ฆาตกรโรคจิตชนะ!',
+  winnerWolf:'🐺 ฝ่ายมนุษย์หมาป่าชนะ!', winnerLoneWolf:'🐺 หมาป่าเดียวดายชนะ!', winnerWolfAndBeggar:'🐺💔 ฝ่ายมนุษย์หมาป่าและยาจกชนะ!', winnerCult:'👁️ ลัทธิชนะ!', winnerSk:'🔪 ฆาตกรโรคจิตชนะ!',
   winnerVampire:'🧛 ฝ่ายแวมไพร์ชนะ!', winnerVillage:'👥 ฝ่ายหมู่บ้านชนะ!', backToSummaryBtn:'กลับไปหน้าสรุป'
 },
 en:{
@@ -907,15 +907,15 @@ en:{
   scriptDiscuss:'"The debate begins — try to find the werewolves"',
   scriptVote:'"Vote to eliminate a suspect — the player with the most votes is executed"',
   scriptCupidWake:'"💘 Cupid, open your eyes — point to 2 players who will be lovers, then close your eyes"',
-  scriptCultWake:'"🟣 Cult Leader, open your eyes — point to 1 player to recruit, then close your eyes"',
+  scriptCultWake:'"👁️ Cult Leader, open your eyes — point to 1 player to recruit, then close your eyes"',
   scriptVampireWake:'"🧛 Vampire, open your eyes — point to 1 player to convert, then close your eyes"',
   scriptShapeshifterWake:'"🎭 Shapeshifter, open your eyes — point to 1 player to disguise as tonight, then close your eyes"',
-  scriptSorcererWake:'"🔮 Sorcerer, open your eyes — point to 1 player to check if they are the Seer, then close your eyes (nod / shake head)"',
+  scriptSorcererWake:'"🧙 Sorcerer, open your eyes — point to 1 player to check if they are the Seer, then close your eyes (nod / shake head)"',
   scriptAlphaWake:'"🩸 Alpha Wolf, open your eyes — Night 1: point to 1 player to convert into a werewolf instead of killing, then close your eyes"',
   scriptWolfWake:'"🐺 Werewolves, open your eyes — point to 1 player to kill tonight, then close your eyes"',
   scriptWolfWakeBonus:'"🐺 Werewolves, open your eyes — Wolf Cub bonus: choose 2 players to kill tonight, then close your eyes"',
   scriptSKWake:'"🔪 Serial Killer, open your eyes — point to 1 player to kill, then close your eyes"',
-  scriptSeerWake:'"🔍 Seer, open your eyes — point to 1 player to investigate, then close your eyes (nod = werewolf / shake = not)"',
+  scriptSeerWake:'"🔮 Seer, open your eyes — point to 1 player to investigate, then close your eyes (nod = werewolf / shake = not)"',
   scriptBodyguardWake:'"🛡️ Bodyguard, open your eyes — point to 1 player to protect tonight, then close your eyes"',
   scriptSpellcasterWake:'"🤫 Spellcaster, open your eyes — point to 1 player who cannot speak tomorrow morning, then close your eyes"',
   scriptDoppelWake:'"🎭 Doppelganger, open your eyes — point to 1 player to mark, then close your eyes (Night 1 only)"',
@@ -954,7 +954,7 @@ en:{
   actHunterNoShot:'Hunter did not shoot anyone', actSkipped:'{actor} skipped their turn',
 
   facMod:'Moderator (not a playable role)', facWolf:'🐺 Werewolf Team', facVillage:'🛡️ Village Team',
-  facSolo:'🔪 Third Party · Solo', facCult:'🟣 Third Party · Cult', facVampire:'🧛 Third Party · Vampire', facNeutral:'✨ Neutral',
+  facSolo:'🔪 Third Party · Solo', facCult:'👁️ Third Party · Cult', facVampire:'🧛 Third Party · Vampire', facNeutral:'✨ Neutral',
 
   winMod:'No win condition — runs the game', winSk:'Be the last one standing',
   winCult:'Cult members outnumber all other factions combined', winVampire:'Convert everyone until only vampires remain',
@@ -1002,14 +1002,14 @@ en:{
   cupidInstruction:'Tap to select 2 lovers — if one dies, the other dies too', skipBtn:'Skip',
   confirmLoversBtn:'Confirm Lovers → Night 1', undoLastAction:'Undo Last Action',
 
-  toolCultLeader:'🟣 Cult Leader', toolVampire:'🧛 Vampire',
-  toolShapeshifter:'🎭 Shapeshifter', toolSorcerer:'🔮 Sorcerer',
+  toolCultLeader:'👁️ Cult Leader', toolVampire:'🧛 Vampire',
+  toolShapeshifter:'🎭 Shapeshifter', toolSorcerer:'🧙 Sorcerer',
   toolAlphaWolf:'🩸 Alpha Wolf', toolWerewolf:'🐺 Werewolf',
   toolLoneWolf:'🌑 Lone Wolf',
   helpLoneWolfKill:'Choose 1 player to kill — can target other werewolves · cannot kill yourself',
   scriptLoneWolfWake:'"🌑 Lone Wolf, open your eyes — choose 1 player to kill, then close your eyes (can target other werewolves)"',
   chkLoneWolfSelf:'🌑 Cannot kill yourself',
-  toolSerialKiller:'🔪 Serial Killer', toolSeer:'🔍 Seer',
+  toolSerialKiller:'🔪 Serial Killer', toolSeer:'🔮 Seer',
   toolBodyguard:'🛡️ Bodyguard', toolSpellcaster:'🤫 Spellcaster',
   toolDoppelganger:'🎭 Doppelganger (mark on Night 1)',
 
@@ -1018,7 +1018,7 @@ en:{
   helpSilence:"Choose who can't speak tomorrow morning",
   helpAlphaConvert:'🩸 Tap 1 villager to convert to werewolf (instead of killing tonight · once per game)',
   helpSkKill:'🔪 Tap 1 person to kill (Serial Killer can kill every night, independent of werewolves)',
-  helpCultRecruit:'🟣 Tap 1 person to recruit (wins when cult outnumbers all other factions)',
+  helpCultRecruit:'👁️ Tap 1 person to recruit (wins when cult outnumbers all other factions)',
   helpVampireBite:'🧛 Tap 1 person to convert to vampire (wins when everyone remaining is a vampire)',
   helpShapeShift:"🎭 Tap 1 person to disguise as tonight (if Seer checks the Shapeshifter, they see this person's result instead)",
   helpDopplePick:'🎭 Tap 1 person to mark (not yourself) — if they die, the Doppelganger immediately takes their role',
@@ -1031,12 +1031,12 @@ en:{
   chkWolfCantKillOwn:"🐺 Werewolves can't kill their own (Werewolf/Sorcerer)",
   chkSilenceRepeat:"🤫 Can't silence the same person two nights in a row — wait at least 1 night",
   chkAlphaWolfOnly:'🩸 Can only convert non-werewolves', chkSkSelfKill:"🔪 Can't kill yourself",
-  chkAlreadyInCult:'🟣 This person is already in the cult', chkAlreadyVampire:'🧛 This person is already a vampire',
+  chkAlreadyInCult:'👁️ This person is already in the cult', chkAlreadyVampire:'🧛 This person is already a vampire',
   chkShapeshiftSelf:'🎭 Choose someone else to disguise as (not yourself)', chkDoppleSelf:'🎭 Choose someone else, not yourself',
-  chkSeerSelf:"🔍 Seer can't check themselves", chkSeerUsedNow:'✅ Seer already used tonight',
-  chkSeerCheckedAlready:'🔍 Already checked {name} — choose someone else', chkSeerWolf:'🟢 Is a werewolf', chkSeerNotWolf:'🔴 Not a werewolf',
+  chkSeerSelf:"🔮 Seer can't check themselves", chkSeerUsedNow:'✅ Seer already used tonight',
+  chkSeerCheckedAlready:'🔮 Already checked {name} — choose someone else', chkSeerWolf:'🟢 Is a werewolf', chkSeerNotWolf:'🔴 Not a werewolf',
   chkSorcWolfOnly:"🪄 Sorcerer can't target their own side", chkSorcUsedNow:'✅ Sorcerer already used tonight',
-  chkSorcCheckedAlready:'🔮 Already checked {name} — choose someone else', chkSorcIsSeer:'🟢 Yes! This is the Seer', chkSorcNotSeer:'🔴 Not the Seer',
+  chkSorcCheckedAlready:'🧙 Already checked {name} — choose someone else', chkSorcIsSeer:'🟢 Yes! This is the Seer', chkSorcNotSeer:'🔴 Not the Seer',
 
   stepInfo:'▶️ Up next: {label} — use the skill or tap "Skip this skill" before moving on',
   skipToolTitle:'Skip this skill tonight', morningBtnDisabled:'🌅 Morning — complete all skills in order first', morningBtn:'🌅 Morning — Resolve Night',
@@ -1057,7 +1057,7 @@ en:{
   princeRevealed:'👑 {name} is the Prince! Revealed and survives the first execution',
   pacifistVetoBanner:"🕊️ Pacifist used their veto — today's execution is cancelled, no one dies",
 
-  winnerWolf:'🐺 Werewolves win!', winnerLoneWolf:'🐺 Lone Wolf wins!', winnerWolfAndBeggar:'🐺💔 Werewolf Team & Beggar win!', winnerCult:'🟣 Cult wins!', winnerSk:'🔪 Serial Killer wins!',
+  winnerWolf:'🐺 Werewolves win!', winnerLoneWolf:'🐺 Lone Wolf wins!', winnerWolfAndBeggar:'🐺💔 Werewolf Team & Beggar win!', winnerCult:'👁️ Cult wins!', winnerSk:'🔪 Serial Killer wins!',
   winnerVampire:'🧛 Vampires win!', winnerVillage:'👥 Village wins!', backToSummaryBtn:'Back to summary'
 }
 };
@@ -1817,15 +1817,15 @@ function gcell(i){
   if(G.phase!=='day'&&(G.wolfTargets.includes(i)||G.loneWolfTarget===i)) b+='🎯';
   if(G.phase==='night'&&G.alphaConvert===i) b+='🩸';
   if(G.phase==='night'&&G.skTarget===i) b+='🔪';
-  if(G.cult&&G.cult.includes(i)) b+='🟣';
+  if(G.cult&&G.cult.includes(i)) b+='👁️';
   if(G.phase==='night'&&G.cultRecruit===i) b+='✨';
   if(G.vampires&&G.vampires.includes(i)) b+='🧛';
   if(G.phase==='night'&&G.vampireBite===i) b+='🩸';
   if(G.phase==='night'&&G.shapeTarget===i) b+='🎭';
   if(!G.doppleAcquired&&G.doppleTarget===i) b+='🔖';
   if(teamOf(i)==='mod') b+='🎙️';
-  if(G.phase==='night'&&G.seerChecked&&G.seerChecked.includes(i)) b+='🔍';
-  if(G.phase==='night'&&G.sorcChecked&&G.sorcChecked.includes(i)) b+='🔮';
+  if(G.phase==='night'&&G.seerChecked&&G.seerChecked.includes(i)) b+='🔮';
+  if(G.phase==='night'&&G.sorcChecked&&G.sorcChecked.includes(i)) b+='🧙';
   if(G.protectThis===i) b+='🛡️';
   if(G.silenced===i) b+='🔇';
   if(G.lovers&&G.lovers.includes(i)) b+='💘';
@@ -1855,7 +1855,7 @@ function viewHistory(){
     actCursedConvert:['🌗','clr-green'],
     actToughGuyHit:  ['💪','clr-yellow'],
     actToughGuyDeath:['💀','clr-red'],
-    actRecruited:    ['🟣','clr-purple'],
+    actRecruited:    ['👁️','clr-purple'],
     actBit:          ['🧛','clr-purple'],
     actConverted:    ['🩸','clr-green'],
     actShapeshifted: ['🎭','clr-purple'],
@@ -1893,7 +1893,7 @@ function viewHistory(){
     }).join('');
     return `<div class="hist-section">
       <div class="hist-header ${hdrClass}" data-hsk="${sec.sk}">
-        ${sec.isNight?'🌙':'☀️'} ${hdrLabel}
+        ${hdrLabel}
         <span class="hist-toggle">${collapsed?'▶ '+sec.events.length:'▼'}</span>
       </div>
       ${collapsed?'':` <div class="hist-body">${eventsHTML}</div>`}
