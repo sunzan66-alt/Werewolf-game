@@ -376,7 +376,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.8.3</div>
+<div id="verbadge">v3.9.0</div>
 
 <script>
 const ROLES = [
@@ -739,7 +739,7 @@ th:{
   actCursedConvert:'{target} ถูกสาปกลายเป็นหมาป่า',
   actRecruited:'{actor} ชวน {target} เข้าลัทธิ', actBit:'{actor} กัด {target}',
   actConverted:'{actor} เปลี่ยน {target} เป็นหมาป่า', actShapeshifted:'{actor} จำแลงเป็น {target}',
-  actSeerChecked:'🔮 เทพพยากรณ์ ตรวจสอบ {target}', actSorcChecked:'🧙 นางปีศาจ ตรวจสอบ {target}',
+  actSeerChecked:'เทพพยากรณ์ ตรวจสอบ {target}', actSorcChecked:'นางปีศาจ ตรวจสอบ {target}',
   actBeggarWin:'ยาจก {target} ถูกกำจัด — ชนะทันที!',
   actMarked:'{actor} จับตา {target}', actPaired:'จับคู่รัก {a} และ {b}',
   actExecuted:'{target} ถูกประหาร', actHunterShot:'{actor} ยิง {target}',
@@ -947,7 +947,7 @@ en:{
   actCursedConvert:'{target} was cursed and became a werewolf',
   actRecruited:'{actor} recruited {target} into the cult', actBit:'{actor} bit {target}',
   actConverted:'{actor} converted {target} into a werewolf', actShapeshifted:'{actor} disguised as {target}',
-  actSeerChecked:'🔮 Seer investigated {target}', actSorcChecked:'🧙 Sorcerer investigated {target}',
+  actSeerChecked:'Seer investigated {target}', actSorcChecked:'Sorcerer investigated {target}',
   actBeggarWin:'Beggar {target} was eliminated — instant win!',
   actMarked:'{actor} marked {target}', actPaired:'Paired lovers {a} and {b}',
   actExecuted:'{target} was executed', actHunterShot:'{actor} shot {target}',
@@ -1361,12 +1361,14 @@ function effRole(i){
   const p=S.players[i];
   if(p.role==='drunk' && G && G.nightNo>=3 && G.drunkTrueRole) return G.drunkTrueRole;
   if(p.role==='doppelganger' && G && G.doppleAcquired && G.doppleCopiedRole) return G.doppleCopiedRole;
+  if(p.role==='apprentice' && G && seerDied()) return 'seer';
   return p.role;
 }
 function isAwakenedAs(i,id){
   const p=S.players[i];
   if(p.role==='drunk' && G.nightNo>=3 && G.drunkTrueRole===id) return true;
   if(p.role==='doppelganger' && G.doppleAcquired && G.doppleCopiedRole===id) return true;
+  if(p.role==='apprentice' && seerDied() && id==='seer') return true;
   return false;
 }
 function roleActiveAlive(id){
@@ -1562,7 +1564,7 @@ function resolveNight(){          // 🌅 เช้าแล้ว
           if(convertedNames.includes(h.vars.target)){h.key='actCursedConvert';_sndTransform=true;}
           else if(tidx>=0 && G.toughDieNext===tidx) h.key='actToughGuyHit';
           else{h.key='actBlocked';_sndBlocked=true;}
-        } else if(tidx>=0 && roleOf(tidx)==='beggar'){
+        } else if(tidx>=0 && effRole(tidx)==='beggar'){
           h.key='actBeggarWin'; h.vars={target:h.vars.target}; _sndBeggar=true;
         }
       }
@@ -1595,7 +1597,7 @@ function resolveDay(){           // 🌙 มืดแล้ว
       G.princeSaved=true; princeName=S.players[G.dayVote].name;
       setTimeout(()=>playSound('revealRoyal'),200);
     } else {
-      const _isBeggarVote=roleOf(G.dayVote)==='beggar';
+      const _isBeggarVote=effRole(G.dayVote)==='beggar';
       _didExec=true; haptic('heavy');
       setTimeout(()=>{
         if(G.phase==='over') return;
@@ -1606,7 +1608,7 @@ function resolveDay(){           // 🌙 มืดแล้ว
   }
   G.banner={type:'exec',deaths:[...G.deaths],princeSaved:princeName,pacifistVeto:G.pacifistVeto};
   G.pacifistVeto=false;
-  const _execIsBeggar=_didExec&&G.deaths.length>0&&roleOf(G.dayVote)==='beggar';
+  const _execIsBeggar=_didExec&&G.deaths.length>0&&effRole(G.dayVote)==='beggar';
   if(_execIsBeggar) logEvent('actBeggarWin',{target:S.players[G.dayVote].name});
   else logEvent('actExecuted',{target:G.deaths.length>0?S.players[G.dayVote].name:''});
   setTimeout(()=>{ if(G.phase!=='over') playSound('night'); },_didExec?1500:0);
@@ -1794,7 +1796,7 @@ function bannerHTML(b, extra){
   const ex=extra||'';
   if(!b) return ex?`<div class="banner">${ex}</div>`:'';
   const names=b.deaths.map(i=>esc(S.players[i].name));
-  const beg=b.deaths.filter(i=>roleOf(i)==='beggar').map(i=>esc(S.players[i].name));
+  const beg=b.deaths.filter(i=>effRole(i)==='beggar').map(i=>esc(S.players[i].name));
   const begLine=beg.length?`<div style="margin-top:6px;color:#f0d486;font-weight:800">${T('beggarWin',{names:beg.join(', ')})}</div>`:'';
   const conv=(b.converts||[]).map(i=>esc(S.players[i].name));
   const convLine=conv.length?`<div style="margin-top:6px;color:#f0908e;font-weight:700">${T('convertedToWolf',{names:conv.join(', ')})}</div>`:'';
@@ -1811,7 +1813,7 @@ function bannerHTML(b, extra){
 function gcell(i){
   const p=S.players[i], conv=G.wolfConverts&&G.wolfConverts.includes(i), r=conv?roleById('werewolf'):roleById(effRole(i)), dead=!G.alive[i];
   let b='';
-  if(dead) b+=(roleOf(i)==='beggar'?'🏆':'💀');
+  if(dead) b+=(effRole(i)==='beggar'?'🏆':'💀');
   if(G.phase!=='day'&&(G.wolfTargets.includes(i)||G.loneWolfTarget===i)) b+='🎯';
   if(G.phase==='night'&&G.alphaConvert===i) b+='🩸';
   if(G.phase==='night'&&G.skTarget===i) b+='🔪';
@@ -1990,10 +1992,10 @@ function viewGame(){
       const loneWolfOnly=G.winner==='wolf'
         && S.players.some((p,i)=>G.alive[i]&&p.role==='lonewolf')
         && !S.players.some((p,i)=>G.alive[i]&&['werewolf','wolfcub','alphawolf','shapeshifter'].includes(p.role));
-      const beggarWon=G.winner==='wolf' && S.players.some((p,i)=>p.role==='beggar'&&!G.alive[i]);
+      const beggarWon=G.winner==='wolf' && S.players.some((p,i)=>effRole(i)==='beggar'&&!G.alive[i]);
       const txt=loneWolfOnly?T('winnerLoneWolf'):beggarWon?T('winnerWolfAndBeggar'):G.winner==='wolf'?T('winnerWolf'):G.winner==='cult'?T('winnerCult'):G.winner==='sk'?T('winnerSk'):G.winner==='vampire'?T('winnerVampire'):T('winnerVillage');
       body=`<div class="banner win">${txt}</div>
-        <div class="card">${S.players.map((p,i)=>{const r=(G.wolfConverts&&G.wolfConverts.includes(i))?roleById('werewolf'):roleById(p.role);return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':(p.role==='beggar'?'🏆':'💀')}</div><div class="rl"><span class="teamtag t-${r.team}" style="margin:0">${roleLabel(r)}</span></div></div>`}).join('')}</div>
+        <div class="card">${S.players.map((p,i)=>{const r=(G.wolfConverts&&G.wolfConverts.includes(i))?roleById('werewolf'):roleById(effRole(i));return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':(effRole(i)==='beggar'?'🏆':'💀')}</div><div class="rl"><span class="teamtag t-${r.team}" style="margin:0">${roleLabel(r)}</span></div></div>`}).join('')}</div>
         <button class="btn block ghost" id="gHistoryBtn">${T('historyTitle')}</button>
         <button class="btn block" id="gExit2">${T('backToSummaryBtn')}</button>`;
     }
