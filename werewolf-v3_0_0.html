@@ -376,7 +376,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.9.2</div>
+<div id="verbadge">v3.10.0</div>
 
 <script>
 const ROLES = [
@@ -687,6 +687,31 @@ th:{
   rulesMod:'ถือมือถือเครื่องเดียวตลอดเกม ทำหน้าที่เรียกแต่ละบทบาทตอนกลางคืน นับโหวตตอนกลางวัน และประกาศผล ผู้เล่นคนอื่นไม่ต้องมีมือถือ',
   rulesNote:'รายละเอียดความสามารถของแต่ละบทบาท ดูได้ตอนเปิดไพ่บทบาทของตัวเอง',
 
+  // ===== กฎเกม (Game Rules) — หน้าใหม่แยกจาก How to Play =====
+  gameRulesTitle:'📜 กฎเกม',
+  grImportantTitle:'📜 1. กฎสำคัญของเกม',
+  grImportantList:'☠️ ความตายเป็นสิ่งถาวร — เมื่อผู้เล่นเสียชีวิต จะไม่สามารถกลับมามีชีวิตได้ (ยกเว้นความสามารถที่ระบุไว้เป็นพิเศษ)\n\n🎭 การเปลี่ยนบทบาทถือเป็นบทบาทใหม่ — หากตัวละครเปลี่ยนบทบาทระหว่างเกม ชื่อ ไอคอน ฝ่าย และเงื่อนไขการชนะ จะเปลี่ยนตามบทบาทใหม่ทันที\n\n🤫 ข้อมูลคือหัวใจของเกม — ห้ามเปิดเผยหน้าจอหรือแอบดูบทบาทของผู้เล่นคนอื่น เว้นแต่ความสามารถของตัวละครจะอนุญาต\n\n⚖️ ผู้ดำเนินรายการเป็นผู้ตัดสินสูงสุด — หากเกิดข้อโต้แย้งหรือสถานการณ์ที่กฎไม่ได้ระบุไว้ ให้ยึดคำตัดสินของผู้ดำเนินรายการ\n\n🗣️ การพูดคุยคืออาวุธที่สำคัญที่สุด — ความสามารถของตัวละครเป็นเพียงเครื่องมือ การสังเกต วิเคราะห์ หลอกลวง และโน้มน้าว คือกุญแจสู่ชัยชนะ',
+
+  grStructureTitle:'🏘️ 2. โครงสร้างเกม',
+  grStructureIntro:'เกมรองรับผู้เล่น ตั้งแต่ 3 คนขึ้นไป\n\nตัวละครแบ่งออกเป็น 4 ฝ่าย',
+  grTeamsList:'🐺 ฝ่ายมนุษย์หมาป่า — ชนะเมื่อจำนวนฝ่ายหมาป่าเท่ากับหรือมากกว่าฝ่ายอื่น\n\n🛡️ ฝ่ายหมู่บ้าน — ชนะเมื่อกำจัดภัยคุกคามทั้งหมดได้\n\n✨ ฝ่ายกลาง — แต่ละตัวละครมีเงื่อนไขการชนะของตนเอง\n\n🎩 ผู้ดำเนินรายการ — ทำหน้าที่ควบคุมเกม ไม่นับเป็นผู้เล่น และไม่มีเงื่อนไขการชนะ',
+  grFlowTitle:'ลำดับการเล่น',
+  grFlowList:'🎴 สุ่มและแจกบทบาท\n\n💘 กามเทพเลือกคู่รัก (คืนแรกเท่านั้น หากมี)\n\n🌙 กลางคืน — ตัวละครที่มีสกิลกลางคืนใช้ความสามารถตามลำดับ\n\n🌅 เช้า — ประกาศผลเหตุการณ์ที่เกิดขึ้นเมื่อคืน\n\n☀️ กลางวัน — ผู้เล่นอภิปรายและโหวต\n\n🔁 วนซ้ำจนกว่าจะมีฝ่ายใดฝ่ายหนึ่งชนะ',
+
+  grNightTitle:'🌙 3. ลำดับการใช้สกิลตอนกลางคืน',
+  grNightIntro:'ระบบจะเรียกเฉพาะตัวละครที่ยังมีชีวิตและสามารถใช้สกิลได้ ตามลำดับดังนี้',
+  grNightList:'1. 👁️ ผู้นำลัทธิ (Cult Leader)\n2. 🧛 แวมไพร์ (Vampire)\n3. 🎭 หมาป่าจำแลง (Shapeshifter)\n4. 🧙 นางปีศาจ (Sorcerer)\n5. 🐺 หมาป่าจ่าฝูง (คืนแรกเท่านั้น) หรือ หมาป่า (Werewolf)\n6. 🌑 หมาป่าเดียวดาย (Lone Wolf)\n7. 🔪 ฆาตกรโรคจิต (Serial Killer)\n8. 🔮 เทพพยากรณ์ (Seer) / ผู้สืบทอดเทพยากรณ์ (Apprentice Seer)\n9. 🛡️ บอดี้การ์ด (Bodyguard)\n10. ✨ จอมเวท (Spellcaster)\n11. 🎭 ผู้เลียนแบบ (Doppelganger) (คืนแรกเท่านั้น)',
+  grNightNote:'💡 ตัวละครที่ไม่มีสกิลกลางคืน หรือเสียชีวิตแล้ว จะไม่ถูกเรียกใช้งาน',
+
+  grWinTitle:'🏆 4. ลำดับการตรวจสอบผู้ชนะ',
+  grWinIntro:'หลังจบ กลางคืน และ กลางวัน ทุกครั้ง เกมจะตรวจสอบผู้ชนะตามลำดับต่อไปนี้ หากเข้าเงื่อนไขข้อใดก่อน จะถือว่าฝ่ายนั้นชนะทันที',
+  grWinList:'🧛 ฝ่ายแวมไพร์ชนะ — ผู้เล่นที่เหลือทั้งหมดเป็นแวมไพร์\n\n👁️ ฝ่ายลัทธิชนะ — สมาชิกลัทธิมีจำนวนมากกว่าผู้เล่นที่ไม่ใช่ลัทธิทั้งหมด\n\n🔪 ฆาตกรโรคจิตชนะ — เหลือฆาตกรโรคจิตเป็นผู้รอดชีวิตเพียงคนเดียว\n\n🐺 ฝ่ายมนุษย์หมาป่าชนะ — มีหมาป่าที่โจมตีได้เหลืออยู่ และจำนวนฝ่ายหมาป่าเท่ากับหรือมากกว่าผู้เล่นฝ่ายอื่นทั้งหมด\n\n🛡️ ฝ่ายหมู่บ้านชนะ — ไม่มีหมาป่า แวมไพร์ ลัทธิ หรือฆาตกรโรคจิตเหลืออยู่',
+
+  grRoleInfoTitle:'🎭 5. รายละเอียดบทบาท',
+  grRoleInfoIntro:'ผู้เล่นสามารถแตะที่ตัวละครแต่ละตัวเพื่อดูรายละเอียดได้ตลอดเวลา โดยแต่ละบทบาทจะแสดงข้อมูลดังต่อไปนี้',
+  grRoleInfoList:'• 🏳️ ฝ่าย ที่สังกัด\n\n• ⭐ ระดับความยาก ของบทบาท\n\n• 📖 ความสามารถ และคำอธิบายของบทบาท\n\n• 🏆 เงื่อนไขการชนะ\n\n• 🌙 วิธีใช้สกิล ข้อจำกัด และเงื่อนไขพิเศษ (หากมี)\n\n• 🔄 การเปลี่ยนบทบาทหรือความสามารถระหว่างเกม (หากมี)',
+  grRoleInfoNote:'💡 แนะนำให้ผู้เล่นทุกคนอ่านรายละเอียดของบทบาทตนเองก่อนเริ่มเกม เพื่อเข้าใจความสามารถ เงื่อนไขการชนะ และข้อจำกัดของบทบาทนั้น',
+
   // ===== Moderator Script + Beginner Toggle (v3.1.0) =====
   scriptTitle:'📋 สคริปต์ผู้ดำเนินรายการ',
   scriptSubtitle:'อ่านออกเสียงให้ผู้เล่นฟัง ตามบทบาทที่มีในเกมนี้',
@@ -893,6 +918,31 @@ en:{
   rulesModTitle:'The Moderator',
   rulesMod:'Holds the single phone for the whole game — calls each role at night, counts votes during the day, and announces results. Other players don\'t need a phone.',
   rulesNote:'Each role\'s full ability is shown when you open your own role card.',
+
+  // ===== Game Rules — new page separate from How to Play =====
+  gameRulesTitle:'📜 Game Rules',
+  grImportantTitle:'📜 1. Important Rules',
+  grImportantList:'☠️ Death is permanent. Once a player dies, they cannot return to life unless a role explicitly states otherwise.\n\n🎭 Role changes are permanent. If a player\'s role changes during the game, their role, icon, team, and win condition immediately become those of the new role.\n\n🤫 Information is the heart of the game. Players must not reveal their screen or secretly view another player\'s role unless a role ability specifically allows it.\n\n⚖️ The Moderator has the final decision. If any situation is unclear or not covered by the rules, the Moderator\'s ruling is final.\n\n🗣️ Discussion is your greatest weapon. Role abilities are only tools—observation, deduction, deception, and persuasion are the true keys to victory.',
+
+  grStructureTitle:'🏘️ 2. Game Structure',
+  grStructureIntro:'The game supports 3 or more players.\n\nRoles are divided into 4 teams:',
+  grTeamsList:'🐺 Werewolf Team — Wins when the number of living werewolves is equal to or greater than all remaining opponents.\n\n🛡️ Village Team — Wins by eliminating every major threat.\n\n✨ Neutral Roles — Each role has its own unique win condition.\n\n🎩 Moderator — Controls the game, is not counted as a player, and has no win condition.',
+  grFlowTitle:'Game Flow',
+  grFlowList:'🎴 Randomly assign roles.\n\n💘 Cupid chooses two Lovers (Night 1 only, if Cupid is in the game).\n\n🌙 Night — Roles with night abilities act in order.\n\n🌅 Morning — The Moderator announces the night\'s events.\n\n☀️ Day — Players discuss and vote.\n\n🔁 Repeat until one side wins.',
+
+  grNightTitle:'🌙 3. Night Action Order',
+  grNightIntro:'Only living players whose abilities are available that night will be called, in the following order:',
+  grNightList:'1. 👁️ Cult Leader\n2. 🧛 Vampire\n3. 🎭 Shapeshifter\n4. 🧙 Sorcerer\n5. 🐺 Alpha Wolf (Night 1 only) or Werewolves\n6. 🌑 Lone Wolf\n7. 🔪 Serial Killer\n8. 🔮 Seer / Apprentice Seer\n9. 🛡️ Bodyguard\n10. ✨ Spellcaster\n11. 🎭 Doppelganger (Night 1 only)',
+  grNightNote:'💡 Roles without night abilities, or players who are already dead, will not be called.',
+
+  grWinTitle:'🏆 4. Victory Check Order',
+  grWinIntro:'After every Night and Day phase, the game checks for a winner in the following order. The first condition that is met immediately ends the game.',
+  grWinList:'🧛 Vampire Victory — Every remaining living player is a Vampire.\n\n👁️ Cult Victory — Cult members outnumber all non-Cult players combined.\n\n🔪 Serial Killer Victory — The Serial Killer is the last player alive.\n\n🐺 Werewolf Victory — At least one killing werewolf remains alive, and the Werewolf Team has equal to or more living players than everyone else combined.\n\n🛡️ Village Victory — No Werewolves, Vampires, Cult Leader, or Serial Killer remain alive.',
+
+  grRoleInfoTitle:'🎭 5. Role Information',
+  grRoleInfoIntro:'Players can tap any role at any time to view detailed information. Each role page includes:',
+  grRoleInfoList:'• 🏳️ Team\n\n• ⭐ Difficulty\n\n• 📖 Role Description & Ability\n\n• 🏆 Win Condition\n\n• 🌙 Skill Usage, Limitations, and Special Rules (if applicable)\n\n• 🔄 Possible Role Transformations or Ability Changes (if applicable)',
+  grRoleInfoNote:'💡 It is highly recommended that every player reads their role before the game begins to fully understand its abilities, limitations, and victory condition.',
 
   // ===== Moderator Script + Beginner Toggle (v3.1.0) =====
   scriptTitle:'📋 Moderator Script',
@@ -2352,6 +2402,46 @@ function viewRules(){
     <p class="footnote">${T('rulesNote')}</p>
   </div>`;
 }
+function viewGameRules(){
+  const lines=k=>T(k).split('\n').map(l=>l.trim()===''?'':`<p style="margin:0 0 6px">${l}</p>`).join('');
+  return `<div class="screen-pad">
+    <button class="exitbtn" id="gameRulesBack" style="border-color:rgba(224,184,74,.5);color:#f0d486">${T('rulesBackBtn')}</button>
+    <h1 class="title" style="font-size:24px;margin-top:14px">${T('gameRulesTitle')}</h1>
+
+    <div class="card">
+      <p class="section-label">${T('grImportantTitle')}</p>
+      ${lines('grImportantList')}
+    </div>
+
+    <div class="card">
+      <p class="section-label">${T('grStructureTitle')}</p>
+      ${lines('grStructureIntro')}
+      ${lines('grTeamsList')}
+      <p class="section-label" style="margin-top:14px">${T('grFlowTitle')}</p>
+      ${lines('grFlowList')}
+    </div>
+
+    <div class="card">
+      <p class="section-label">${T('grNightTitle')}</p>
+      <p style="margin:0 0 8px;color:var(--muted);font-size:13px">${T('grNightIntro')}</p>
+      ${lines('grNightList')}
+      <p class="footnote" style="margin-top:8px">${T('grNightNote')}</p>
+    </div>
+
+    <div class="card">
+      <p class="section-label">${T('grWinTitle')}</p>
+      <p style="margin:0 0 8px;color:var(--muted);font-size:13px">${T('grWinIntro')}</p>
+      ${lines('grWinList')}
+    </div>
+
+    <div class="card">
+      <p class="section-label">${T('grRoleInfoTitle')}</p>
+      <p style="margin:0 0 8px;color:var(--muted);font-size:13px">${T('grRoleInfoIntro')}</p>
+      ${lines('grRoleInfoList')}
+      <p class="footnote" style="margin-top:8px">${T('grRoleInfoNote')}</p>
+    </div>
+  </div>`;
+}
 function viewMenu(){
   return `<div class="menu">
     <div class="menu-bg" style="background-image:url('${MENU_BG}')"></div>
@@ -2362,6 +2452,7 @@ function viewMenu(){
         <div class="menu-icon-row">
           <button class="menu-icon-btn" id="menuSettings" title="${T('settings')}">⚙️</button>
           <button class="menu-icon-btn" id="menuRules" title="${T('rulesTitle')}">📖</button>
+          <button class="menu-icon-btn" id="menuGameRules" title="${T('gameRulesTitle')}">📜</button>
         </div>
       </div>
     </div>
@@ -2566,7 +2657,7 @@ function playSound(type){
   }catch(e){}
 }
 function render(){
-  const _pg=['menu','setup','list','reveal','settings','rules','script'];
+  const _pg=['menu','setup','list','reveal','settings','rules','gamerules','script'];
   const _inGame=G&&G.phase&&G.phase!=='over';
   const _isOver=G&&G.phase==='over';
   if(_isOver){ /* BGM รอ 5s หลังเสียงชนะ — จัดการใน playWinSound */ }
@@ -2578,6 +2669,7 @@ function render(){
   if(S.screen==='menu') html=viewMenu();
   else if(S.screen==='settings') html=viewSettings();
   else if(S.screen==='rules') html=viewRules();
+  else if(S.screen==='gamerules') html=viewGameRules();
   else if(S.screen==='script') html=viewScript();
   else if(S.screen==='setup') html=viewSetup();
   else if(S.screen==='list') html=viewList();
@@ -2589,7 +2681,7 @@ function render(){
     if(G.phase==='day') ph='phase-day';
     else if(G.phase==='night'||G.phase==='cupid'||G.phase==='hunter') ph='phase-night';
   }
-  const fade = (_prevScreen!==S.screen) && ['menu','setup','settings','rules','script'].includes(S.screen);
+  const fade = (_prevScreen!==S.screen) && ['menu','setup','settings','rules','gamerules','script'].includes(S.screen);
   app.className='wrap'+(ph?' '+ph:'')+(fade?' fade-in':'');
   if(fade){ app.style.animation='none'; void app.offsetWidth; app.style.animation=''; }
   _prevScreen=S.screen;
@@ -2605,10 +2697,15 @@ function bind(){
     const st=$('menuStart'); if(st) st.onclick=()=>{S.screen='setup';showLoader();requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
     const se=$('menuSettings'); if(se) se.onclick=()=>{S.screen='settings';requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
     const mr=$('menuRules'); if(mr) mr.onclick=()=>{S.screen='rules';requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
+    const mgr=$('menuGameRules'); if(mgr) mgr.onclick=()=>{S.screen='gamerules';requestAnimationFrame(()=>requestAnimationFrame(()=>render()));};
     return;
   }
   if(S.screen==='rules'){
     const rb=$('rulesBack'); if(rb) rb.onclick=()=>{S.screen='menu';render();};
+    return;
+  }
+  if(S.screen==='gamerules'){
+    const grb=$('gameRulesBack'); if(grb) grb.onclick=()=>{S.screen='menu';render();};
     return;
   }
   if(S.screen==='settings'){
