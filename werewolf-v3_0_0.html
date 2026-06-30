@@ -380,7 +380,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.11.4</div>
+<div id="verbadge">v3.11.6</div>
 
 <script>
 const ROLES = [
@@ -1405,7 +1405,7 @@ function tickTimer(){
     stopTimer(); return;
   }
   const s=Math.ceil(rem/1000);
-  el.classList.remove('warn','danger');
+  el.classList.remove('warn','danger','up');
   if(s<10) el.classList.add('danger');
   else if(s<30) el.classList.add('warn');
   // 8 วินาทีสุดท้าย: เริ่มเสียง tick (เล่นครั้งเดียว)
@@ -1546,7 +1546,7 @@ function checkWin(){
   const cultN=idx.filter(inCult).length;
   const skN=idx.filter(i=>effRole(i)==='serialkiller'&&!inCult(i)&&!inVamp(i)).length;
   const wolfN=idx.filter(i=>teamOf(i)==='wolf'&&!inCult(i)).length;
-  const killerWolves=idx.filter(i=>!inCult(i)&&!inVamp(i)&&(['werewolf','wolfcub','alphawolf','lonewolf','shapeshifter'].includes(effRole(i))||(G.wolfConverts&&G.wolfConverts.includes(i)))).length;
+  const killerWolves=idx.filter(i=>!inCult(i)&&!inVamp(i)&&(['werewolf','alphawolf','lonewolf','shapeshifter'].includes(effRole(i))||(G.wolfConverts&&G.wolfConverts.includes(i)))).length;
   if(vampN>0 && vampN===N){ G.winner='vampire'; return true; }
   if(cultN>0 && cultN > N-cultN){ G.winner='cult'; return true; }
   if(skN>0 && N===skN){ G.winner='sk'; return true; }
@@ -1559,6 +1559,7 @@ function enterDay(){
   G.protectPrev=G.protectThis; G.protectThis=null;
   G.wolfTargets=[]; G.check=null; G.dayVote=null; G.wolfKillCount=1; G.loneWolfTarget=null; G._wolfWakeDone=false;
   G.dayNo++;
+  G.timerExpired=false; // กันไม่ให้ template render() เห็น flag ค้างจากเมื่อวาน (จะแก้อีกทีใน startDayTimer)
   G.banner={type:'morning',deaths:[...G.deaths],converts:[...(G.justConverts||[])],vampires:[...(G.justVampires||[])]};
   G.phase=checkWin()?'over':'day';
   if(G.phase==='over') playWinSound();
@@ -1582,7 +1583,7 @@ function finishResolution(){
   if(G.afterHunter==='night'){enterNight();return;}
   if(G.afterHunter==='dayStay'){
     if(checkWin()){G.phase='over';playWinSound();render();return;}
-    G.phase='day'; render(); startDayTimer(); return;
+    G.timerExpired=false; G.phase='day'; render(); startDayTimer(); return;
   }
   enterDay();
 }
@@ -1817,7 +1818,7 @@ function gameTap(i){
 }
 function nightTools(){
   const t=[];
-  const KILL_IDS=['werewolf','wolfcub','alphawolf','shapeshifter'];
+  const KILL_IDS=['werewolf','alphawolf','shapeshifter'];
   const killerAlive=S.players.some((p,i)=>G.alive[i]&&(KILL_IDS.includes(p.role)||G.wolfConverts.includes(i)||KILL_IDS.some(id=>isAwakenedAs(i,id))));
   const alphaFirstNight=aliveHas('alphawolf')&&!G.alphaUsed&&G.nightNo===1;
   const hideMode=!S.revealOnDeath; // โหมดซ่อนการตาย: บทบาทที่ตายแล้วยังถูกเรียก แต่กดได้แค่ Skip
