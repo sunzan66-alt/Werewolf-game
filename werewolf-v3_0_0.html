@@ -368,6 +368,14 @@
   .hist-event.clr-pink{border-left-color:#dd6699;}
   .hist-event.clr-orange{border-left-color:#e08030;}
   .hist-event.clr-gold{border-left-color:#f0d486;}
+  .gs-card{padding:14px 16px}
+  .gs-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:13px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .gs-row:last-child{border-bottom:none}
+  .gs-k{color:var(--muted)}
+  .gs-v{color:var(--ink);font-weight:700}
+  .gs-tl-row{display:flex;gap:8px;align-items:baseline;padding:4px 0;font-size:12.5px;border-left:2px solid rgba(224,184,74,.35);padding-left:8px;margin:2px 0}
+  .gs-tl-when{color:var(--gold);font-weight:700;flex-shrink:0;min-width:64px}
+  .gs-tl-txt{color:#d0d4f0}
   .hist-event.clr-green{border-left-color:#55aa66;}
   .hist-event.clr-gray{border-left-color:#555566;opacity:.65;}
   .hist-event.clr-yellow{border-left-color:#ddaa22;}
@@ -380,7 +388,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.11.6</div>
+<div id="verbadge">v3.12.0</div>
 
 <script>
 const ROLES = [
@@ -706,7 +714,7 @@ th:{
   grNightTitle:'🌙 3. ลำดับการใช้สกิลตอนกลางคืน',
   grNightIntro:'ระบบจะเรียกเฉพาะตัวละครที่ยังมีชีวิตและสามารถใช้สกิลได้ ตามลำดับดังนี้',
   grNightList:'1. 👁️ ผู้นำลัทธิ (Cult Leader)\n2. 🧛 แวมไพร์ (Vampire)\n3. 🎭 หมาป่าจำแลง (Shapeshifter)\n4. 🧙 นางปีศาจ (Sorcerer)\n5. 🐺 หมาป่าจ่าฝูง (คืนแรกเท่านั้น) หรือ หมาป่า (Werewolf)\n6. 🌑 หมาป่าเดียวดาย (Lone Wolf)\n7. 🔪 ฆาตกรโรคจิต (Serial Killer)\n8. 🔮 เทพพยากรณ์ (Seer) / ผู้สืบทอดเทพยากรณ์ (Apprentice Seer)\n9. 🛡️ บอดี้การ์ด (Bodyguard)\n10. ✨ จอมเวท (Spellcaster)\n11. 🎭 ผู้เลียนแบบ (Doppelganger) (คืนแรกเท่านั้น)',
-  grNightNote:'💡 ตัวละครที่ไม่มีสกิลกลางคืน หรือเสียชีวิตแล้ว จะไม่ถูกเรียกใช้งาน',
+  grNightNote:'💡 บทบาทที่ไม่มีสกิลกลางคืนจะไม่ถูกเรียก\\n\\nหากเปิดใช้ "ปิดการเปิดเผยบทบาทเมื่อเสียชีวิต" (Reveal Roles on Death = OFF) บทบาทที่ตายแล้วจะยังคงถูกเรียกตามลำดับปกติ',
 
   grWinTitle:'🏆 4. ลำดับการตรวจสอบผู้ชนะ',
   grWinIntro:'หลังจบ กลางคืน และ กลางวัน ทุกครั้ง เกมจะตรวจสอบผู้ชนะตามลำดับต่อไปนี้ หากเข้าเงื่อนไขข้อใดก่อน จะถือว่าฝ่ายนั้นชนะทันที',
@@ -768,6 +776,10 @@ th:{
   revealOnDesc:'เมื่อผู้เล่นเสียชีวิต ปุ่มสกิลของบทบาทนั้นจะหายไปทันที — ทุกคนรู้ได้ว่าใครตายจากบทบาทที่หายไป',
   revealOffDesc:'ถึงผู้เล่นจะเสียชีวิตแล้ว ระบบยังคงเรียกบทบาทนั้นตามลำดับเดิม แต่กดได้แค่ "ข้าม" เท่านั้น เพื่อไม่ให้ผู้เล่นคนอื่นรู้ว่าใครตายจากลำดับการเรียก',
   helpDeadSkipOnly:'💀 ผู้เล่นที่ถือบทบาทนี้เสียชีวิตแล้ว — เรียกตามสคริปต์ตามปกติ แล้วกด "ข้าม" ได้เลย (ผู้เล่นคนอื่นจะไม่รู้ว่าตาย)',
+  gsTitle:'📊 สรุปเกม', gsNight:'กลางคืน', gsDay:'กลางวัน', gsTotalDeath:'ผู้เสียชีวิตทั้งหมด',
+  gsLongestSurvivor:'รอดชีวิตนานที่สุด', gsFirstBlood:'คนแรกที่เสียชีวิต', gsMostConverted:'เปลี่ยนฝ่ายมากที่สุด',
+  gsNoConvert:'ไม่มีการเปลี่ยนฝ่าย', gsTimeline:'🕒 ไทม์ไลน์เหตุการณ์', gsNoDeaths:'ไม่มีใครเสียชีวิตในเกมนี้',
+  gsAliveCount:'รอดชีวิตจนจบเกม ({n} คน)', gsNightLabel:'คืนที่ {n}', gsDayLabel:'วันที่ {n}',
   actKilled:'{actor} ฆ่า {target}', actBlocked:'{actor} พยายามฆ่า {target} แต่ถูกป้องกันไว้ได้',
   actToughGuyHit:'{target} ได้รับบาดเจ็บจากการถูกมนุษย์หมาป่าเล่นงาน',
   actToughGuyDeath:'{target} ทนพิษบาดแผลไม่ไหว เสียชีวิต',
@@ -943,7 +955,7 @@ en:{
   grNightTitle:'🌙 3. Night Action Order',
   grNightIntro:'Only living players whose abilities are available that night will be called, in the following order:',
   grNightList:'1. 👁️ Cult Leader\n2. 🧛 Vampire\n3. 🎭 Shapeshifter\n4. 🧙 Sorcerer\n5. 🐺 Alpha Wolf (Night 1 only) or Werewolves\n6. 🌑 Lone Wolf\n7. 🔪 Serial Killer\n8. 🔮 Seer / Apprentice Seer\n9. 🛡️ Bodyguard\n10. ✨ Spellcaster\n11. 🎭 Doppelganger (Night 1 only)',
-  grNightNote:'💡 Roles without night abilities, or players who are already dead, will not be called.',
+  grNightNote:'💡 Roles without night abilities will not be called.\\n\\nIf Reveal Roles on Death is OFF, dead roles are still called in their normal order.',
 
   grWinTitle:'🏆 4. Victory Check Order',
   grWinIntro:'After every Night and Day phase, the game checks for a winner in the following order. The first condition that is met immediately ends the game.',
@@ -1005,6 +1017,10 @@ en:{
   revealOnDesc:'When a player dies, their skill button disappears immediately — everyone can tell who died from the missing role.',
   revealOffDesc:'Even after a player dies, the system still calls their role in the usual order — but the only option is "Skip". Other players won\'t be able to tell who died just from the calling order.',
   helpDeadSkipOnly:'💀 The player holding this role has died — read the script as usual, then press "Skip" (other players won\'t know they\'re dead).',
+  gsTitle:'📊 Game Summary', gsNight:'Night', gsDay:'Day', gsTotalDeath:'Total Death',
+  gsLongestSurvivor:'Longest Survivor', gsFirstBlood:'First Blood', gsMostConverted:'Most Converted',
+  gsNoConvert:'No conversions', gsTimeline:'🕒 Role Timeline', gsNoDeaths:'No one died this game',
+  gsAliveCount:'Survived to the end ({n} players)', gsNightLabel:'Night {n}', gsDayLabel:'Day {n}',
   actChecked:'{actor} checked {target}', actProtected:'{actor} protected {target}',
   actKilled:'{actor} killed {target}', actBlocked:'{actor} tried to kill {target} but was blocked',
   actToughGuyHit:'{target} was wounded by the werewolves',
@@ -1478,7 +1494,7 @@ function startRun(){
      princeSaved:false, pacifistVeto:false, ghostVoteDay:0,
      drunkTrueRole:null, doppleTarget:null, doppleAcquired:false, doppleCopiedRole:null,
      tool:'kill', check:null, hunterQueue:[], afterHunter:null,
-     deaths:[], banner:null, winner:null, history:[], showHistory:false, historyCollapsed:{}};
+     deaths:[], banner:null, winner:null, history:[], showHistory:false, historyCollapsed:{}, deathLog:[]};
   if(G.phase==='night') G.nightNo=1;
   S.players.forEach((p,i)=>{ if(p.role==='cultleader') G.cult.push(i); });
   S.players.forEach((p,i)=>{ if(p.role==='vampire') G.vampires.push(i); });
@@ -1497,6 +1513,7 @@ function killChain(seeds){
     const i=q.shift();
     if(i==null||!G.alive[i]) continue;
     G.alive[i]=false; G.deaths.push(i);
+    G.deathLog.push({idx:i,name:S.players[i].name,role:effRole(i),night:G.nightNo,day:G.dayNo,phase:G.phase});
     if(roleOf(i)==='wolfcub') G.cubBonusPending=true;
     if(effRole(i)==='ghost') G.ghostVoteDay=(G.dayNo||0)+1;
     if(G.doppleTarget===i && !G.doppleAcquired){
@@ -2001,6 +2018,64 @@ function viewHistory(){
   return `<div style="padding:0 2px">${sectHTML}</div>
     <button class="btn block ghost" id="gHistoryBack" style="margin-top:14px">${T('historyBackBtn')}</button>`;
 }
+function computeGameSummary(){
+  const log=G.deathLog||[];
+  const totalDeaths=log.length;
+  // ผู้รอดชีวิตนานที่สุด: คนที่ยังมีชีวิตอยู่ตอนจบ = รอดนานสุดเสมอ ถ้าตายหมดให้ดูคนตายล่าสุด
+  const aliveIdx=S.players.map((p,i)=>i).filter(i=>G.alive[i]&&teamOf(i)!=='mod');
+  let longestSurvivor=null;
+  if(aliveIdx.length){
+    longestSurvivor={name:S.players[aliveIdx[0]].name,role:effRole(aliveIdx[0]),alive:true,count:aliveIdx.length};
+  } else if(log.length){
+    const last=log[log.length-1];
+    longestSurvivor={name:last.name,role:last.role,alive:false};
+  }
+  const firstBlood=log.length?{name:log[0].name,role:log[0].role,night:log[0].night,day:log[0].day,phase:log[0].phase}:null;
+  // เปลี่ยนฝ่ายมากที่สุด: เทียบจำนวน convert ของแต่ละประเภท
+  const cursedN=(G.wolfConverts||[]).length;
+  const vampOrigN=S.players.filter(p=>p.role==='vampire').length;
+  const vampConvN=Math.max(0,(G.vampires||[]).length-vampOrigN);
+  const cultOrigN=S.players.filter(p=>p.role==='cultleader').length;
+  const cultConvN=Math.max(0,(G.cult||[]).length-cultOrigN);
+  const convList=[['wolf',cursedN],['vampire',vampConvN],['cult',cultConvN]].sort((a,b)=>b[1]-a[1]);
+  const mostConverted=convList[0][1]>0?{team:convList[0][0],count:convList[0][1]}:null;
+  return {nights:G.nightNo,days:G.dayNo,totalDeaths,longestSurvivor,firstBlood,mostConverted,timeline:log};
+}
+function viewGameSummary(){
+  const sm=computeGameSummary();
+  const teamLabel={wolf:T('teamWolf'),vampire:T('winnerVampire'),cult:T('winnerCult')};
+  const survivorTxt=sm.longestSurvivor
+    ?(sm.longestSurvivor.alive
+      ?T('gsAliveCount',{n:sm.longestSurvivor.count})
+      :esc(sm.longestSurvivor.name)+' ('+roleLabel(roleById(sm.longestSurvivor.role))+')')
+    :'—';
+  const firstBloodTxt=sm.firstBlood
+    ?esc(sm.firstBlood.name)+' ('+roleLabel(roleById(sm.firstBlood.role))+')'
+    :'—';
+  const convertedTxt=sm.mostConverted
+    ?teamLabel[sm.mostConverted.team]+' (+'+sm.mostConverted.count+')'
+    :T('gsNoConvert');
+  const rows=[
+    [T('gsNight'),'🌙 '+sm.nights],
+    [T('gsDay'),'☀️ '+sm.days],
+    [T('gsTotalDeath'),'💀 '+sm.totalDeaths],
+    [T('gsLongestSurvivor'),survivorTxt],
+    [T('gsFirstBlood'),firstBloodTxt],
+    [T('gsMostConverted'),convertedTxt],
+  ].map(([k,v])=>`<div class="gs-row"><span class="gs-k">${k}</span><span class="gs-v">${v}</span></div>`).join('');
+  const tl=sm.timeline.map(d=>{
+    const lbl=d.phase==='night'?T('gsNightLabel',{n:d.night}):T('gsDayLabel',{n:d.day});
+    return `<div class="gs-tl-row"><span class="gs-tl-when">${lbl}</span><span class="gs-tl-txt">${esc(d.name)} — ${roleLabel(roleById(d.role))}</span></div>`;
+  }).join('')||`<p class="footnote" style="margin:4px 0">${T('gsNoDeaths')}</p>`;
+  return `<div class="card gs-card">
+    <p class="section-label">${T('gsTitle')}</p>
+    ${rows}
+  </div>
+  <div class="card gs-card">
+    <p class="section-label">${T('gsTimeline')}</p>
+    ${tl}
+  </div>`;
+}
 function viewGame(){
   const aw=S.players.filter((p,i)=>G.alive[i]&&teamOf(i)==='wolf').length;
   const av=S.players.filter((p,i)=>G.alive[i]&&teamOf(i)!=='wolf'&&teamOf(i)!=='mod').length;
@@ -2098,6 +2173,7 @@ function viewGame(){
       const beggarWon=G.winner==='wolf' && S.players.some((p,i)=>effRole(i)==='beggar'&&!G.alive[i]);
       const txt=loneWolfOnly?T('winnerLoneWolf'):beggarWon?T('winnerWolfAndBeggar'):G.winner==='wolf'?T('winnerWolf'):G.winner==='cult'?T('winnerCult'):G.winner==='sk'?T('winnerSk'):G.winner==='vampire'?T('winnerVampire'):T('winnerVillage');
       body=`<div class="banner win">${txt}</div>
+        ${viewGameSummary()}
         <div class="card">${S.players.map((p,i)=>{const r=(G.wolfConverts&&G.wolfConverts.includes(i))?roleById('werewolf'):roleById(effRole(i));return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':(effRole(i)==='beggar'?'🏆':'💀')}</div><div class="rl"><span class="teamtag t-${r.team}" style="margin:0">${roleLabel(r)}</span></div></div>`}).join('')}</div>
         <button class="btn block ghost" id="gHistoryBtn">${T('historyTitle')}</button>
         <button class="btn block" id="gExit2">${T('backToSummaryBtn')}</button>`;
