@@ -203,7 +203,9 @@
   .save-group-form{display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap;}
   .save-group-form .pinput{flex:1;min-width:120px;}
   .tchip.on{background:linear-gradient(180deg,#f4e6b0,#e0b84a);color:#0b1026;border-color:transparent}
-  .daytimer{text-align:center;font-size:26px;font-weight:800;letter-spacing:.04em;color:var(--gold);background:rgba(224,184,74,.1);border:1px solid rgba(224,184,74,.35);border-radius:14px;padding:12px;margin:6px 0 12px}
+  .daytimer{text-align:center;font-size:26px;font-weight:800;letter-spacing:.04em;color:var(--gold);background:rgba(224,184,74,.1);border:1px solid rgba(224,184,74,.35);border-radius:14px;padding:12px;margin:6px 0 12px;transition:color .3s,background .3s,border-color .3s}
+  .daytimer.warn{color:#f0b25a;background:rgba(224,140,40,.14);border-color:rgba(224,140,40,.5)}
+  .daytimer.danger{color:#f0908e;background:rgba(204,70,68,.16);border-color:rgba(204,70,68,.5)}
   .daytimer.up{color:#f0908e;background:rgba(204,70,68,.16);border-color:rgba(204,70,68,.5);animation:tpulse 1s ease-in-out infinite}
   @keyframes tpulse{0%,100%{opacity:1}50%{opacity:.55}}
 
@@ -378,7 +380,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.11.1</div>
+<div id="verbadge">v3.11.4</div>
 
 <script>
 const ROLES = [
@@ -1403,6 +1405,9 @@ function tickTimer(){
     stopTimer(); return;
   }
   const s=Math.ceil(rem/1000);
+  el.classList.remove('warn','danger');
+  if(s<10) el.classList.add('danger');
+  else if(s<30) el.classList.add('warn');
   // 8 วินาทีสุดท้าย: เริ่มเสียง tick (เล่นครั้งเดียว)
   if(s<=8&&!G._tickStarted){
     G._tickStarted=true;
@@ -1575,7 +1580,10 @@ function enterNight(){
 function finishResolution(){
   if(G.hunterQueue.length){G.phase='hunter';render();return;}
   if(G.afterHunter==='night'){enterNight();return;}
-  if(G.afterHunter==='dayStay'){ if(checkWin()){G.phase='over';playWinSound();}else G.phase='day'; render(); return; }
+  if(G.afterHunter==='dayStay'){
+    if(checkWin()){G.phase='over';playWinSound();render();return;}
+    G.phase='day'; render(); startDayTimer(); return;
+  }
   enterDay();
 }
 function resolveNight(){          // 🌅 เช้าแล้ว
@@ -2654,7 +2662,7 @@ function playSound(type){
       if(!buf) return;
       const _VOL={click:0.3,addRole:0.4,removeRole:0.4,error:0.45,reveal:1.1,
         winVillage:1.4,winWolf:1.4,winLoneWolf:1.4,winSK:1.4,winBeggar:1.4,winVampire:1.4,winCult:1.4,
-        tick:1.0,bell:1.2};
+        tick:1.0,bell:2.0};
       const play=()=>{
         const src=_wwaCtx.createBufferSource();
         src.buffer=buf;
