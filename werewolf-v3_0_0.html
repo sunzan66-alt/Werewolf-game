@@ -282,6 +282,8 @@
   .tool.tdone:not(.on){border-color:rgba(127,217,154,.5);color:#9be3b1}
   .tool.tskip:not(.on){border-color:rgba(150,160,190,.45);color:#9aa6c4;opacity:.65}
   .tool.tlock:not(.on){border-color:var(--line);color:#5f6790;opacity:.55}
+  .tool.tool-dead{border-style:dashed!important}
+  .tool.tool-dead.on{border-color:rgba(200,90,90,.6);background:rgba(120,30,30,.18)}
   .checkbar{text-align:center;border-radius:12px;padding:11px;margin:8px 0;font-weight:700;font-size:14px}
   .checkbar.g{background:rgba(127,217,154,.16);color:#9be3b1;border:1px solid rgba(127,217,154,.4)}
   .checkbar.r{background:rgba(204,70,68,.16);color:#f0908e;border:1px solid rgba(204,70,68,.4)}
@@ -376,7 +378,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.10.0</div>
+<div id="verbadge">v3.11.1</div>
 
 <script>
 const ROLES = [
@@ -653,6 +655,7 @@ try{
   S.soundFX=localStorage.getItem('ww_sfx')!=='off';
   S.soundAmbient=localStorage.getItem('ww_amb')!=='off';
 }catch(e){ S.soundFX=true; S.soundAmbient=true; }
+try{ S.revealOnDeath=localStorage.getItem('ww_reveal')==='on'; }catch(e){ S.revealOnDeath=false; }
 try{ S.lang=localStorage.getItem('language')||'th'; }catch(e){ S.lang='th'; }
 
 // ===== โครงระบบหลายภาษา (รอบนี้ใส่เฉพาะ label ของ Main Menu / Settings) =====
@@ -690,7 +693,7 @@ th:{
   // ===== กฎเกม (Game Rules) — หน้าใหม่แยกจาก How to Play =====
   gameRulesTitle:'📜 กฎเกม',
   grImportantTitle:'📜 1. กฎสำคัญของเกม',
-  grImportantList:'☠️ ความตายเป็นสิ่งถาวร — เมื่อผู้เล่นเสียชีวิต จะไม่สามารถกลับมามีชีวิตได้ (ยกเว้นความสามารถที่ระบุไว้เป็นพิเศษ)\n\n🎭 การเปลี่ยนบทบาทถือเป็นบทบาทใหม่ — หากตัวละครเปลี่ยนบทบาทระหว่างเกม ชื่อ ไอคอน ฝ่าย และเงื่อนไขการชนะ จะเปลี่ยนตามบทบาทใหม่ทันที\n\n🤫 ข้อมูลคือหัวใจของเกม — ห้ามเปิดเผยหน้าจอหรือแอบดูบทบาทของผู้เล่นคนอื่น เว้นแต่ความสามารถของตัวละครจะอนุญาต\n\n⚖️ ผู้ดำเนินรายการเป็นผู้ตัดสินสูงสุด — หากเกิดข้อโต้แย้งหรือสถานการณ์ที่กฎไม่ได้ระบุไว้ ให้ยึดคำตัดสินของผู้ดำเนินรายการ\n\n🗣️ การพูดคุยคืออาวุธที่สำคัญที่สุด — ความสามารถของตัวละครเป็นเพียงเครื่องมือ การสังเกต วิเคราะห์ หลอกลวง และโน้มน้าว คือกุญแจสู่ชัยชนะ',
+  grImportantList:'☠️ ความตายเป็นสิ่งถาวร — เมื่อผู้เล่นเสียชีวิต จะไม่สามารถกลับมามีชีวิตได้ (ยกเว้นความสามารถที่ระบุไว้เป็นพิเศษ)\n\n🎭 การเปลี่ยนบทบาทถือเป็นบทบาทใหม่ — หากตัวละครเปลี่ยนบทบาทระหว่างเกม ชื่อ ไอคอน ฝ่าย และเงื่อนไขการชนะ จะเปลี่ยนตามบทบาทใหม่ทันที\n\n🤫 ข้อมูลคือหัวใจของเกม — ห้ามเปิดเผยหน้าจอหรือแอบดูบทบาทของผู้เล่นคนอื่น เว้นแต่ความสามารถของตัวละครจะอนุญาต\n\n⚖️ ผู้ดำเนินรายการเป็นผู้ตัดสินสูงสุด — หากเกิดข้อโต้แย้งหรือสถานการณ์ที่กฎไม่ได้ระบุไว้ ให้ยึดคำตัดสินของผู้ดำเนินรายการ\n\n🗣️ การพูดคุยคืออาวุธที่สำคัญที่สุด — ความสามารถของตัวละครเป็นเพียงเครื่องมือ การสังเกต วิเคราะห์ หลอกลวง และโน้มน้าว คือกุญแจสู่ชัยชนะ\n\n☠️ Hidden Death — เมื่อผู้เล่นเสียชีวิต บทบาทจะไม่ถูกเปิดเผยจนกว่าจะจบเกม และในช่วงกลางคืน ระบบจะยังเรียกบทบาทนั้นตามลำดับเดิมเพื่อป้องกันการเปิดเผยข้อมูลจากลำดับการเรียกสกิล (เกิดขึ้นเฉพาะเมื่อเปิดใช้ Reveal Roles on Death = OFF)',
 
   grStructureTitle:'🏘️ 2. โครงสร้างเกม',
   grStructureIntro:'เกมรองรับผู้เล่น ตั้งแต่ 3 คนขึ้นไป\n\nตัวละครแบ่งออกเป็น 4 ฝ่าย',
@@ -758,6 +761,11 @@ th:{
   backToMenuBtn:'← กลับไปเมนูหลัก',
   sfxSetting:'🔊 เสียงเอฟเฟกต์', ambSetting:'🎵 เสียง Ambient',
   voiceSetting:'📢 เสียงประกาศ (เร็วๆนี้)', soundOn:'เปิด', soundOff:'ปิด', actProtected:'{actor} ปกป้อง {target}',
+  revealDeathSetting:'💀 เปิดเผยบทบาทเมื่อเสียชีวิต (Reveal Roles on Death)',
+  revealOnLabel:'☑ เปิด (แนะนำมือใหม่)', revealOffLabel:'☐ ปิด (แนะนำผู้เล่นชำนาญ)',
+  revealOnDesc:'เมื่อผู้เล่นเสียชีวิต ปุ่มสกิลของบทบาทนั้นจะหายไปทันที — ทุกคนรู้ได้ว่าใครตายจากบทบาทที่หายไป',
+  revealOffDesc:'ถึงผู้เล่นจะเสียชีวิตแล้ว ระบบยังคงเรียกบทบาทนั้นตามลำดับเดิม แต่กดได้แค่ "ข้าม" เท่านั้น เพื่อไม่ให้ผู้เล่นคนอื่นรู้ว่าใครตายจากลำดับการเรียก',
+  helpDeadSkipOnly:'💀 ผู้เล่นที่ถือบทบาทนี้เสียชีวิตแล้ว — เรียกตามสคริปต์ตามปกติ แล้วกด "ข้าม" ได้เลย (ผู้เล่นคนอื่นจะไม่รู้ว่าตาย)',
   actKilled:'{actor} ฆ่า {target}', actBlocked:'{actor} พยายามฆ่า {target} แต่ถูกป้องกันไว้ได้',
   actToughGuyHit:'{target} ได้รับบาดเจ็บจากการถูกมนุษย์หมาป่าเล่นงาน',
   actToughGuyDeath:'{target} ทนพิษบาดแผลไม่ไหว เสียชีวิต',
@@ -922,7 +930,7 @@ en:{
   // ===== Game Rules — new page separate from How to Play =====
   gameRulesTitle:'📜 Game Rules',
   grImportantTitle:'📜 1. Important Rules',
-  grImportantList:'☠️ Death is permanent. Once a player dies, they cannot return to life unless a role explicitly states otherwise.\n\n🎭 Role changes are permanent. If a player\'s role changes during the game, their role, icon, team, and win condition immediately become those of the new role.\n\n🤫 Information is the heart of the game. Players must not reveal their screen or secretly view another player\'s role unless a role ability specifically allows it.\n\n⚖️ The Moderator has the final decision. If any situation is unclear or not covered by the rules, the Moderator\'s ruling is final.\n\n🗣️ Discussion is your greatest weapon. Role abilities are only tools—observation, deduction, deception, and persuasion are the true keys to victory.',
+  grImportantList:'☠️ Death is permanent. Once a player dies, they cannot return to life unless a role explicitly states otherwise.\n\n🎭 Role changes are permanent. If a player\'s role changes during the game, their role, icon, team, and win condition immediately become those of the new role.\n\n🤫 Information is the heart of the game. Players must not reveal their screen or secretly view another player\'s role unless a role ability specifically allows it.\n\n⚖️ The Moderator has the final decision. If any situation is unclear or not covered by the rules, the Moderator\'s ruling is final.\n\n🗣️ Discussion is your greatest weapon. Role abilities are only tools—observation, deduction, deception, and persuasion are the true keys to victory.\n\n☠️ Hidden Death (When "Reveal Roles on Death" is OFF) — When a player dies, their role is not revealed until the game ends. During the Night Phase, dead roles are still called in their normal order. The Moderator should simply press Skip for any dead role to prevent information from being revealed through the night action sequence.',
 
   grStructureTitle:'🏘️ 2. Game Structure',
   grStructureIntro:'The game supports 3 or more players.\n\nRoles are divided into 4 teams:',
@@ -990,6 +998,11 @@ en:{
   backToMenuBtn:'← Back to Main Menu',
   sfxSetting:'🔊 Sound Effects', ambSetting:'🎵 Ambient Sound',
   voiceSetting:'📢 Moderator Voice (coming soon)', soundOn:'On', soundOff:'Off',
+  revealDeathSetting:'💀 Reveal Roles on Death',
+  revealOnLabel:'☑ ON (Recommended for Beginners)', revealOffLabel:'☐ OFF (Recommended for Experienced Players)',
+  revealOnDesc:'When a player dies, their skill button disappears immediately — everyone can tell who died from the missing role.',
+  revealOffDesc:'Even after a player dies, the system still calls their role in the usual order — but the only option is "Skip". Other players won\'t be able to tell who died just from the calling order.',
+  helpDeadSkipOnly:'💀 The player holding this role has died — read the script as usual, then press "Skip" (other players won\'t know they\'re dead).',
   actChecked:'{actor} checked {target}', actProtected:'{actor} protected {target}',
   actKilled:'{actor} killed {target}', actBlocked:'{actor} tried to kill {target} but was blocked',
   actToughGuyHit:'{target} was wounded by the werewolves',
@@ -1424,6 +1437,9 @@ function isAwakenedAs(i,id){
 function roleActiveAlive(id){
   return S.players.some((p,i)=>G.alive[i]&&(p.role===id||isAwakenedAs(i,id)));
 }
+function roleAnyAssigned(id){
+  return S.players.some(p=>p.role===id);
+}
 function seerDied(){
   const si=S.players.findIndex(p=>p.role==='seer');
   return si>=0 && !G.alive[si];
@@ -1796,19 +1812,42 @@ function nightTools(){
   const KILL_IDS=['werewolf','wolfcub','alphawolf','shapeshifter'];
   const killerAlive=S.players.some((p,i)=>G.alive[i]&&(KILL_IDS.includes(p.role)||G.wolfConverts.includes(i)||KILL_IDS.some(id=>isAwakenedAs(i,id))));
   const alphaFirstNight=aliveHas('alphawolf')&&!G.alphaUsed&&G.nightNo===1;
+  const hideMode=!S.revealOnDeath; // โหมดซ่อนการตาย: บทบาทที่ตายแล้วยังถูกเรียก แต่กดได้แค่ Skip
   // ลำดับ: ลัทธิ → แวมไพร์ → จำแลง → นางปีศาจ → หมาป่า(รวมเดียวดาย) → ฆาตกร → เทพพยากรณ์ → บอดี้การ์ด → จอมเวท
-  if(roleActiveAlive('cultleader')) t.push(['cultRecruit',T('toolCultLeader')]);
-  if(roleActiveAlive('vampire')) t.push(['vampireBite',T('toolVampire')]);
-  if(roleActiveAlive('shapeshifter')) t.push(['shapeShift',T('toolShapeshifter')]);
-  if(roleActiveAlive('sorcerer')) t.push(['sorcCheck',T('toolSorcerer')]);
-  if(alphaFirstNight) t.push(['alphaConvert',T('toolAlphaWolf')]);   // คืนแรก: แปลงร่างเท่านั้น
-  else if(killerAlive) t.push(['kill',T('toolWerewolf')]);
-  if(roleActiveAlive('lonewolf')) t.push(['lonewolfKill',T('toolLoneWolf')]);
-  if(roleActiveAlive('serialkiller')) t.push(['skKill',T('toolSerialKiller')]);
-  if(roleActiveAlive('seer')||(aliveHas('apprentice')&&seerDied())) t.push(['seerCheck',T('toolSeer')]);
-  if(roleActiveAlive('bodyguard')) t.push(['protect',T('toolBodyguard')]);
-  if(roleActiveAlive('spellcaster')) t.push(['silence',T('toolSpellcaster')]);
-  if(G.nightNo===1 && aliveHas('doppelganger') && !G.doppleAcquired) t.push(['dopplePick',T('toolDoppelganger')]);
+  if(roleActiveAlive('cultleader')) t.push(['cultRecruit',T('toolCultLeader'),false]);
+  else if(hideMode&&roleAnyAssigned('cultleader')) t.push(['cultRecruit',T('toolCultLeader'),true]);
+
+  if(roleActiveAlive('vampire')) t.push(['vampireBite',T('toolVampire'),false]);
+  else if(hideMode&&roleAnyAssigned('vampire')) t.push(['vampireBite',T('toolVampire'),true]);
+
+  if(roleActiveAlive('shapeshifter')) t.push(['shapeShift',T('toolShapeshifter'),false]);
+  else if(hideMode&&roleAnyAssigned('shapeshifter')) t.push(['shapeShift',T('toolShapeshifter'),true]);
+
+  if(roleActiveAlive('sorcerer')) t.push(['sorcCheck',T('toolSorcerer'),false]);
+  else if(hideMode&&roleAnyAssigned('sorcerer')) t.push(['sorcCheck',T('toolSorcerer'),true]);
+
+  const killAnyAssigned=S.players.some((p,i)=>KILL_IDS.includes(p.role)||G.wolfConverts.includes(i));
+  if(alphaFirstNight) t.push(['alphaConvert',T('toolAlphaWolf'),false]);   // คืนแรก: แปลงร่างเท่านั้น
+  else if(killerAlive) t.push(['kill',T('toolWerewolf'),false]);
+  else if(hideMode&&killAnyAssigned) t.push(['kill',T('toolWerewolf'),true]);
+
+  if(roleActiveAlive('lonewolf')) t.push(['lonewolfKill',T('toolLoneWolf'),false]);
+  else if(hideMode&&roleAnyAssigned('lonewolf')) t.push(['lonewolfKill',T('toolLoneWolf'),true]);
+
+  if(roleActiveAlive('serialkiller')) t.push(['skKill',T('toolSerialKiller'),false]);
+  else if(hideMode&&roleAnyAssigned('serialkiller')) t.push(['skKill',T('toolSerialKiller'),true]);
+
+  const seerAnyAssigned=roleAnyAssigned('seer')||roleAnyAssigned('apprentice');
+  if(roleActiveAlive('seer')||(aliveHas('apprentice')&&seerDied())) t.push(['seerCheck',T('toolSeer'),false]);
+  else if(hideMode&&seerAnyAssigned) t.push(['seerCheck',T('toolSeer'),true]);
+
+  if(roleActiveAlive('bodyguard')) t.push(['protect',T('toolBodyguard'),false]);
+  else if(hideMode&&roleAnyAssigned('bodyguard')) t.push(['protect',T('toolBodyguard'),true]);
+
+  if(roleActiveAlive('spellcaster')) t.push(['silence',T('toolSpellcaster'),false]);
+  else if(hideMode&&roleAnyAssigned('spellcaster')) t.push(['silence',T('toolSpellcaster'),true]);
+
+  if(G.nightNo===1 && aliveHas('doppelganger') && !G.doppleAcquired) t.push(['dopplePick',T('toolDoppelganger'),false]);
   return t;
 }
 function activeNightTool(){
@@ -1973,15 +2012,20 @@ function viewGame(){
     const tools=nightTools();
     const active=activeNightTool();
     G.tool=active||(tools.length?tools[tools.length-1][0]:'kill');
+    const activeEntry=tools.find(t=>t[0]===active);
+    const activeIsDead=!!(activeEntry&&activeEntry[2]);
     const chips=tools.map(t=>{
       const k=t[0]; const done=toolDone(k); const skip=G.skipped&&G.skipped.includes(k);
-      const isActive=k===active;
+      const isActive=k===active; const isDead=t[2];
       const locked=!done&&!skip&&!isActive;
       const mark=done?' ✓':(skip?' ⏭':(isActive?'':' 🔒'));
       const cls=isActive?'on':(done?'tdone':(skip?'tskip':'tlock'));
-      return `<button class="tool ${cls}" ${isActive?`data-tool="${k}"`:'disabled'}>${t[1]}${mark}</button>`;
+      return `<button class="tool ${cls}${isDead?' tool-dead':''}" ${isActive?`data-tool="${k}"`:'disabled'}>${t[1]}${isDead?' 💀':''}${mark}</button>`;
     }).join('');
     let help='';
+    if(activeIsDead){
+      help=T('helpDeadSkipOnly');
+    } else
     if(G.tool==='kill') help=T('helpKill',{cur:G.wolfTargets.length,max:G.wolfKillCount})+(G.wolfKillCount>1?T('helpKillBonus'):'');
     else if(G.tool==='lonewolfKill') help=T('helpLoneWolfKill');
     else if(G.tool==='protect') help=G.protectPrev!=null?T('helpProtectRepeat',{name:esc(S.players[G.protectPrev].name)}):T('helpProtect');
@@ -2007,7 +2051,7 @@ function viewGame(){
       ? `<button class="btn block" disabled style="opacity:.4">${T('morningBtnDisabled')}</button>`
       : `<button class="btn block" id="gNight">${T('morningBtn')}</button>`;
     body=`${bannerHTML(G.banner&&G.banner.type==='exec'?G.banner:null)}
-      <div class="tools">${chips}</div>${stepBlock}<p class="gins">${help}</p>${ck}${miniRow}${ggrid()}
+      <div class="tools">${chips}</div>${stepBlock}<p class="gins">${help}</p>${ck}${miniRow}${activeIsDead?'':ggrid()}
       <div class="bottombar">${nightBtn}</div>`;
   } else if(G.phase==='day'){
     const tm=S.timerMin>0?`<div class="daytimer ${G.timerExpired?'up':''}" id="daytimer">${G.timerExpired?T('timerExpired'):fmtTimer()}</div>`:'';
@@ -2488,6 +2532,14 @@ function viewSettings(){
         <span class="set-label">${T('voiceSetting')}</span>
         <div class="lang-btns"><button class="tchip">${T('soundOff')}</button></div>
       </div>
+      <div class="set-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+        <span class="set-label">${T('revealDeathSetting')}</span>
+        <div class="lang-btns">
+          <button class="tchip ${S.revealOnDeath?'on':''}" id="revealOn">${T('revealOnLabel')}</button>
+          <button class="tchip ${!S.revealOnDeath?'on':''}" id="revealOff">${T('revealOffLabel')}</button>
+        </div>
+        <p class="footnote" style="margin:2px 0 0">${S.revealOnDeath?T('revealOnDesc'):T('revealOffDesc')}</p>
+      </div>
     </div>
   </div>`;
 }
@@ -2716,6 +2768,9 @@ function bind(){
     if(sfxOff) sfxOff.onclick=()=>{S.soundFX=false;try{localStorage.setItem('ww_sfx','off');}catch(e){}render();};
     if(ambOn) ambOn.onclick=()=>{S.soundAmbient=true;try{localStorage.setItem('ww_amb','on');}catch(e){}render();};
     if(ambOff) ambOff.onclick=()=>{S.soundAmbient=false;try{localStorage.setItem('ww_amb','off');}catch(e){}render();};
+    const revOn=$('revealOn'),revOff=$('revealOff');
+    if(revOn) revOn.onclick=()=>{S.revealOnDeath=true;try{localStorage.setItem('ww_reveal','on');}catch(e){}render();};
+    if(revOff) revOff.onclick=()=>{S.revealOnDeath=false;try{localStorage.setItem('ww_reveal','off');}catch(e){}render();};
     return;
   }
   if(S.screen==='setup'){
