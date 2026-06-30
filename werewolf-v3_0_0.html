@@ -363,6 +363,7 @@
   .hist-event.clr-purple{border-left-color:#aa55dd;}
   .hist-event.clr-pink{border-left-color:#dd6699;}
   .hist-event.clr-orange{border-left-color:#e08030;}
+  .hist-event.clr-gold{border-left-color:#f0d486;}
   .hist-event.clr-green{border-left-color:#55aa66;}
   .hist-event.clr-gray{border-left-color:#555566;opacity:.65;}
   .hist-event.clr-yellow{border-left-color:#ddaa22;}
@@ -375,7 +376,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.8.2</div>
+<div id="verbadge">v3.8.3</div>
 
 <script>
 const ROLES = [
@@ -659,6 +660,8 @@ const translations={
 th:{
   // ===== Main Menu / Settings (ของเดิม) =====
   start:'เริ่มเกม', settings:'ตั้งค่า', language:'ภาษา', save:'บันทึก', cancel:'ยกเลิก', back:'ย้อนกลับ',
+  undoLabel:'ย้อนกลับ', reviewConfirmQ:'ต้องการดูบทบาทของตัวเองซ้ำไหม?',
+  reviewCancel:'ยกเลิก', reviewConfirmBtn:'ยืนยัน — ดูบทบาท',
 
   // ===== Team labels (TEAM_LABEL) =====
   teamMod:'ผู้ดำเนินรายการ', teamWolf:'ฝ่ายมนุษย์หมาป่า', teamVillage:'ฝ่ายหมู่บ้าน', teamNeutral:'เป็นกลาง', teamSpecial:'พิเศษ',
@@ -731,12 +734,13 @@ th:{
   sfxSetting:'🔊 เสียงเอฟเฟกต์', ambSetting:'🎵 เสียง Ambient',
   voiceSetting:'📢 เสียงประกาศ (เร็วๆนี้)', soundOn:'เปิด', soundOff:'ปิด', actProtected:'{actor} ปกป้อง {target}',
   actKilled:'{actor} ฆ่า {target}', actBlocked:'{actor} พยายามฆ่า {target} แต่ถูกป้องกันไว้ได้',
-  actToughGuyHit:'💪 {target} ได้รับบาดเจ็บจากการถูกมนุษย์หมาป่าเล่นงาน',
-  actToughGuyDeath:'💀 {target} ทนพิษบาดแผลไม่ไหว เสียชีวิต',
-  actCursedConvert:'🌗➡️🐺 {target} ถูกสาปกลายเป็นหมาป่า',
+  actToughGuyHit:'{target} ได้รับบาดเจ็บจากการถูกมนุษย์หมาป่าเล่นงาน',
+  actToughGuyDeath:'{target} ทนพิษบาดแผลไม่ไหว เสียชีวิต',
+  actCursedConvert:'{target} ถูกสาปกลายเป็นหมาป่า',
   actRecruited:'{actor} ชวน {target} เข้าลัทธิ', actBit:'{actor} กัด {target}',
   actConverted:'{actor} เปลี่ยน {target} เป็นหมาป่า', actShapeshifted:'{actor} จำแลงเป็น {target}',
   actSeerChecked:'🔮 เทพพยากรณ์ ตรวจสอบ {target}', actSorcChecked:'🧙 นางปีศาจ ตรวจสอบ {target}',
+  actBeggarWin:'ยาจก {target} ถูกกำจัด — ชนะทันที!',
   actMarked:'{actor} จับตา {target}', actPaired:'จับคู่รัก {a} และ {b}',
   actExecuted:'{target} ถูกประหาร', actHunterShot:'{actor} ยิง {target}',
   actHunterNoShot:'นายพรานไม่ยิงใคร', actSkipped:'{actor} ข้ามสกิล',
@@ -866,6 +870,8 @@ th:{
 },
 en:{
   start:'Start Game', settings:'Settings', language:'Language', save:'Save', cancel:'Cancel', back:'Back',
+  undoLabel:'Undo', reviewConfirmQ:'View your role again?',
+  reviewCancel:'Cancel', reviewConfirmBtn:'Confirm — View Role',
 
   teamMod:'Moderator', teamWolf:'Werewolf Team', teamVillage:'Village Team', teamNeutral:'Neutral', teamSpecial:'Special',
   backToMenuBtn:'← Back to Main Menu',
@@ -936,12 +942,13 @@ en:{
   voiceSetting:'📢 Moderator Voice (coming soon)', soundOn:'On', soundOff:'Off',
   actChecked:'{actor} checked {target}', actProtected:'{actor} protected {target}',
   actKilled:'{actor} killed {target}', actBlocked:'{actor} tried to kill {target} but was blocked',
-  actToughGuyHit:'💪 {target} was wounded by the werewolves',
-  actToughGuyDeath:'💀 {target} could not survive the wounds and died',
-  actCursedConvert:'🌗➡️🐺 {target} was cursed and became a werewolf',
+  actToughGuyHit:'{target} was wounded by the werewolves',
+  actToughGuyDeath:'{target} could not survive the wounds and died',
+  actCursedConvert:'{target} was cursed and became a werewolf',
   actRecruited:'{actor} recruited {target} into the cult', actBit:'{actor} bit {target}',
   actConverted:'{actor} converted {target} into a werewolf', actShapeshifted:'{actor} disguised as {target}',
   actSeerChecked:'🔮 Seer investigated {target}', actSorcChecked:'🧙 Sorcerer investigated {target}',
+  actBeggarWin:'Beggar {target} was eliminated — instant win!',
   actMarked:'{actor} marked {target}', actPaired:'Paired lovers {a} and {b}',
   actExecuted:'{target} was executed', actHunterShot:'{actor} shot {target}',
   actHunterNoShot:'Hunter did not shoot anyone', actSkipped:'{actor} skipped their turn',
@@ -1547,18 +1554,23 @@ function resolveNight(){          // 🌅 เช้าแล้ว
   {
     const deadNames=G.deaths.map(idx=>S.players[idx].name);
     const convertedNames=(G.justConverts||[]).map(idx=>S.players[idx].name);
-    let _sndBlocked=false,_sndTransform=false;
+    let _sndBlocked=false,_sndTransform=false,_sndBeggar=false;
     G.history.forEach(h=>{
-      if(h.night===G.nightNo && h.key==='actKilled' && !deadNames.includes(h.vars.target)){
+      if(h.night===G.nightNo && h.key==='actKilled'){
         const tidx=S.players.findIndex(p=>p.name===h.vars.target);
-        if(convertedNames.includes(h.vars.target)){h.key='actCursedConvert';_sndTransform=true;}
-        else if(tidx>=0 && G.toughDieNext===tidx) h.key='actToughGuyHit';
-        else{h.key='actBlocked';_sndBlocked=true;}
+        if(!deadNames.includes(h.vars.target)){
+          if(convertedNames.includes(h.vars.target)){h.key='actCursedConvert';_sndTransform=true;}
+          else if(tidx>=0 && G.toughDieNext===tidx) h.key='actToughGuyHit';
+          else{h.key='actBlocked';_sndBlocked=true;}
+        } else if(tidx>=0 && roleOf(tidx)==='beggar'){
+          h.key='actBeggarWin'; h.vars={target:h.vars.target}; _sndBeggar=true;
+        }
       }
     });
-    const _dur={kill:650,blocked:400,transform:900,morning:2000};
+    const _dur={kill:650,blocked:400,transform:900,morning:2000,winBeggar:1600};
     const _chain=[];
-    if(_hasDeath){ _chain.push('kill'); haptic('heavy'); }
+    if(_sndBeggar) _chain.push('winBeggar');
+    else if(_hasDeath){ _chain.push('kill'); haptic('heavy'); }
     if(_sndBlocked){ _chain.push('blocked'); haptic('medium'); }
     if(_sndTransform) _chain.push('transform');
     _chain.push('morning');
@@ -1583,13 +1595,20 @@ function resolveDay(){           // 🌙 มืดแล้ว
       G.princeSaved=true; princeName=S.players[G.dayVote].name;
       setTimeout(()=>playSound('revealRoyal'),200);
     } else {
-      _didExec=true; haptic('heavy'); setTimeout(()=>{ if(G.phase!=='over') playSound('execute'); },100);
+      const _isBeggarVote=roleOf(G.dayVote)==='beggar';
+      _didExec=true; haptic('heavy');
+      setTimeout(()=>{
+        if(G.phase==='over') return;
+        playSound(_isBeggarVote?'winBeggar':'execute');
+      },100);
       killChain([G.dayVote]);
     }
   }
   G.banner={type:'exec',deaths:[...G.deaths],princeSaved:princeName,pacifistVeto:G.pacifistVeto};
   G.pacifistVeto=false;
-  logEvent('actExecuted',{target:G.deaths.length>0?S.players[G.dayVote].name:''});
+  const _execIsBeggar=_didExec&&G.deaths.length>0&&roleOf(G.dayVote)==='beggar';
+  if(_execIsBeggar) logEvent('actBeggarWin',{target:S.players[G.dayVote].name});
+  else logEvent('actExecuted',{target:G.deaths.length>0?S.players[G.dayVote].name:''});
   setTimeout(()=>{ if(G.phase!=='over') playSound('night'); },_didExec?1500:0);
   finishResolution();
 }
@@ -1792,7 +1811,7 @@ function bannerHTML(b, extra){
 function gcell(i){
   const p=S.players[i], conv=G.wolfConverts&&G.wolfConverts.includes(i), r=conv?roleById('werewolf'):roleById(effRole(i)), dead=!G.alive[i];
   let b='';
-  if(dead) b+='💀';
+  if(dead) b+=(roleOf(i)==='beggar'?'🏆':'💀');
   if(G.phase!=='day'&&(G.wolfTargets.includes(i)||G.loneWolfTarget===i)) b+='🎯';
   if(G.phase==='night'&&G.alphaConvert===i) b+='🩸';
   if(G.phase==='night'&&G.skTarget===i) b+='🔪';
@@ -1846,6 +1865,7 @@ function viewHistory(){
     actSkipped:      ['⏭️','clr-gray'],
     actSorcChecked:  ['🧙','clr-purple'],
     actSeerChecked:  ['🔮','clr-blue'],
+    actBeggarWin:    ['🏆','clr-gold'],
   };
 
   const NIGHT_KEYS=new Set(['actKilled','actBlocked','actProtected','actChecked','actCursedConvert',
@@ -1892,7 +1912,7 @@ function viewGame(){
     </div></div>`;
   let body='';
   if(G.phase==='cupid'){
-    const miniRow=ACT.length?`<div class="mini-row"><button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ ย้อนกลับ(<b>${ACT.length}</b>)</button></div>`:'';
+    const miniRow=ACT.length?`<div class="mini-row"><button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ ${T('undoLabel')}(<b>${ACT.length}</b>)</button></div>`:'';
     const cupidScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptCupidWake')}</div></div>`:'';
     body=`<p class="gins">${T('cupidInstruction')}</p>${cupidScript}${miniRow}${ggrid()}
       <div class="bottombar"><button class="btn ghost" id="gCupidSkip">${T('skipBtn')}</button>
@@ -1930,7 +1950,7 @@ function viewGame(){
         :'';
       return `<div class="step-block"><div class="step-label">▶️ ${curLabel}</div>${scriptKey?`<div class="step-script">${T('scriptLineLabel')} ${scriptKey}</div>`:''}</div>`;
     })():'';
-    const miniRow=(ACT.length||active)?`<div class="mini-row">${ACT.length?`<button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ ย้อนกลับ(<b>${ACT.length}</b>)</button>`:''}${active?`<button class="mini-btn skip" id="gSkipTool" title="${T('skipToolTitle')}">⏭ Skip</button>`:''}</div>`:'';
+    const miniRow=(ACT.length||active)?`<div class="mini-row">${ACT.length?`<button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ ${T('undoLabel')}(<b>${ACT.length}</b>)</button>`:''}${active?`<button class="mini-btn skip" id="gSkipTool" title="${T('skipToolTitle')}">⏭ Skip</button>`:''}</div>`:'';
     const nightBtn=active
       ? `<button class="btn block" disabled style="opacity:.4">${T('morningBtnDisabled')}</button>`
       : `<button class="btn block" id="gNight">${T('morningBtn')}</button>`;
@@ -1973,7 +1993,7 @@ function viewGame(){
       const beggarWon=G.winner==='wolf' && S.players.some((p,i)=>p.role==='beggar'&&!G.alive[i]);
       const txt=loneWolfOnly?T('winnerLoneWolf'):beggarWon?T('winnerWolfAndBeggar'):G.winner==='wolf'?T('winnerWolf'):G.winner==='cult'?T('winnerCult'):G.winner==='sk'?T('winnerSk'):G.winner==='vampire'?T('winnerVampire'):T('winnerVillage');
       body=`<div class="banner win">${txt}</div>
-        <div class="card">${S.players.map((p,i)=>{const r=(G.wolfConverts&&G.wolfConverts.includes(i))?roleById('werewolf'):roleById(p.role);return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':'💀'}</div><div class="rl"><span class="teamtag t-${r.team}" style="margin:0">${roleLabel(r)}</span></div></div>`}).join('')}</div>
+        <div class="card">${S.players.map((p,i)=>{const r=(G.wolfConverts&&G.wolfConverts.includes(i))?roleById('werewolf'):roleById(p.role);return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':(p.role==='beggar'?'🏆':'💀')}</div><div class="rl"><span class="teamtag t-${r.team}" style="margin:0">${roleLabel(r)}</span></div></div>`}).join('')}</div>
         <button class="btn block ghost" id="gHistoryBtn">${T('historyTitle')}</button>
         <button class="btn block" id="gExit2">${T('backToSummaryBtn')}</button>`;
     }
@@ -2124,10 +2144,10 @@ function viewList(){
   const confirmBar=S.reviewTarget!=null?`
   <div class="review-confirm">
     <div class="rc-name">${esc(S.players[S.reviewTarget].name)}</div>
-    <div class="rc-sub">ต้องการดูบทบาทของตัวเองซ้ำไหม?</div>
+    <div class="rc-sub">${T('reviewConfirmQ')}</div>
     <div style="display:flex;gap:10px;width:100%">
-      <button class="btn ghost block" id="rcCancel" style="flex:1">ยกเลิก</button>
-      <button class="btn block" id="rcConfirm" style="flex:2">ยืนยัน — ดูบทบาท</button>
+      <button class="btn ghost block" id="rcCancel" style="flex:1">${T('reviewCancel')}</button>
+      <button class="btn block" id="rcConfirm" style="flex:2">${T('reviewConfirmBtn')}</button>
     </div>
   </div>`:'';
   return `
