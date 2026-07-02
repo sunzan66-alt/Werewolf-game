@@ -415,7 +415,7 @@
 <div id="flash-overlay"></div>
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"></div>
-<div id="verbadge">v3.14.15</div>
+<div id="verbadge">v3.14.19</div>
 
 <script>
 const ROLES = [
@@ -1594,6 +1594,14 @@ function checkWin(){
   const skN=idx.filter(i=>effRole(i)==='serialkiller'&&!inCult(i)&&!inVamp(i)).length;
   const wolfN=idx.filter(i=>teamOf(i)==='wolf'&&!inCult(i)).length;
   const killerWolves=idx.filter(i=>!inCult(i)&&!inVamp(i)&&(['werewolf','alphawolf','lonewolf','shapeshifter'].includes(effRole(i))||(G.wolfConverts&&G.wolfConverts.includes(i)))).length;
+  // กฎพิเศษ: เหลือ 2 คน — แวมไพร์เดี่ยว หรือ ผู้นำลัทธิเดี่ยว vs ตัวละครที่ฆ่าได้ (หมาป่า/ฆาตกรโรคจิต)
+  // ฝ่ายฆ่าชนะทันที เพราะต่อให้แวมไพร์/ผู้นำลัทธิใช้พลัง ก็โดนฆ่าก่อนเช้าอยู่ดี
+  if(N===2){
+    const soloVamp=vampN===1;
+    const soloCult=cultN===1 && vampN===0;
+    if((soloVamp||soloCult) && killerWolves>0){ G.winner='wolf'; return true; }
+    if((soloVamp||soloCult) && skN===1){ G.winner='sk'; return true; }
+  }
   if(N===0){ G.winner='extinct'; return true; } // ทุกคนตายหมด — ไม่มีผู้ชนะ
   if(vampN>0 && vampN===N){ G.winner='vampire'; return true; }
   if(cultN>0 && cultN > N-cultN){ G.winner='cult'; return true; }
@@ -1705,20 +1713,20 @@ function resolveNight(){          // 🌅 เช้าแล้ว
     if(_sndTransform) _chain.push('transform');
     _chain.push('morning');
     let _cd=0;
-    playChainSequential(_chain, ()=>{ window._morningEnd=Date.now(); finishResolution(); });
+    playChainSequential(_chain, ()=>{ window._morningEnd=Date.now(); finishResolution(); }, checkWin);
     return;
   }
   finishResolution();
 }
-function playChainSequential(list,onLastStart){
+function playChainSequential(list,onLastStart,skipLast){
   if(G.phase==='over') return; // จบเกม: ข้ามทุกเสียง (kill/blocked/transform/morning) เหมือนเดิม
   if(list.length<=1){
-    if(list[0]) playSound(list[0]);
+    if(list[0] && !(skipLast&&skipLast())) playSound(list[0]);
     if(onLastStart) onLastStart();
     return;
   }
   const [first,...rest]=list;
-  playSoundThen(first,()=>playChainSequential(rest,onLastStart));
+  playSoundThen(first,()=>playChainSequential(rest,onLastStart,skipLast));
 }
 function resolveDay(){           // 🌙 มืดแล้ว
   pushUndo();
@@ -1745,7 +1753,7 @@ function resolveDay(){           // 🌙 มืดแล้ว
   const _execIsBeggar=_didExec&&G.deaths.length>0&&effRole(G.dayVote)==='beggar';
   if(_execIsBeggar) logEvent('actBeggarWin',{target:S.players[G.dayVote].name});
   else logEvent('actExecuted',{target:G.deaths.length>0?S.players[G.dayVote].name:''});
-  const _playNight=()=>{ if(G.phase!=='over') playSound('night'); finishResolution(); };
+  const _playNight=()=>{ if(!checkWin()) playSound('night'); finishResolution(); };
   if(_lastSnd){
     setTimeout(()=>{
       if(G.phase==='over'){ finishResolution(); return; }
