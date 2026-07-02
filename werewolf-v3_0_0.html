@@ -391,7 +391,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.14.1</div>
+<div id="verbadge">v3.14.2</div>
 
 <script>
 const ROLES = [
@@ -487,9 +487,9 @@ const ROLE_DESC_EN = {
   drunk: "Doesn't know their true role — starts the game with no power. On Night 3, awakens and gains the ability of their randomly assigned true role.",
   doppelganger: "On the first night, choose 1 player to mark. Whenever that player dies, immediately takes on their role (and team).",
   beggar: "Has given up on life — wins instantly when eliminated (voted out or killed). The game continues normally for everyone else.",
-  serialkiller: "Special character (solo). Each night, can kill 1 player. Wins by being the last one standing.",
-  cultleader: "Special character. Each night, recruits 1 player into the cult. Wins when cult members outnumber all other factions combined.",
-  vampire: "Special character. Each night, chooses 1 player to convert into a vampire (growing their numbers). Wins when only vampires remain."
+  serialkiller: "Neutral role (solo). Each night, can kill 1 player. Wins by being the last one standing.",
+  cultleader: "Neutral role. Each night, recruits 1 player into the cult. Wins when cult members outnumber all other factions combined.",
+  vampire: "Neutral role. Each night, chooses 1 player to convert into a vampire (growing their numbers). Wins when only vampires remain."
 };
 function roleDesc(r){ return S.lang==='en' ? (ROLE_DESC_EN[r.id]||r.desc) : r.desc; }
 const TEAM_LABEL_KEY={mod:'teamMod',wolf:'teamWolf',village:'teamVillage',neutral:'teamNeutral',special:'teamSpecial'};
@@ -925,7 +925,7 @@ en:{
   backToMenuBtn:'← Back to Main Menu',
 
   // ===== role category headers (viewSetup) =====
-  catMod:'🎙️ Moderator', catWolf:'🐺 Werewolf Team', catVillage:'🛡️ Village Team', catNeutral:'✨ Special Characters (Neutral)',
+  catMod:'🎙️ Moderator', catWolf:'🐺 Werewolf Team', catVillage:'🛡️ Village Team', catNeutral:'✨ Neutral Roles',
   recMystic:'🔮 Mystic Mode', dynModNote:'adjusts to roles in play',
 
   // ===== How to Play (v2.2.0) =====
@@ -1073,7 +1073,7 @@ en:{
 
   modSummaryTitle:'Role Summary', modOnlySub:"For the moderator only — shows everyone's role",
   iAmMod:'I am the moderator · Show', backToList:'← Back to list', allRolesSummary:'Full Role Summary',
-  startRunBtn:'▶️ Start Running Game (Night/Day)', reshuffleBtn:'🎲 Play Again (reshuffle, same names)', resetAllBtn:'Reset Everything',
+  startRunBtn:'▶️ Start Game', reshuffleBtn:'🎲 Play Again (reshuffle, same names)', resetAllBtn:'Reset Everything',
 
   phaseCupid:'💘 Match Lovers', phaseNight:'🌙 Night {n}', phaseDay:'☀️ Day {n}',
   phaseHunter:"🏹 Hunter's Last Shot", phaseOver:'🏁 Game Over',
