@@ -391,7 +391,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.14.0</div>
+<div id="verbadge">v3.14.1</div>
 
 <script>
 const ROLES = [
@@ -1121,7 +1121,7 @@ en:{
   stepInfo:'▶️ Up next: {label} — use the skill or tap "Skip this skill" before moving on',
   skipToolTitle:'Skip this skill tonight', morningBtnDisabled:'🌅 Morning — complete all skills in order first', morningBtn:'🌅 Morning — Resolve Night',
 
-  timerExpired:"⏰ Time's up! Vote now", silencedAliveNote:'🤫 Silenced: {name}',
+  timerExpired:"⏰ Time's up! Cast your vote!", silencedAliveNote:'🤫 Silenced: {name}',
   mayorVoteNote:'🎩 Mayor vote = 2 votes (if revealed)', ghostVoteNote:'👻 Ghost can still vote today (last day)',
   executeSilencedBtn:'⚖️ Execute the one who spoke', pacifistBtn:'🕊️ Pacifist',
   dayInstruction:'Tap to select who is voted out (none = no execution)',
@@ -1422,7 +1422,7 @@ function tickTimer(){
       try{navigator.vibrate&&navigator.vibrate([200,100,200]);}catch(e){}
       playSound('bell'); // ระฆังหมดเวลา
     }
-    el.classList.add('up'); el.textContent='⏰ หมดเวลา! โหวตได้เลย';
+    el.classList.add('up'); el.textContent=T('timerExpired');
     stopTimer(); return;
   }
   const s=Math.ceil(rem/1000);
