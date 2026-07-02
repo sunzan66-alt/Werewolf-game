@@ -391,7 +391,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.14.9</div>
+<div id="verbadge">v3.14.10</div>
 
 <script>
 const ROLES = [
@@ -663,7 +663,7 @@ let S={
 S.counts.werewolf=1; S.counts.villager=0;
 S._focusName=true;
 S.timerMin=3;
-S.modLevel=null;
+S.modLevel='beginner';
 try{
   S.soundFX=localStorage.getItem('ww_sfx')!=='off';
   S.soundAmbient=localStorage.getItem('ww_amb')!=='off';
@@ -1367,7 +1367,7 @@ function reshuffle(){
 }
 function resetAll(){
   G=null; UNDO=null;
-  S.screen='setup'; S.active=null; S.flipped=false; S.modUnlocked=false; S.modLevel=null;
+  S.screen='setup'; S.active=null; S.flipped=false; S.modUnlocked=false; S.modLevel='beginner';
   S.players.forEach(p=>{p.role=null;p.revealed=false;});
   render();
 }
@@ -1376,6 +1376,7 @@ function openReveal(i){
     // ดูซ้ำ: แสดง confirmation ใน viewList แทน ไม่ข้ามเข้าทันที
     S.reviewTarget=i; render(); return;
   }
+  if(S.reviewTarget!=null){ S.reviewTarget=null; render(); return; }
   // เปิดครั้งแรก: spin ก่อนแสดงบทบาท
   S.active=i; S.flipped=false; S.spinning=true; S.screen='reveal';
   render();
