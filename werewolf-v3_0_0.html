@@ -376,6 +376,8 @@
   #flash-overlay{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;}
   #fade-overlay{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0;background:#000;transition:opacity .28s ease}
   #fade-overlay.show{opacity:1}
+  #sunrise-overlay{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(255,246,222,.95),rgba(255,221,150,.9));transition:opacity .42s ease}
+  #sunrise-overlay.show{opacity:.22}
   @keyframes flashGold{0%{background:rgba(240,200,70,.5);opacity:1;}100%{background:rgba(240,200,70,0);opacity:0;}}
   @keyframes flashDark{0%{background:rgba(5,5,15,.88);opacity:1;}100%{background:rgba(5,5,15,0);opacity:0;}}
   .hist-section{margin:8px 0;}
@@ -412,7 +414,8 @@
 <div id="loader"></div>
 <div id="flash-overlay"></div>
 <div id="fade-overlay"></div>
-<div id="verbadge">v3.14.13</div>
+<div id="sunrise-overlay"></div>
+<div id="verbadge">v3.14.15</div>
 
 <script>
 const ROLES = [
@@ -1611,7 +1614,7 @@ function enterDay(){
   G.banner={type:'morning',deaths:[...G.deaths],converts:[...(G.justConverts||[])],vampires:[...(G.justVampires||[])]};
   G.phase=checkWin()?'over':'day';
   if(G.phase==='over'){ playWinSound(); render(); stopTimer(); return; }
-  fadeTransition(()=>{ render(); startDayTimer(); }, 280);
+  sunriseTransition(()=>{ render(); startDayTimer(); });
 }
 function enterNight(){
   stopTimer(); ACT=[];
@@ -1702,33 +1705,38 @@ function resolveNight(){          // 🌅 เช้าแล้ว
     if(_sndTransform) _chain.push('transform');
     _chain.push('morning');
     let _cd=0;
-    _chain.forEach(s=>{setTimeout(()=>{
-      if(G.phase==='over') return; // จบเกม: ข้ามทุกเสียง (kill/blocked/transform/morning)
-      playSound(s);
-    },_cd);_cd+=(_dur[s]||500);});
-    window._morningEnd=Date.now()+_cd;
+    playChainSequential(_chain, ()=>{ window._morningEnd=Date.now(); finishResolution(); });
+    return;
   }
   finishResolution();
+}
+function playChainSequential(list,onLastStart){
+  if(G.phase==='over') return; // จบเกม: ข้ามทุกเสียง (kill/blocked/transform/morning) เหมือนเดิม
+  if(list.length<=1){
+    if(list[0]) playSound(list[0]);
+    if(onLastStart) onLastStart();
+    return;
+  }
+  const [first,...rest]=list;
+  playSoundThen(first,()=>playChainSequential(rest,onLastStart));
 }
 function resolveDay(){           // 🌙 มืดแล้ว
   pushUndo();
   let _didExec=false;
   G.deaths=[]; G.hunterQueue=[]; G.afterHunter='night';
   let princeName=null;
+  let _lastSnd=null;
   if(G.pacifistVeto){
     // นักสันติวิธีออกเสียง — ยกเลิกการประหารทั้งหมดวันนี้
-    setTimeout(()=>{ if(G.phase!=='over') playSound('pacifistVeto'); },100);
+    _lastSnd='pacifistVeto';
   } else if(G.dayVote!=null){
     if(roleOf(G.dayVote)==='prince' && !G.princeSaved){
       G.princeSaved=true; princeName=S.players[G.dayVote].name;
-      setTimeout(()=>playSound('revealRoyal'),200);
+      _lastSnd='revealRoyal';
     } else {
       const _isBeggarVote=effRole(G.dayVote)==='beggar';
       _didExec=true; haptic('heavy');
-      setTimeout(()=>{
-        if(G.phase==='over') return;
-        playSound(_isBeggarVote?'winBeggar':'execute');
-      },100);
+      _lastSnd=_isBeggarVote?'winBeggar':'execute';
       killChain([G.dayVote]);
     }
   }
@@ -1737,8 +1745,13 @@ function resolveDay(){           // 🌙 มืดแล้ว
   const _execIsBeggar=_didExec&&G.deaths.length>0&&effRole(G.dayVote)==='beggar';
   if(_execIsBeggar) logEvent('actBeggarWin',{target:S.players[G.dayVote].name});
   else logEvent('actExecuted',{target:G.deaths.length>0?S.players[G.dayVote].name:''});
-  setTimeout(()=>{ if(G.phase!=='over') playSound('night'); },_didExec?1500:0);
-  finishResolution();
+  const _playNight=()=>{ if(G.phase!=='over') playSound('night'); finishResolution(); };
+  if(_lastSnd){
+    setTimeout(()=>{
+      if(G.phase==='over'){ finishResolution(); return; }
+      playSoundThen(_lastSnd,_playNight);
+    },100);
+  } else _playNight();
 }
 function executeSilenced(){      // คนโดนใบ้เผลอพูด -> ประหารทันที โหวตต่อได้
   if(G.silenced==null||!G.alive[G.silenced]) return;
@@ -2747,6 +2760,15 @@ function fadeTransition(cb,holdMs){
     requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ el.classList.remove('show'); }); });
   }, holdMs||280);
 }
+function sunriseTransition(cb){
+  const el=document.getElementById('sunrise-overlay');
+  if(!el){ cb(); return; }
+  el.classList.add('show');
+  setTimeout(()=>{
+    cb();
+    setTimeout(()=>{ el.classList.remove('show'); }, 120);
+  }, 420);
+}
 function playSoundThen(type,cb){
   const isAmb=['night','morning','gameStart'].includes(type);
   if((isAmb?!S.soundAmbient:!S.soundFX)||!SFX[type]){ cb(); return; }
@@ -2756,8 +2778,13 @@ function playSoundThen(type,cb){
       if(!buf){ cb(); return; }
       const src=_wwaCtx.createBufferSource(); src.buffer=buf;
       const g=_wwaCtx.createGain(); g.gain.value=0.85;
-      src.connect(g); g.connect(_wwaCtx.destination); src.start();
-      setTimeout(cb, Math.max(300, buf.duration*1000));
+      src.connect(g); g.connect(_wwaCtx.destination);
+      let _done=false;
+      const finish=()=>{ if(_done) return; _done=true; cb(); };
+      src.onended=finish;
+      src.start();
+      // สำรอง เผื่อ onended ไม่ยิง (บาง browser/เคส) — ใช้ระยะเวลาไฟล์จริงบวก buffer เล็กน้อย ไม่ใช่ delay กำหนดตายตัว
+      setTimeout(finish, buf.duration*1000+150);
     });
   };
   if(_wwaCtx.state==='suspended') _wwaCtx.resume().then(go); else go();
