@@ -391,7 +391,7 @@
 <div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
-<div id="verbadge">v3.14.2</div>
+<div id="verbadge">v3.14.7</div>
 
 <script>
 const ROLES = [
@@ -808,7 +808,7 @@ th:{
   recBeginner:'😊 มือใหม่', recCasual:'🎲 คลาสสิก', recAdvanced:'🔥 ขั้นสูง', recChaos:'🌀 ปั่นป่วน',
 
   // ===== viewSetup =====
-  players:'ผู้เล่น', playerPlaceholder:'พิมพ์ชื่อ… คั่นด้วย , เพื่อเพิ่มหลายคน', add:'เพิ่ม',
+  players:'ผู้เล่น', playerPlaceholder:'พิมพ์ชื่อ… คั่นด้วยเครื่องหมายจุลภาค', add:'เพิ่ม',
   noPlayersYet:'ยังไม่มีผู้เล่น — เพิ่มอย่างน้อย 3 คน', rolesInGame:'บทบาทในเกม',
   savedGroups:'👥 กลุ่มผู้เล่น', noSavedGroups:'ยังไม่มีกลุ่มที่บันทึกไว้',
   saveGroupBtn:'💾 บันทึกกลุ่มนี้', saveGroupPrompt:'ตั้งชื่อกลุ่ม',
@@ -996,14 +996,14 @@ en:{
   scriptNoteGhost:'⚠️ The Ghost may still vote for 1 day after death',
   scriptNotePacifist:'⚠️ The Pacifist may veto an execution before it happens',
   scriptNotePrince:'⚠️ The Prince may reveal themselves to survive the first execution',
-  scriptOpenScript:'📋 View Script',
+  scriptOpenScript:'📋 Moderator Script',
   scriptBannerTip:'Tip: View the script before starting the game',
   modExpLevel:'What kind of moderator are you?',
-  modExpBeginner:'🌱 Beginner — I need the script',
-  modExpNormal:'⚡ Experienced — no script needed',
+  modExpBeginner:'🌱 Beginner — Use Guided Script',
+  modExpNormal:'⚡ Experienced Moderator — No script needed',
   scriptLineLabel:'📢 Say:',
-  scriptMorningLine:'"Morning has come. Everyone open your eyes"',
-  scriptMorningDeath:'"Last night… {names} died"',
+  scriptMorningLine:'"Morning has come. Everyone, open your eyes."',
+  scriptMorningDeath:'"Last night, {names} died."',
   scriptMorningPeace:'"Last night was peaceful. No one died"',
   scriptSilencedLine:'"[name] cannot speak this morning"',
 
@@ -1019,9 +1019,9 @@ en:{
   revealOffDesc:'Even after a player dies, the system still calls their role in the usual order — but the only option is "Skip". Other players won\'t be able to tell who died just from the calling order.',
   helpDeadSkipOnly:'💀 The player holding this role has died — read the script as usual, then press "Skip" (other players won\'t know they\'re dead).',
   gsTitle:'📊 Game Summary', gsNight:'Night', gsDay:'Day', gsTotalDeath:'Total Death',
-  gsLongestSurvivor:'Survived to the End', gsFirstBlood:'First Blood', gsNoSurvivors:'None (everyone died)',
+  gsLongestSurvivor:'Survivors', gsFirstBlood:'First Blood', gsNoSurvivors:'None (everyone died)',
   actChecked:'{actor} checked {target}', actProtected:'{actor} protected {target}',
-  actKilled:'{actor} killed {target}', actBlocked:'{actor} tried to kill {target} but was blocked',
+  actKilled:'{actor} killed {target}', actBlocked:'Werewolves attempted to kill {target}, but the attack was blocked.',
   actToughGuyHit:'{target} was wounded by the werewolves',
   actToughGuyDeath:'{target} could not survive the wounds and died',
   actCursedConvert:'{target} was cursed and became a werewolf',
@@ -1044,10 +1044,10 @@ en:{
 
   recBeginner:'😊 Beginner', recCasual:'🎲 Classic', recAdvanced:'🔥 Advanced', recChaos:'🌀 Chaos',
 
-  players:'Players', playerPlaceholder:'Type name(s)… separate with , to add multiple', add:'Add',
+  players:'Players', playerPlaceholder:'Enter names… Separate with commas.', add:'Add',
   noPlayersYet:'No players yet — add at least 3', rolesInGame:'Roles in Game',
   savedGroups:'👥 Player Groups', noSavedGroups:'No saved groups yet',
-  saveGroupBtn:'💾 Save this group', saveGroupPrompt:'Name this group',
+  saveGroupBtn:'💾 Save Group', saveGroupPrompt:'Name this group',
   saveGroupReplace:'A group with this name already exists. Replace it?',
   saveGroupName:'Group name', saveGroupConfirm:'Save',
   hideExtraRoles:'▲ Hide extra roles', showMoreRoles:'▼ More roles ({n})',
@@ -1062,7 +1062,7 @@ en:{
   applyRecBtn:'✨ Apply Recommended Set for {n} Players', dayTimer:'⏱️ Day Timer', timerOff:'Off', timerMinFmt:'{n} min',
   startGameBtn:'Randomize Roles & Start', setupFootnote:"Ability descriptions are general defaults — adjust to your group's house rules",
 
-  tapNameToReveal:'Tap a name to reveal role', passDeviceSub:'Pass the device so each player can view their own role',
+  tapNameToReveal:'Tap a player to reveal their role', passDeviceSub:'Pass the device so each player can view their own role',
   viewed:'Viewed', tapToView:'Tap to view', viewedProgress:'Viewed {done} / {total}',
   openModSummary:'🎭 Open Moderator Summary', backToSetup:'← Back to Setup',
   passDeviceTo:'Pass device to', rememberRoleConfirm:'Remember your role, then tap OK', tapCardToReveal:'Tap the card to reveal',
@@ -1071,15 +1071,15 @@ en:{
   noOtherMasons:'— No other Masons in this game —', otherMasons:'🤝 Other Masons',
   noOtherWolves:'— No other werewolves —', wolvesYouKnow:'🗡️ Werewolves you know', yourWolfTeam:'🐺 Your werewolf team',
 
-  modSummaryTitle:'Role Summary', modOnlySub:"For the moderator only — shows everyone's role",
-  iAmMod:'I am the moderator · Show', backToList:'← Back to list', allRolesSummary:'Full Role Summary',
+  modSummaryTitle:'Role Summary', modOnlySub:'For the moderator only — shows all player roles.',
+  iAmMod:"I'm the Moderator · Show Roles", backToList:'← Back to list', allRolesSummary:'Full Role Summary',
   startRunBtn:'▶️ Start Game', reshuffleBtn:'🎲 Play Again (reshuffle, same names)', resetAllBtn:'Reset Everything',
 
   phaseCupid:'💘 Match Lovers', phaseNight:'🌙 Night {n}', phaseDay:'☀️ Day {n}',
   phaseHunter:"🏹 Hunter's Last Shot", phaseOver:'🏁 Game Over',
   aliveSuffix:'alive', undoBtn:'↩︎ Undo', endGameBtn:'⏹ End Game',
 
-  cupidInstruction:'Tap to select 2 lovers — if one dies, the other dies too', skipBtn:'Skip',
+  cupidInstruction:'Choose 2 lovers. If one dies, the other dies too.', skipBtn:'Skip',
   confirmLoversBtn:'Confirm Lovers → Night 1', undoLastAction:'Undo Last Action',
 
   toolCultLeader:'👁️ Cult Leader', toolVampire:'🧛 Vampire',
@@ -1093,7 +1093,7 @@ en:{
   toolBodyguard:'🛡️ Bodyguard', toolSpellcaster:'🤫 Spellcaster',
   toolDoppelganger:'🎭 Doppelganger (mark on Night 1)',
 
-  helpKill:'Choose victim(s) {cur}/{max}', helpKillBonus:' · Wolf Cub bonus!',
+  helpKill:'Choose a target ({cur}/{max})', helpKillBonus:' · Wolf Cub bonus!',
   helpProtectRepeat:"Protect 1 person · can't repeat {name} (protected last night)", helpProtect:'Protect 1 person from werewolves',
   helpSilence:"Choose who can't speak tomorrow morning",
   helpAlphaConvert:'🩸 Tap 1 villager to convert to werewolf (instead of killing tonight · once per game)',
@@ -1114,12 +1114,12 @@ en:{
   chkAlreadyInCult:'👁️ This person is already in the cult', chkAlreadyVampire:'🧛 This person is already a vampire',
   chkShapeshiftSelf:'🎭 Choose someone else to disguise as (not yourself)', chkDoppleSelf:'🎭 Choose someone else, not yourself',
   chkSeerSelf:"🔮 Seer can't check themselves", chkSeerUsedNow:'✅ Seer already used tonight',
-  chkSeerCheckedAlready:'🔮 Already checked {name} — choose someone else', chkSeerWolf:'🟢 Is a werewolf', chkSeerNotWolf:'🔴 Not a werewolf',
+  chkSeerCheckedAlready:'🔮 Already checked {name} — choose someone else', chkSeerWolf:'🟢 is a Werewolf.', chkSeerNotWolf:'🔴 Not a werewolf',
   chkSorcWolfOnly:"🪄 Sorcerer can't target their own side", chkSorcUsedNow:'✅ Sorcerer already used tonight',
   chkSorcCheckedAlready:'🧙 Already checked {name} — choose someone else', chkSorcIsSeer:'🟢 Yes! This is the Seer', chkSorcNotSeer:'🔴 Not the Seer',
 
   stepInfo:'▶️ Up next: {label} — use the skill or tap "Skip this skill" before moving on',
-  skipToolTitle:'Skip this skill tonight', morningBtnDisabled:'🌅 Morning — complete all skills in order first', morningBtn:'🌅 Morning — Resolve Night',
+  skipToolTitle:'Skip this skill tonight', morningBtnDisabled:'🌅 Finish all night actions first.', morningBtn:'🌅 Morning — Resolve Night',
 
   timerExpired:"⏰ Time's up! Cast your vote!", silencedAliveNote:'🤫 Silenced: {name}',
   mayorVoteNote:'🎩 Mayor vote = 2 votes (if revealed)', ghostVoteNote:'👻 Ghost can still vote today (last day)',
@@ -1215,7 +1215,7 @@ const REC_MODES=[['beginner','😊 มือใหม่'],['casual','🎲 ค�
 const MODE_DESC={
   beginner:{th:'บทบาทพื้นฐาน เข้าใจง่าย เหมาะมือใหม่', en:'Simple core roles for first-timers.'},
   casual:{th:'สมดุล มีบทบาทพิเศษพอเหมาะ', en:'Balanced mix with a few special roles.'},
-  advanced:{th:'บทบาทเชิงกลยุทธ์ ซับซ้อนขึ้น', en:'Strategic, more complex roles.'},
+  advanced:{th:'บทบาทเชิงกลยุทธ์ ซับซ้อนขึ้น', en:'More strategic roles with advanced abilities.'},
   mystic:{th:'ทุกคนมีพลัง ไม่มีชาวบ้าน', en:'Everyone has a special role. No Villagers.'}
 };
 function recBalance(counts){ return ROLES.reduce((s,r)=>s+((counts[r.id]||0)*r.bal),0); }
