@@ -70,6 +70,17 @@
       radial-gradient(1100px 560px at 50% -8%, #2536a0 0%, rgba(37,54,160,0) 58%),
       radial-gradient(800px 500px at 80% 112%, #16265e 0%, rgba(22,38,94,0) 55%),
       linear-gradient(180deg,#091038 0%,#0c1747 52%,#05091f 100%)}
+  .wrap.phase-night::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:
+      radial-gradient(1.5px 1.5px at 25% 15%, rgba(255,255,255,.9), transparent),
+      radial-gradient(1px 1px at 55% 25%, rgba(255,255,255,.8), transparent),
+      radial-gradient(1.5px 1.5px at 75% 12%, rgba(255,255,255,.85), transparent),
+      radial-gradient(1px 1px at 10% 45%, rgba(255,255,255,.75), transparent),
+      radial-gradient(1.5px 1.5px at 90% 35%, rgba(255,255,255,.8), transparent),
+      radial-gradient(1px 1px at 35% 55%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1.5px 1.5px at 65% 8%, rgba(255,255,255,.85), transparent),
+      radial-gradient(1px 1px at 45% 65%, rgba(255,255,255,.75), transparent);
+    animation:twinkleA 6.5s ease-in-out infinite}
 
   .eyebrow{font-family:Georgia,"Times New Roman",serif;letter-spacing:.42em;text-transform:uppercase;font-size:11px;color:var(--gold);text-align:center;margin:0 0 4px;padding-left:.42em}
   h1.title{font-size:38px;font-weight:800;text-align:center;margin:0;letter-spacing:.02em;
@@ -548,7 +559,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.15.10</div>
+<div id="verbadge">v3.15.20</div>
 
 <script>
 const ROLES = [
@@ -1438,7 +1449,7 @@ function mysticBalanceTune(counts){
   const cnt=id=>counts[id]||0;
   // บทบาทพลังที่ยอมให้เพิ่ม/ลดได้ ครอบหลายระดับสมดุลเพื่อปรับละเอียด (กันบทบาทบังคับ seer/bodyguard/mayor/prince ไว้)
   const REMOVE=['toughguy','hunter','spellcaster','idiot','lycan','cursed','minion','sorcerer','werewolf'];
-  const ADD=['toughguy','hunter','spellcaster','idiot','lycan','cursed','minion','sorcerer','werewolf'];
+  const ADD=['toughguy','hunter','spellcaster','idiot','lycan','cursed','minion','sorcerer','werewolf','mason'];
   let guard=0;
   while(guard++<400){
     const sc=finalBalance(counts);
@@ -1450,6 +1461,7 @@ function mysticBalanceTune(counts){
       for(const ad of ADD){
         if(ad===rem) continue;
         if(UNIQUE.has(ad) && cnt(ad)>=1) continue;             // ห้ามเพิ่ม UNIQUE role เกิน 1
+        if(ad==='werewolf' && cnt('werewolf')>=2) continue;    // หมาป่าไม่เกิน 2 ตัวเสมอในโหมดนี้
         counts[rem]--; counts[ad]=cnt(ad)+1;                  // ลองสลับ
         const a=Math.abs(finalBalance(counts));
         counts[ad]--; if(!counts[ad]) delete counts[ad]; counts[rem]=cnt(rem)+1;  // คืนค่า
@@ -1479,17 +1491,24 @@ function mysticSetup(n){
   const maxNeutral=Math.max(1,Math.floor(n/8));
   let neutrals=0;
   for(const [id,thr] of neutralPool){ if(n>=thr && neutrals<maxNeutral && left()>1){ add(id); used++; neutrals++; } }
-  // บทบาทบังคับ: ข้อมูล / ป้องกัน / ผู้นำ / จอมเวท
+  // บทบาทบังคับ: ข้อมูล / ป้องกัน / ผู้นำ / จอมเวท / คิวปิด
   if(n>=5 && left()>0){ add('seer'); used++; }        // info
   if(n>=6 && left()>0){ add('bodyguard'); used++; }   // protection
   if(n>=7 && left()>0){ add('mayor'); used++; }       // leadership
+  if(n>=8 && left()>0){ add('cupid'); used++; }       // คิวปิด
   if(n>=10 && left()>0){ add('spellcaster'); used++; } // silence mechanic เพิ่มความสนุก
-  // ที่นั่งที่เหลือ: เติมด้วย village special (ห้าม villager) ลำดับตาม priority
-  const dupPool=['hunter','spellcaster','lycan','toughguy','idiot','bodyguard'];
+  // ที่นั่งที่เหลือ: เติมด้วย village special (ห้าม villager) ลำดับตาม priority — ห้ามเติมหมาป่าเพิ่ม (จำกัดไม่เกิน 2 ตัวเสมอในโหมดนี้)
+  const dupPool=['hunter','spellcaster','lycan','toughguy','idiot','bodyguard','cultleader','beggar','cursed','apprentice','pacifist','prince','ghost','drunk','doppelganger','sorcerer','wolfcub','minion','shapeshifter','deceased'];
   let di=0, guard=0;
   while(left()>0 && guard++<300){
     if(left()>=2 && cnt('mason')===0 && n>=8){ add('mason',2); used+=2; continue; }   // คู่ Mason
-    add(dupPool[di%dupPool.length]); used++; di++;
+    let picked=null;
+    for(let tries=0;tries<dupPool.length;tries++){
+      const cand=dupPool[(di+tries)%dupPool.length];
+      if(!(UNIQUE.has(cand) && cnt(cand)>=1)){ picked=cand; di=(di+tries+1)%dupPool.length; break; }
+    }
+    if(picked){ add(picked); used++; }
+    else { add('mason'); used++; } // ทุก flavor role ครบโควตาแล้ว (max 1) เติม Mason แทน (ไม่จำกัดจำนวน ไม่ใช่หมาป่า)
   }
   delete counts.villager;                              // ไม่มีชาวบ้านเด็ดขาด
   return mysticBalanceTune(counts);
@@ -1513,9 +1532,7 @@ function recommendSetup(n, mode){
   // ฝั่งหมาป่า: รวมบทบาทพิเศษ + หมาป่าธรรมดา ให้อยู่ใน "งบ" เดียว (ไม่นับซ้ำ)
   let wolfUsed=0;
   for(const [id,thr] of wolfSpecials){ if(n>=thr && wolfUsed<wolfBudget-1){ add(id); wolfUsed++; } }
-  const plainWolves=(mode==='beginner'&&wolfUsed>0)
-    ? Math.max(1, wolfBudget-wolfUsed)
-    : Math.min(2, Math.max(1, wolfBudget-wolfUsed));
+  const plainWolves=Math.max(1, wolfBudget-wolfUsed); // สเกลตาม wolfBudget เสมอทุกโหมด กันฝั่งหมาป่าไม่โตตามจำนวนคน (คนเยอะเคยหมู่บ้านได้เปรียบสุดขั้ว)
   add('werewolf',plainWolves); wolfUsed+=plainWolves;
   let used=wolfUsed;
   for(const [id,thr] of villageSpecials){ if(n>=thr && used<n-1){ add(id); used++; } }
@@ -1904,7 +1921,8 @@ function resolveNight(){          // 🌅 เช้าแล้ว
     if(_sndTransform) _chain.push('transform');
     _chain.push('morning');
     let _cd=0;
-    playChainSequential(_chain, ()=>{ window._morningEnd=Date.now(); finishResolution(); }, checkWin);
+    playChainSequential(_chain, ()=>{ window._morningEnd=Date.now(); }, checkWin);
+    finishResolution();
     return;
   }
   finishResolution();
@@ -1953,13 +1971,12 @@ function resolveDay(){           // 🌙 มืดแล้ว
   const _execIsBeggar=_execKilled&&effRole(G.dayVote)==='beggar';
   if(_execIsBeggar) logEvent('actBeggarWin',{target:S.players[G.dayVote].name});
   else logEvent('actExecuted',{target:_execKilled?S.players[G.dayVote].name:''});
-  const _playNight=()=>{ if(!checkWin()) playSound('night'); finishResolution(); };
-  if(_lastSnd){
-    setTimeout(()=>{
-      if(G.phase==='over'){ finishResolution(); return; }
-      playSoundThen(_lastSnd,_playNight);
-    },100);
-  } else _playNight();
+  const _playNight=()=>{ if(!checkWin()) playSound('night'); };
+  if(G.phase!=='over'){
+    if(_lastSnd) playSoundThen(_lastSnd,_playNight);
+    else _playNight();
+  }
+  finishResolution();
 }
 function executeSilenced(){      // คนโดนใบ้เผลอพูด -> ประหารทันที โหวตต่อได้
   if(G.silenced==null||!G.alive[G.silenced]) return;
@@ -2629,7 +2646,7 @@ function viewList(){
 function revealPackInfo(selfIdx){
   const PACK=['werewolf','wolfcub','alphawolf','shapeshifter','sorcerer'];
   const self=S.players[selfIdx].role;
-  if(self==='lonewolf') return `<div class="packbox">${T('loneWolfReveal')}</div>`;
+  if(self==='lonewolf') return '';
   if(self==='mason'){
     const others=S.players.filter((q,j)=>j!==selfIdx&&q.role==='mason').map(q=>q.name);
     const list=others.length?others.map(esc).join(', '):T('noOtherMasons');
@@ -3018,24 +3035,8 @@ function fadeTransition(cb,holdMs){
     requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ el.classList.remove('show'); }); });
   }, holdMs||280);
 }
-const T_SLIDE_OUT=250, T_SCENE=300, T_SLIDE_IN=250;
 function playPhaseTransition(kind, cb){
-  cb(); // next screen appears immediately -- zero delay, animation below is a non-blocking cosmetic tail only
-  const el=document.getElementById(kind==='day'?'sunrise-overlay':'night-overlay');
-  if(el){
-    const lbl=el.querySelector('.transLabel');
-    if(lbl) lbl.textContent = kind==='day'
-      ? (S.lang==='en'?'☀ DAY '+G.dayNo:'☀ วันที่ '+G.dayNo)
-      : (S.lang==='en'?'🌙 NIGHT '+G.nightNo:'🌙 คืนที่ '+G.nightNo);
-  }
-  const wrap=document.getElementById('appSlideWrap');
-  if(wrap){ wrap.classList.remove('slideOutLeft'); wrap.classList.add('slideInRight'); }
-  const _tok=(G._phaseVisToken=(G._phaseVisToken||0)+1);
-  requestAnimationFrame(()=>{ if(G._phaseVisToken===_tok && el) el.classList.add('show'); });
-  setTimeout(()=>{
-    if(wrap) wrap.classList.remove('slideInRight');
-    if(el) el.classList.remove('show');
-  }, T_SLIDE_OUT+T_SCENE);
+  cb(); // instant, no cinematic overlay -- per user request, day/night switch has zero animation now
 }
 function playSoundThen(type,cb){
   const isAmb=['night','morning','gameStart'].includes(type);
@@ -3311,7 +3312,7 @@ function bindGame(){
         const sfxKey=TOOL_SFX_MAP[G.tool];
         G.skipped.push(G.tool);
         actCommit(b);
-        if(isDeadOnly&&sfxKey&&SFX[sfxKey]){ playSoundThen(sfxKey,render); return; }
+        if(isDeadOnly&&sfxKey&&SFX[sfxKey]){ playSound(sfxKey); }
         render(); return;
       }
       actCommit(b); render();
