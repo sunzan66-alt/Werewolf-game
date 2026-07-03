@@ -542,16 +542,15 @@
 </style>
 </head>
 <body>
-<div id="appSlideWrap"><div class="wrap" id="app"></div></div>
+<div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.15.7-dbg</div>
+<div id="verbadge">v3.15.8-nowrap</div>
 
 <script>
-window.__wwErrLog = [];
 window.onerror = function(msg, src, line, col, err){
   try{
     var d = document.getElementById('wwErrBox');
@@ -561,7 +560,7 @@ window.onerror = function(msg, src, line, col, err){
       d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#b00020;color:#fff;font:12px monospace;padding:8px;white-space:pre-wrap;max-height:35vh;overflow:auto;';
       document.body.appendChild(d);
     }
-    d.textContent += 'JS ERROR: '+msg+'\nat line '+line+' col '+col+'\n\n';
+    d.textContent += 'JS ERROR: '+msg+' @'+line+':'+col+'\n';
   }catch(e){}
   return false;
 };
@@ -3371,36 +3370,13 @@ render();
 try{
   var okBox=document.createElement('div');
   okBox.id='wwOkBox';
-  var appEl=document.getElementById('app');
-  var diag='';
-  try{
-    var btn=document.getElementById('menuStart');
-    if(btn){
-      var cs=getComputedStyle(btn);
-      var r=btn.getBoundingClientRect();
-      diag='btn: display='+cs.display+' vis='+cs.visibility+' opac='+cs.opacity+' h='+cs.height+' rectH='+r.height+' rectY='+r.top;
-      var menuEl=document.querySelector('.menu');
-      if(menuEl){
-        var cs2=getComputedStyle(menuEl);
-        var r2=menuEl.getBoundingClientRect();
-        diag+=' | .menu: display='+cs2.display+' pos='+cs2.position+' h='+cs2.height+' rectH='+r2.height+' transform='+cs2.transform;
-      }
-      var wrapEl=document.getElementById('appSlideWrap');
-      if(wrapEl){
-        var cs3=getComputedStyle(wrapEl);
-        diag+=' | wrap: transform='+cs3.transform+' h='+cs3.height;
-      }
-    } else { diag='NO #menuStart FOUND'; }
-  }catch(ex){ diag='diag err: '+ex.message; }
-  okBox.textContent='DEBUG v3.15.6: #app children='+(appEl?appEl.children.length:'NO#app')+' len='+(appEl?appEl.innerHTML.length:'N/A')+' || '+diag;
-  okBox.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#0a7a2f;color:#fff;font:10px monospace;padding:6px;word-break:break-all;';
+  var btn=document.getElementById('menuStart');
+  var diag='NO BTN';
+  if(btn){ var r=btn.getBoundingClientRect(); var cs=getComputedStyle(btn); diag='btn vis='+cs.visibility+' opac='+cs.opacity+' rectH='+r.height+' rectY='+r.top; }
+  okBox.textContent='TEST-NOWRAP v3.15.8: '+diag+' (appSlideWrap REMOVED for this test)';
+  okBox.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#0a7a2f;color:#fff;font:11px monospace;padding:6px;';
   document.body.appendChild(okBox);
-}catch(e){
-  var errBox=document.createElement('div');
-  errBox.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#663c00;color:#fff;font:11px monospace;padding:6px;';
-  errBox.textContent='DEBUG: marker itself threw: '+e.message;
-  document.body.appendChild(errBox);
-}
+}catch(e){}
 document.addEventListener('click',e=>{
   if(!_wwaCtx) try{_wwaCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(_){}
   else if(_wwaCtx.state==='suspended') _wwaCtx.resume();
