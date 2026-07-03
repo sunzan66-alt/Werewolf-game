@@ -376,68 +376,22 @@
   #flash-overlay{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;}
   #fade-overlay{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0;background:#000;transition:opacity .28s ease}
   #fade-overlay.show{opacity:1}
-  #appSlideWrap{position:relative;width:100%;overflow-x:hidden}
-  #appSlideWrap.slideOutLeft{animation:appSlideOutLeft .16s ease both}
-  #appSlideWrap.slideInRight{animation:appSlideInRight .16s ease both}
-  @keyframes appSlideOutLeft{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
-  @keyframes appSlideInRight{0%{transform:translateX(100%)}100%{transform:translateX(0)}}
-  #sunrise-overlay{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(255,246,222,.95),rgba(255,221,150,.9));transition:opacity .18s ease;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  #sunrise-overlay{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(255,246,222,.95),rgba(255,221,150,.9));transition:opacity .1s ease;overflow:hidden;display:flex;align-items:center;justify-content:center}
   #sunrise-overlay.show{opacity:.32}
-  #sunrise-overlay .duskDarken{position:absolute;inset:0;background:#04060f;opacity:0}
-  #sunrise-overlay.show .duskDarken{animation:duskDarkenPulse .17s ease both}
-  #sunrise-overlay .duskFog{position:absolute;left:-10%;bottom:0;width:120%;height:45%;background:linear-gradient(0deg,rgba(150,160,185,.35),transparent);opacity:0}
-  #sunrise-overlay.show .duskFog{animation:duskFogDissolve .25s ease both}
-  #sunrise-overlay .sunriseGlow{position:absolute;left:-10%;bottom:0;width:120%;height:70%;transform-origin:bottom;transform:scaleY(0);opacity:0;background:linear-gradient(0deg,rgba(255,214,120,.9),rgba(255,214,120,0))}
-  #sunrise-overlay.show .sunriseGlow{animation:sunriseGlowRise .28s ease .07s both}
-  #sunrise-overlay .sunRay{position:absolute;bottom:-10%;width:10%;height:60%;opacity:0;background:linear-gradient(0deg,rgba(255,244,214,.8),transparent)}
-  #sunrise-overlay .sunRay1{left:32%}
-  #sunrise-overlay .sunRay2{left:56%}
-  #sunrise-overlay.show .sunRay{animation:sunRayUp .28s ease-out both}
-  #sunrise-overlay.show .sunRay1{animation-delay:.12s}
-  #sunrise-overlay.show .sunRay2{animation-delay:.17s}
-  #sunrise-overlay .dayCloud{position:absolute;width:120px;height:34px;border-radius:50%;background:rgba(255,255,255,.55);opacity:0}
-  #sunrise-overlay .dc1{top:22%;left:-30%}
-  #sunrise-overlay .dc2{top:38%;left:-50%}
-  #sunrise-overlay.show .dayCloud{animation:dayCloudDrift .33s ease-out both}
-  #sunrise-overlay.show .dc2{animation-delay:.04s}
-  #sunrise-overlay .bird{position:absolute;width:14px;height:6px;opacity:0}
-  #sunrise-overlay .bird::before,#sunrise-overlay .bird::after{content:'';position:absolute;top:2px;width:8px;height:2px;background:#3a2a10;border-radius:2px}
-  #sunrise-overlay .bird::before{left:0;transform:rotate(28deg)}
-  #sunrise-overlay .bird::after{right:0;transform:rotate(-28deg)}
-  #sunrise-overlay .b1{top:26%;left:20%}
-  #sunrise-overlay .b2{top:34%;left:38%}
-  #sunrise-overlay.show .bird{animation:birdFly .3s linear both}
-  #sunrise-overlay.show .b2{animation-delay:.06s}
-  #sunrise-overlay .dayMote{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff3d0;opacity:0}
-  #sunrise-overlay .dm1{left:30%;bottom:20%}
-  #sunrise-overlay .dm2{left:55%;bottom:28%}
-  #sunrise-overlay .dm3{left:70%;bottom:16%}
-  #sunrise-overlay.show .dayMote{animation:moteDrift .33s ease-out both}
-  #sunrise-overlay.show .dm2{animation-delay:.06s}
-  #sunrise-overlay.show .dm3{animation-delay:.1s}
-  @keyframes dayCloudDrift{0%{opacity:0;transform:translateX(0)}30%{opacity:.7}100%{opacity:0;transform:translateX(260%)}}
-  @keyframes birdFly{0%{opacity:0;transform:translate(0,0)}15%{opacity:.8}85%{opacity:.7}100%{opacity:0;transform:translate(160%,-18px)}}
-  @keyframes moteDrift{0%{opacity:0;transform:translateY(0)}40%{opacity:.7}100%{opacity:0;transform:translateY(-30px)}}
+  #sunrise-overlay .sweepBeam{position:absolute;top:0;bottom:0;left:-60%;width:60%;background:linear-gradient(100deg,transparent,rgba(255,250,225,.9),transparent);opacity:0}
+  #sunrise-overlay.show .sweepBeam{animation:sweepRight .5s ease both}
   #sunrise-overlay .transLabel{position:relative;z-index:2;color:#3a2a10;font-size:22px;font-weight:800;letter-spacing:.04em;text-shadow:0 1px 0 rgba(255,255,255,.5);opacity:0}
-  #sunrise-overlay.show .transLabel{animation:transLabelIn .22s ease .15s both}
-  #night-overlay{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(10,16,38,.92),rgba(5,8,20,.95));transition:opacity .18s ease;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  #sunrise-overlay.show .transLabel{animation:transLabelIn .45s ease .05s both}
+  #night-overlay{position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(10,16,38,.92),rgba(5,8,20,.95));transition:opacity .1s ease;overflow:hidden;display:flex;align-items:center;justify-content:center}
   #night-overlay.show{opacity:.4}
-  #night-overlay .duskClouds{position:absolute;top:30%;width:55%;height:18%;border-radius:50%;background:radial-gradient(ellipse, rgba(20,24,40,.75), transparent 70%);opacity:0;left:-40%}
-  #night-overlay .dc2{top:48%;left:-60%}
-  #night-overlay.show .duskClouds{animation:cloudSweep .3s ease both}
-  #night-overlay.show .dc2{animation-delay:.06s}
   #night-overlay .moonGlow{position:absolute;top:18%;left:50%;width:90px;height:90px;margin-left:-45px;border-radius:50%;background:radial-gradient(circle, rgba(220,228,255,.9), rgba(220,228,255,0) 70%);opacity:0}
-  #night-overlay.show .moonGlow{animation:moonFadeIn .25s ease .14s both}
+  #night-overlay.show .moonGlow{animation:moonFadeIn .5s ease both}
   #night-overlay .nightFog{position:absolute;left:-20%;bottom:0;width:140%;height:35%;background:linear-gradient(90deg,transparent,rgba(200,210,230,.12),transparent);opacity:0}
-  #night-overlay.show .nightFog{animation:fogDrift .3s ease .06s both}
+  #night-overlay.show .nightFog{animation:fogDrift .5s ease both}
   #night-overlay .transLabel{position:relative;z-index:2;color:#dfe6ff;font-size:22px;font-weight:800;letter-spacing:.04em;text-shadow:0 1px 4px rgba(0,0,10,.6);opacity:0}
-  #night-overlay.show .transLabel{animation:transLabelIn .22s ease .15s both}
-  @keyframes duskDarkenPulse{0%{opacity:0}35%{opacity:.35}100%{opacity:0}}
-  @keyframes duskFogDissolve{0%{opacity:.6;transform:translateY(0)}100%{opacity:0;transform:translateY(-14px)}}
-  @keyframes sunriseGlowRise{0%{opacity:0;transform:scaleY(0)}100%{opacity:.85;transform:scaleY(1)}}
-  @keyframes sunRayUp{0%{opacity:0;transform:translateY(30px)}40%{opacity:.5}100%{opacity:0;transform:translateY(-50px)}}
+  #night-overlay.show .transLabel{animation:transLabelIn .45s ease .05s both}
+  @keyframes sweepRight{0%{opacity:0;transform:translateX(0)}15%{opacity:1}100%{opacity:0;transform:translateX(220%)}}
   @keyframes transLabelIn{0%{opacity:0;transform:translateY(6px) scale(.94)}30%{opacity:1;transform:translateY(0) scale(1)}80%{opacity:1}100%{opacity:0}}
-  @keyframes cloudSweep{0%{opacity:0;transform:translateX(0)}20%{opacity:.55}80%{opacity:.5}100%{opacity:0;transform:translateX(220%)}}
   @keyframes moonFadeIn{0%{opacity:0;transform:scale(.85)}40%{opacity:1;transform:scale(1)}100%{opacity:.9;transform:scale(1)}}
   @keyframes fogDrift{0%{opacity:0;transform:translateX(-6%)}30%{opacity:1}100%{opacity:.6;transform:translateX(6%)}}
   .hunterFx,.cupidFx{position:fixed;inset:0;z-index:10600;pointer-events:none;opacity:0;animation:hfContainerFade .78s ease both}
@@ -529,13 +483,13 @@
 </style>
 </head>
 <body>
-<div id="appSlideWrap"><div class="wrap" id="app"></div></div>
+<div class="wrap" id="app"></div>
 <div id="loader"></div>
 <div id="flash-overlay"></div>
 <div id="fade-overlay"></div>
-<div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
-<div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.14.25</div>
+<div id="sunrise-overlay"><div class="sweepBeam"></div><div class="transLabel"></div></div>
+<div id="night-overlay"><div class="moonGlow"></div><div class="nightFog"></div><div class="transLabel"></div></div>
+<div id="verbadge">v3.14.22</div>
 
 <script>
 const ROLES = [
@@ -1771,8 +1725,8 @@ function enterDay(){
   G.timerExpired=false; // กันไม่ให้ template render() เห็น flag ค้างจากเมื่อวาน (จะแก้อีกทีใน startDayTimer)
   G.banner={type:'morning',deaths:[...G.deaths],converts:[...(G.justConverts||[])],vampires:[...(G.justVampires||[])]};
   G.phase=checkWin()?'over':'day';
-  if(G.phase==='over'){ resetPhaseTransitionVisuals(); playWinSound(); render(); stopTimer(); return; }
-  dayTransitionResolve(()=>{ render(); startDayTimer(); });
+  if(G.phase==='over'){ playWinSound(); render(); stopTimer(); return; }
+  sunriseTransition(()=>{ render(); startDayTimer(); });
 }
 function enterNight(){
   stopTimer(); ACT=[];
@@ -1783,26 +1737,14 @@ function enterNight(){
   G.seerUsed=false; G.sorcUsed=false; G.alphaConvert=null; G.skTarget=null; G.cultRecruit=null; G.shapeTarget=null; G.vampireBite=null; G.skipped=[]; G.loneWolfTarget=null;
   G.dayVote=null; G.tool='kill';
   G.phase=checkWin()?'over':'night';
-  if(G.phase==='over'){ resetPhaseTransitionVisuals(); playWinSound(); render(); return; }
-  nightTransitionResolve(render);
-}
-function resetPhaseTransitionVisuals(){
-  const wrap=document.getElementById('appSlideWrap');
-  if(wrap){ wrap.classList.remove('slideOutLeft'); wrap.classList.remove('slideInRight'); }
-  const so=document.getElementById('sunrise-overlay');
-  if(so) so.classList.remove('show');
-  const no=document.getElementById('night-overlay');
-  if(no) no.classList.remove('show');
-  G._dayShowPending=false;
-  G._nightShowPending=false;
-  G._phaseVisToken=(G._phaseVisToken||0)+1;
+  if(G.phase==='over'){ playWinSound(); render(); return; }
+  nightTransition(render);
 }
 function finishResolution(){
-  if(G.hunterQueue.length){ resetPhaseTransitionVisuals(); G.phase='hunter'; render(); return; }
+  if(G.hunterQueue.length){G.phase='hunter';render();return;}
   if(G.afterHunter==='night'){enterNight();return;}
   if(G.afterHunter==='dayStay'){
-    if(checkWin()){ resetPhaseTransitionVisuals(); G.phase='over';playWinSound();render();return;}
-    resetPhaseTransitionVisuals();
+    if(checkWin()){G.phase='over';playWinSound();render();return;}
     G.phase='day'; render(); resumeDayTimer(); return;
   }
   enterDay();
@@ -2980,58 +2922,27 @@ function fadeTransition(cb,holdMs){
     requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ el.classList.remove('show'); }); });
   }, holdMs||280);
 }
-const PHASE_SLIDE_MS=160, PHASE_CINEMA_MS=300;
-function dayTransitionShow(){
+function sunriseTransition(cb){
   const el=document.getElementById('sunrise-overlay');
-  if(!el) return;
+  if(!el){ cb(); return; }
   const lbl=el.querySelector('.transLabel');
-  if(lbl) lbl.textContent=(S.lang==='en'?'☀ DAY ':'☀ วันที่ ')+(G.dayNo+1);
-  G._dayAnimT0=performance.now();
-  G._dayShowPending=true;
-  const wrap=document.getElementById('appSlideWrap');
-  if(wrap){ wrap.classList.remove('slideInRight'); wrap.classList.add('slideOutLeft'); }
-  const _tok=(G._phaseVisToken=(G._phaseVisToken||0)+1);
-  requestAnimationFrame(()=>{ if(G._phaseVisToken===_tok) el.classList.add('show'); });
-}
-function dayTransitionResolve(cb){
-  if(!G._dayShowPending) dayTransitionShow();
-  G._dayShowPending=false;
-  const el=document.getElementById('sunrise-overlay');
-  const wrap=document.getElementById('appSlideWrap');
-  const elapsed=performance.now()-(G._dayAnimT0||0);
-  const remain=Math.max(0,(PHASE_SLIDE_MS+PHASE_CINEMA_MS)-elapsed);
+  if(lbl) lbl.textContent=(S.lang==='en'?'☀️ DAY ':'☀️ วันที่ ')+G.dayNo;
+  el.classList.add('show');
   setTimeout(()=>{
-    if(wrap){ wrap.classList.remove('slideOutLeft'); wrap.classList.add('slideInRight'); }
     cb();
-    if(el) setTimeout(()=>el.classList.remove('show'),120);
-    if(wrap) setTimeout(()=>wrap.classList.remove('slideInRight'),PHASE_SLIDE_MS+60);
-  },remain);
+    setTimeout(()=>{ el.classList.remove('show'); }, 100);
+  }, 480);
 }
-function nightTransitionShow(){
+function nightTransition(cb){
   const el=document.getElementById('night-overlay');
-  if(!el) return;
+  if(!el){ cb(); return; }
   const lbl=el.querySelector('.transLabel');
-  if(lbl) lbl.textContent=(S.lang==='en'?'🌙 NIGHT ':'🌙 คืนที่ ')+(G.nightNo+1);
-  G._nightAnimT0=performance.now();
-  G._nightShowPending=true;
-  const wrap=document.getElementById('appSlideWrap');
-  if(wrap){ wrap.classList.remove('slideInRight'); wrap.classList.add('slideOutLeft'); }
-  const _tok=(G._phaseVisToken=(G._phaseVisToken||0)+1);
-  requestAnimationFrame(()=>{ if(G._phaseVisToken===_tok) el.classList.add('show'); });
-}
-function nightTransitionResolve(cb){
-  if(!G._nightShowPending) nightTransitionShow();
-  G._nightShowPending=false;
-  const el=document.getElementById('night-overlay');
-  const wrap=document.getElementById('appSlideWrap');
-  const elapsed=performance.now()-(G._nightAnimT0||0);
-  const remain=Math.max(0,(PHASE_SLIDE_MS+PHASE_CINEMA_MS)-elapsed);
+  if(lbl) lbl.textContent=(S.lang==='en'?'🌙 NIGHT ':'🌙 คืนที่ ')+G.nightNo;
+  el.classList.add('show');
   setTimeout(()=>{
-    if(wrap){ wrap.classList.remove('slideOutLeft'); wrap.classList.add('slideInRight'); }
     cb();
-    if(el) setTimeout(()=>el.classList.remove('show'),120);
-    if(wrap) setTimeout(()=>wrap.classList.remove('slideInRight'),PHASE_SLIDE_MS+60);
-  },remain);
+    setTimeout(()=>{ el.classList.remove('show'); }, 100);
+  }, 480);
 }
 function playSoundThen(type,cb){
   const isAmb=['night','morning','gameStart'].includes(type);
@@ -3297,8 +3208,8 @@ function bindGame(){
     G.tool=el.dataset.tool;G.check=null;render();
   });
   const map={gExit:exitGame,gExit2:exitGame,
-    gNight:()=>{dayTransitionShow();resolveNight();},
-    gDay:()=>{nightTransitionShow();resolveDay();},
+    gNight:()=>{flashScreen('gold');resolveNight();},
+    gDay:()=>{flashScreen('dark');resolveDay();},
     gCupidOk:confirmCupid,gCupidSkip:skipCupid,gHunterSkip:hunterSkip,
     gUndo:doUndo,gExecSil:executeSilenced,gActUndo:doActUndo,
     gSkipTool:()=>{
