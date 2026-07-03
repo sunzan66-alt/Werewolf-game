@@ -327,6 +327,7 @@
   .gcell:active{transform:scale(.98)}
   .gcell.dead{opacity:.4;filter:grayscale(.6)}
   .gcell.sel{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+  .gcell.cupidSel{border-color:#FF7DB6;box-shadow:0 0 0 1px #FF7DB6 inset,0 0 10px rgba(255,95,162,.35)}
   .gcell.target{border-color:#cc4644;box-shadow:0 0 0 1px #cc4644 inset}
   .gcell .gnm{font-weight:700;font-size:14px;line-height:1.15}
   .gcell .grole{font-size:11px;color:var(--muted)}
@@ -478,11 +479,11 @@
   @keyframes hfWhiteFlash{0%{opacity:0}50%{opacity:.85}100%{opacity:0}}
   #app.hfShake{animation:hfShakeKf .22s linear}
   @keyframes hfShakeKf{0%,100%{transform:translate(0,0)}20%{transform:translate(-3px,2px)}40%{transform:translate(3px,-2px)}60%{transform:translate(-2px,1px)}80%{transform:translate(2px,-1px)}}
-  .cfGlow{position:absolute;width:70px;height:70px;margin-left:-35px;margin-top:-35px;border-radius:50%;background:radial-gradient(circle, rgba(255,214,120,.55), transparent 70%);opacity:0;animation:cfGlowPulse .7s ease both}
+  .cfGlow{position:absolute;width:70px;height:70px;margin-left:-35px;margin-top:-35px;border-radius:50%;background:radial-gradient(circle, rgba(255,95,162,.55), transparent 70%);opacity:0;animation:cfGlowPulse .7s ease both}
   .cfRibbonWrap{position:absolute;height:2px;transform-origin:0 50%}
-  .cfRibbon{width:100%;height:100%;background:linear-gradient(90deg, rgba(255,214,120,.05), rgba(255,214,120,.85), rgba(255,214,120,.05));opacity:0;transform-origin:0 50%;animation:cfRibbonIn .5s ease .1s both}
+  .cfRibbon{width:100%;height:100%;background:linear-gradient(90deg, rgba(255,95,162,.05), rgba(255,95,162,.85), rgba(255,95,162,.05));opacity:0;transform-origin:0 50%;animation:cfRibbonIn .5s ease .1s both}
   .cfHeart{position:absolute;margin-left:-14px;margin-top:-14px;font-size:26px;opacity:0;animation:cfHeartIn .5s cubic-bezier(.34,1.56,.64,1) .2s both}
-  .cfSpark{position:absolute;width:6px;height:6px;border-radius:50%;background:#ffd678;box-shadow:0 0 6px 2px rgba(255,214,120,.8);opacity:0;animation:cfSparkUp .55s ease .3s both}
+  .cfSpark{position:absolute;width:6px;height:6px;border-radius:50%;background:#FFD3E8;box-shadow:0 0 6px 2px rgba(255,95,162,.8);opacity:0;animation:cfSparkUp .55s ease .3s both}
   @keyframes cfGlowPulse{0%{opacity:0;transform:scale(.6)}40%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1.2)}}
   @keyframes cfRibbonIn{0%{opacity:0;transform:scaleX(0)}100%{opacity:1;transform:scaleX(1)}}
   @keyframes cfHeartIn{0%{opacity:0;transform:scale(.3)}60%{opacity:1;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}
@@ -509,6 +510,12 @@
   .vicLogoImg{display:block;width:100%;height:auto;opacity:0;transform:scale(.92);animation:vicLogoIn 2.4s cubic-bezier(.22,1,.36,1) .3s both, vicLogoFloat 3.6s ease-in-out 2.7s infinite}
   .vicAnnounce{position:relative;z-index:8;margin-top:14px;padding:0 24px;color:var(--gold);font-size:20px;font-weight:800;text-align:center;text-shadow:0 0 14px rgba(224,184,74,.5);animation:screenFade .6s ease .5s both}
   .vicHint{position:relative;z-index:8;margin-top:18px;color:rgba(255,255,255,.55);font-size:12px;letter-spacing:.06em;animation:screenFade .6s ease .6s both}
+  .vic-village .vicAnnounce{color:var(--gold);text-shadow:0 0 14px rgba(224,184,74,.5)}
+  .vic-wolf .vicAnnounce,.vic-lonewolf .vicAnnounce{color:#ff6a4d;text-shadow:0 0 14px rgba(255,106,77,.5)}
+  .vic-vampire .vicAnnounce{color:#b479e0;text-shadow:0 0 14px rgba(180,121,224,.5)}
+  .vic-cult .vicAnnounce{color:#6a2fb0;text-shadow:0 0 14px rgba(106,47,176,.5)}
+  .vic-sk .vicAnnounce{color:#c3cad1;text-shadow:0 0 14px rgba(195,202,209,.5)}
+  .vic-extinct .vicAnnounce{color:#8a8a8f;text-shadow:0 0 14px rgba(138,138,143,.5)}
   .vic-wolf{--vic-bg1:#1c0605;--vic-bg2:#2a0d0a;--vic-bg3:#000;--vic-fog:rgba(180,30,25,.10);--vic-fog2:rgba(120,15,15,.08);--vic-particle:#ff6a4d;--vic-ray:rgba(255,90,70,.10);--vic-glow:rgba(220,60,50,.35)}
   .vic-lonewolf{--vic-bg1:#141414;--vic-bg2:#1f1f1f;--vic-bg3:#000;--vic-fog:rgba(160,160,170,.10);--vic-fog2:rgba(100,100,110,.08);--vic-particle:#c9ccd4;--vic-ray:rgba(200,205,215,.10);--vic-glow:rgba(180,185,195,.35)}
   .vic-village{--vic-bg1:#16233d;--vic-bg2:#22314f;--vic-bg3:#241c0f;--vic-fog:rgba(90,140,210,.10);--vic-fog2:rgba(230,190,110,.08);--vic-particle:#f0c86a;--vic-ray:rgba(240,200,120,.12);--vic-glow:rgba(230,190,110,.4)}
@@ -560,7 +567,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.15.23</div>
+<div id="verbadge">v3.16.3</div>
 
 <script>
 const ROLES = [
@@ -625,7 +632,7 @@ const ROLES = [
   {id:'cultleader', th:'ผู้นำลัทธิ', en:'Cult Leader', emj:'👁️', team:'neutral',
    desc:'ตัวละครพิเศษ · ทุกคืนชักชวนผู้เล่น 1 คนเข้าลัทธิ ชนะเมื่อสมาชิกลัทธิมากกว่าทุกฝ่ายรวมกัน'},
   {id:'vampire', th:'แวมไพร์', en:'Vampire', emj:'🧛', team:'neutral',
-   desc:'ตัวละครพิเศษ · ทุกคืนเลือกผู้เล่น 1 คนเพื่อกัด ผู้ถูกกัดจะเสียชีวิตตอนหมดเวลาโหวตกลางวัน หากไม่ได้รับการป้องกันจากบอดี้การ์ด ชนะเมื่อเหลือผู้เล่นที่ไม่ใช่แวมไพร์ไม่เกิน 1 คน'},
+   desc:'ตัวละครพิเศษ · ทุกคืน เลือกผู้เล่น 1 คนเพื่อกัด ผู้ที่ถูกกัดยังสามารถพูดคุยในช่วงเช้าได้ แต่จะเสียชีวิตทันทีก่อนเริ่มการโหวต ฝ่ายแวมไพร์ชนะ เมื่อจำนวนแวมไพร์ที่ยังมีชีวิตอยู่ เท่ากับผู้เล่นอื่นที่เหลืออยู่'},
 ];
 const ROLE_DESC_EN = {
   moderator: "You are the Moderator.",
@@ -658,7 +665,7 @@ const ROLE_DESC_EN = {
   beggar: "Has given up on life — wins instantly when eliminated (voted out or killed). The game continues normally for everyone else.",
   serialkiller: "Neutral role (solo). Each night, can kill 1 player. Wins by being the last one standing.",
   cultleader: "Neutral role. Each night, recruits 1 player into the cult. Wins when cult members outnumber all other factions combined.",
-  vampire: "Neutral role. Each night, chooses 1 player to bite. The bitten player dies at the end of the day vote unless protected by the Bodyguard. Wins when at most 1 non-vampire player remains alive."
+  vampire: "Neutral role. Each night, choose 1 player to bite. The bitten player survives the discussion phase but dies immediately before the voting phase begins. Wins when the number of Vampires alive equals the remaining other players."
 };
 function roleDesc(r){ return S.lang==='en' ? (ROLE_DESC_EN[r.id]||r.desc) : r.desc; }
 const TEAM_LABEL_KEY={mod:'teamMod',wolf:'teamWolf',village:'teamVillage',neutral:'teamNeutral',special:'teamSpecial'};
@@ -928,7 +935,7 @@ th:{
 
   grWinTitle:'🏆 4. ลำดับการตรวจสอบผู้ชนะ',
   grWinIntro:'หลังจบ กลางคืน และ กลางวัน ทุกครั้ง เกมจะตรวจสอบผู้ชนะตามลำดับต่อไปนี้ หากเข้าเงื่อนไขข้อใดก่อน จะถือว่าฝ่ายนั้นชนะทันที',
-  grWinList:'🧛 ฝ่ายแวมไพร์ชนะ — ผู้เล่นที่เหลือทั้งหมดเป็นแวมไพร์\n\n👁️ ฝ่ายลัทธิชนะ — สมาชิกลัทธิมีจำนวนมากกว่าผู้เล่นที่ไม่ใช่ลัทธิทั้งหมด\n\n🔪 ฆาตกรโรคจิตชนะ — เหลือฆาตกรโรคจิตเป็นผู้รอดชีวิตเพียงคนเดียว\n\n🐺 ฝ่ายมนุษย์หมาป่าชนะ — มีหมาป่าที่โจมตีได้เหลืออยู่ และจำนวนฝ่ายหมาป่าเท่ากับหรือมากกว่าผู้เล่นฝ่ายอื่นทั้งหมด\n\n🛡️ ฝ่ายหมู่บ้านชนะ — ไม่มีหมาป่า แวมไพร์ ลัทธิ หรือฆาตกรโรคจิตเหลืออยู่',
+  grWinList:'🧛 ฝ่ายแวมไพร์ชนะ — จำนวนแวมไพร์ที่ยังมีชีวิตอยู่ เท่ากับหรือมากกว่าผู้เล่นที่ไม่ใช่แวมไพร์ทั้งหมด\n\n👁️ ฝ่ายลัทธิชนะ — สมาชิกลัทธิมีจำนวนมากกว่าผู้เล่นที่ไม่ใช่ลัทธิทั้งหมด\n\n🔪 ฆาตกรโรคจิตชนะ — เหลือฆาตกรโรคจิตเป็นผู้รอดชีวิตเพียงคนเดียว\n\n🐺 ฝ่ายมนุษย์หมาป่าชนะ — มีหมาป่าที่โจมตีได้เหลืออยู่ และจำนวนฝ่ายหมาป่าเท่ากับหรือมากกว่าผู้เล่นฝ่ายอื่นทั้งหมด\n\n🛡️ ฝ่ายหมู่บ้านชนะ — ไม่มีหมาป่า แวมไพร์ ลัทธิ หรือฆาตกรโรคจิตเหลืออยู่',
 
   grRoleInfoTitle:'🎭 5. รายละเอียดบทบาท',
   grRoleInfoIntro:'ผู้เล่นสามารถแตะที่ตัวละครแต่ละตัวเพื่อดูรายละเอียดได้ตลอดเวลา โดยแต่ละบทบาทจะแสดงข้อมูลดังต่อไปนี้',
@@ -949,7 +956,7 @@ th:{
   scriptVote:'"โหวตว่าจะประหารใคร — ผู้ที่ได้คะแนนสูงสุดถูกประหาร"',
   scriptCupidWake:'"💘 คิวพิด ลืมตา — ชี้ 2 คนที่จะเป็นคู่รัก แล้วหลับตา"',
   scriptCultWake:'"👁️ ผู้นำลัทธิ ลืมตา — ชี้ 1 คนที่จะชวนเข้าลัทธิ แล้วหลับตา"',
-  scriptVampireWake:'"🧛 แวมไพร์ ลืมตา — ชี้ 1 คนที่จะเปลี่ยนเป็นแวมไพร์ แล้วหลับตา"',
+  scriptVampireWake:'"🧛 แวมไพร์ ลืมตา — ชี้ 1 คนที่จะกัด แล้วหลับตา"',
   scriptShapeshifterWake:'"🎭 หมาป่าจำแลง ลืมตา — ชี้ 1 คนที่จะจำแลงเป็นคืนนี้ แล้วหลับตา"',
   scriptSorcererWake:'"🧙 นางปีศาจ ลืมตา — ชี้ 1 คนที่ต้องการตรวจว่าเป็น Seer ไหม แล้วหลับตา (พยักหน้า/ส่ายหัว)"',
   scriptAlphaWake:'"🩸 หมาป่าจ่าฝูง ลืมตา — คืนแรก: ชี้ 1 คนเพื่อแปลงเป็นหมาป่า (แทนการฆ่า) แล้วหลับตา"',
@@ -1006,7 +1013,7 @@ th:{
 
   // ===== win conditions (winCond) =====
   winMod:'ไม่มีเงื่อนไขชนะ — ทำหน้าที่คุมเกม', winSk:'เป็นผู้รอดชีวิตคนสุดท้าย',
-  winCult:'สมาชิกลัทธิมากกว่าทุกฝ่ายรวมกัน', winVampire:'เปลี่ยนคนจนเหลือเฉพาะฝ่ายแวมไพร์',
+  winCult:'สมาชิกลัทธิมากกว่าทุกฝ่ายรวมกัน', winVampire:'จำนวนแวมไพร์เท่ากับหรือมากกว่าผู้เล่นที่ไม่ใช่แวมไพร์',
   winBeggar:'ถูกกำจัด (โหวตออกหรือถูกฆ่า) = ชนะทันที', winDrunk:'ชนะตามบทบาทจริงที่สุ่มได้ (รู้ผลคืนที่ 3)',
   winDoppel:'ชนะตามบทบาทที่ลอกมา (ถ้ายังไม่ลอก = ฝ่ายหมู่บ้าน)',
   winWolfTeam:'จำนวนมนุษย์หมาป่า ≥ ผู้เล่นฝ่ายอื่น', winVillageTeam:'กำจัดภัยคุกคามทั้งหมด (มนุษย์หมาป่า/ฆาตกร/ลัทธิ) ให้หมด', winNone:'—',
@@ -1050,7 +1057,7 @@ th:{
 
   // ===== phaseTitle / top bar =====
   phaseCupid:'💘 จับคู่รัก', phaseNight:'🌙 คืนที่ {n}', phaseDay:'☀️ วันที่ {n}',
-  phaseHunter:'🏹 นายพรานยิงท้าย', phaseOver:'🏁 จบเกม',
+  phaseHunter:'🏹 นายพรานยิงท้าย', phaseOver:'🏁 บทสรุป',
   aliveSuffix:'ยังอยู่', undoBtn:'↩︎ ย้อนกลับ', endGameBtn:'⏹ จบเกม',
 
   // ===== cupid phase =====
@@ -1076,7 +1083,7 @@ th:{
   helpAlphaConvert:'🩸 แตะชาวบ้าน 1 คนเพื่อเปลี่ยนเป็นหมาป่า (แทนการฆ่าคืนนี้ · ใช้ได้ครั้งเดียวทั้งเกม)',
   helpSkKill:'🔪 แตะ 1 คนเพื่อฆ่า (ฆาตกรโรคจิตฆ่าได้ทุกคืน อิสระจากหมาป่า)',
   helpCultRecruit:'👁️ แตะ 1 คนเพื่อชวนเข้าลัทธิ (ชนะเมื่อสมาชิกลัทธิมากกว่าทุกฝ่ายรวมกัน)',
-  helpVampireBite:'🧛 แตะ 1 คนเพื่อเปลี่ยนเป็นแวมไพร์ (ชนะเมื่อทุกคนที่เหลือเป็นแวมไพร์)',
+  helpVampireBite:'🧛 แตะ 1 คนเพื่อกัด (ชนะเมื่อจำนวนแวมไพร์เท่ากับหรือมากกว่าผู้เล่นที่ไม่ใช่แวมไพร์)',
   helpShapeShift:'🎭 แตะ 1 คนเพื่อจำแลงเป็นเขาคืนนี้ (ถ้า Seer ตรวจจำแลง จะเห็นผลของคนนี้แทน)',
   helpDopplePick:'🎭 แตะ 1 คนเพื่อจับตา (ไม่ใช่ตัวเอง) — ถ้าคนนี้ตายเมื่อใด ผู้เลียนแบบจะได้รับบทบาทนั้นทันที',
   helpSeerUsed:'✅ เทพพยากรณ์ใช้ไปแล้วคืนนี้ (รอคืนถัดไป)',
@@ -1167,7 +1174,7 @@ en:{
 
   grWinTitle:'🏆 4. Victory Check Order',
   grWinIntro:'After every Night and Day phase, the game checks for a winner in the following order. The first condition that is met immediately ends the game.',
-  grWinList:'🧛 Vampire Victory — Every remaining living player is a Vampire.\n\n👁️ Cult Victory — Cult members outnumber all non-Cult players combined.\n\n🔪 Serial Killer Victory — The Serial Killer is the last player alive.\n\n🐺 Werewolf Victory — At least one killing werewolf remains alive, and the Werewolf Team has equal to or more living players than everyone else combined.\n\n🛡️ Village Victory — No Werewolves, Vampires, Cult Leader, or Serial Killer remain alive.',
+  grWinList:'🧛 Vampire Victory — Vampires are equal to or outnumber all remaining non-Vampire players.\n\n👁️ Cult Victory — Cult members outnumber all non-Cult players combined.\n\n🔪 Serial Killer Victory — The Serial Killer is the last player alive.\n\n🐺 Werewolf Victory — At least one killing werewolf remains alive, and the Werewolf Team has equal to or more living players than everyone else combined.\n\n🛡️ Village Victory — No Werewolves, Vampires, Cult Leader, or Serial Killer remain alive.',
 
   grRoleInfoTitle:'🎭 5. Role Information',
   grRoleInfoIntro:'Players can tap any role at any time to view detailed information. Each role page includes:',
@@ -1188,7 +1195,7 @@ en:{
   scriptVote:'"Vote to eliminate a suspect — the player with the most votes is executed"',
   scriptCupidWake:'"💘 Cupid, open your eyes — point to 2 players who will be lovers, then close your eyes"',
   scriptCultWake:'"👁️ Cult Leader, open your eyes — point to 1 player to recruit, then close your eyes"',
-  scriptVampireWake:'"🧛 Vampire, open your eyes — point to 1 player to convert, then close your eyes"',
+  scriptVampireWake:'"🧛 Vampire, open your eyes — point to 1 player to bite, then close your eyes"',
   scriptShapeshifterWake:'"🎭 Shapeshifter, open your eyes — point to 1 player to disguise as tonight, then close your eyes"',
   scriptSorcererWake:'"🧙 Sorcerer, open your eyes — point to 1 player to check if they are the Seer, then close your eyes (nod / shake head)"',
   scriptAlphaWake:'"🩸 Alpha Wolf, open your eyes — Night 1: point to 1 player to convert into a werewolf instead of killing, then close your eyes"',
@@ -1244,7 +1251,7 @@ en:{
   facSolo:'🔪 Third Party · Solo', facCult:'👁️ Third Party · Cult', facVampire:'🧛 Third Party · Vampire', facNeutral:'✨ Neutral',
 
   winMod:'No win condition — runs the game', winSk:'Be the last one standing',
-  winCult:'Cult members outnumber all other factions combined', winVampire:'Convert everyone until only vampires remain',
+  winCult:'Cult members outnumber all other factions combined', winVampire:'Vampires equal or outnumber all remaining non-Vampires',
   winBeggar:'Eliminated (voted out or killed) = instant win', winDrunk:'Wins based on real assigned role (revealed Night 3)',
   winDoppel:'Wins based on copied role (Village team if not yet copied)',
   winWolfTeam:'Werewolves ≥ remaining players', winVillageTeam:'Eliminate all threats (werewolves/killers/cult)', winNone:'—',
@@ -1283,7 +1290,7 @@ en:{
   startRunBtn:'▶️ Start Game', reshuffleBtn:'🎲 Play Again (reshuffle, same names)', resetAllBtn:'Reset Everything',
 
   phaseCupid:'💘 Match Lovers', phaseNight:'🌙 Night {n}', phaseDay:'☀️ Day {n}',
-  phaseHunter:"🏹 Hunter's Last Shot", phaseOver:'🏁 Game Over',
+  phaseHunter:"🏹 Hunter's Last Shot", phaseOver:'🏁 Summary',
   aliveSuffix:'alive', undoBtn:'↩︎ Undo', endGameBtn:'⏹ End Game',
 
   cupidInstruction:'Choose 2 lovers. If one dies, the other dies too.', skipBtn:'Skip',
@@ -1306,7 +1313,7 @@ en:{
   helpAlphaConvert:'🩸 Tap 1 villager to convert to werewolf (instead of killing tonight · once per game)',
   helpSkKill:'🔪 Tap 1 person to kill (Serial Killer can kill every night, independent of werewolves)',
   helpCultRecruit:'👁️ Tap 1 person to recruit (wins when cult outnumbers all other factions)',
-  helpVampireBite:'🧛 Tap 1 person to convert to vampire (wins when everyone remaining is a vampire)',
+  helpVampireBite:'🧛 Tap 1 person to bite (wins when Vampires equal or outnumber all remaining non-Vampires)',
   helpShapeShift:"🎭 Tap 1 person to disguise as tonight (if Seer checks the Shapeshifter, they see this person's result instead)",
   helpDopplePick:'🎭 Tap 1 person to mark (not yourself) — if they die, the Doppelganger immediately takes their role',
   helpSeerUsed:'✅ Seer already used tonight (wait for next night)',
@@ -2021,7 +2028,7 @@ function confirmCupid(){
   ov.innerHTML='<div class="cfGlow" style="left:'+ax+'px;top:'+ay+'px"></div>'+
     '<div class="cfGlow" style="left:'+bx+'px;top:'+by+'px"></div>'+
     '<div class="cfRibbonWrap" style="left:'+ax+'px;top:'+ay+'px;width:'+dist+'px;transform:rotate('+ang+'deg)"><div class="cfRibbon"></div></div>'+
-    '<div class="cfHeart" style="left:'+mx+'px;top:'+my+'px">💛</div>'+
+    '<div class="cfHeart" style="left:'+mx+'px;top:'+my+'px">💗</div>'+
     '<div class="cfSpark" style="left:'+(mx-14)+'px;top:'+my+'px"></div>'+
     '<div class="cfSpark" style="left:'+(mx+10)+'px;top:'+(my+6)+'px;animation-delay:.12s"></div>';
   document.body.appendChild(ov);
@@ -2123,6 +2130,7 @@ function nightTap(i){
 function dayTap(i){ if(!G.alive[i])return; G.dayVote=(G.dayVote===i)?null:i; render(); }
 function hunterPick(i){
   if(!G.alive[i]||G._hunterAnimBusy) return;
+  pushUndo(); // snapshot BEFORE _hunterAnimBusy flips true, so undo restores a re-selectable state
   G._hunterAnimBusy=true;
   const card=document.querySelector('[data-gp="'+i+'"]');
   const rect=card?card.getBoundingClientRect():null;
@@ -2138,12 +2146,14 @@ function hunterPick(i){
   document.body.appendChild(ov);
   const appEl=document.getElementById('app');
   if(appEl){ appEl.classList.add('hfShake'); setTimeout(()=>appEl.classList.remove('hfShake'),220); }
-  setTimeout(()=>{ ov.remove(); G._hunterAnimBusy=false; },780); // cosmetic cleanup only, non-blocking
-  pushUndo();
-  G.hunterQueue.shift();
-  logEvent('actHunterShot',{actor:roleLabel(roleById('hunter')),target:S.players[i].name});
-  killChain([i]);
-  finishResolution();
+  setTimeout(()=>{ // holds the current screen until the shoot FX fully finishes, then advances
+    ov.remove();
+    G._hunterAnimBusy=false;
+    G.hunterQueue.shift();
+    logEvent('actHunterShot',{actor:roleLabel(roleById('hunter')),target:S.players[i].name});
+    killChain([i]);
+    finishResolution();
+  },780);
 }
 function hunterSkip(){
   pushUndo();
@@ -2272,6 +2282,7 @@ function gcell(i){
   let cls='gcell';
   if(dead) cls+=' dead';
   if((G.phase==='cupid'&&G.cupidPick.includes(i))||(G.phase==='day'&&G.dayVote===i)) cls+=' sel';
+  if(G.phase==='cupid'&&G.cupidPick.includes(i)) cls+=' cupidSel';
   if(G.phase!=='day'&&(G.wolfTargets.includes(i)||G.loneWolfTarget===i)) cls+=' target';
   return `<div class="${cls}" data-gp="${i}">
     ${iconHTML(r,30)}
