@@ -507,6 +507,7 @@
   .vicGlow{position:absolute;width:280px;height:280px;left:50%;top:50%;margin-left:-140px;margin-top:-140px;border-radius:50%;z-index:6;background:radial-gradient(circle, var(--vic-glow), transparent 70%);filter:blur(6px);opacity:0;animation:vicGlowIn 2.6s ease both, vicGlowPulse 3.2s ease-in-out 2.6s infinite}
   .vicLogoWrap{position:relative;z-index:7;width:min(58vw,260px)}
   .vicLogoImg{display:block;width:100%;height:auto;opacity:0;transform:scale(.92);animation:vicLogoIn 2.4s cubic-bezier(.22,1,.36,1) .3s both, vicLogoFloat 3.6s ease-in-out 2.7s infinite}
+  .vicAnnounce{position:relative;z-index:8;margin-top:14px;padding:0 24px;color:var(--gold);font-size:20px;font-weight:800;text-align:center;text-shadow:0 0 14px rgba(224,184,74,.5);animation:screenFade .6s ease .5s both}
   .vicHint{position:relative;z-index:8;margin-top:18px;color:rgba(255,255,255,.55);font-size:12px;letter-spacing:.06em;animation:screenFade .6s ease .6s both}
   .vic-wolf{--vic-bg1:#1c0605;--vic-bg2:#2a0d0a;--vic-bg3:#000;--vic-fog:rgba(180,30,25,.10);--vic-fog2:rgba(120,15,15,.08);--vic-particle:#ff6a4d;--vic-ray:rgba(255,90,70,.10);--vic-glow:rgba(220,60,50,.35)}
   .vic-lonewolf{--vic-bg1:#141414;--vic-bg2:#1f1f1f;--vic-bg3:#000;--vic-fog:rgba(160,160,170,.10);--vic-fog2:rgba(100,100,110,.08);--vic-particle:#c9ccd4;--vic-ray:rgba(200,205,215,.10);--vic-glow:rgba(180,185,195,.35)}
@@ -559,7 +560,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.15.20</div>
+<div id="verbadge">v3.15.23</div>
 
 <script>
 const ROLES = [
@@ -723,6 +724,10 @@ function viewVictoryLogo(){
   const key=_onlyLW?'lonewolf':(VICLOGO_MAP[G.winner]?G.winner:'village');
   const src=VICLOGO_MAP[key]||VICLOGO_MAP.village;
   const hint=S.lang==='en'?'Tap to skip':'แตะเพื่อข้าม';
+  const _beggarWon=G.winner==='wolf' && S.players.some((p,i)=>effRole(i)==='beggar'&&!G.alive[i]);
+  const _stripIcon=s=>s.replace(/^\S+\s*/,'');
+  const announceTxt=G.winner==='extinct'?_stripIcon(T('winnerExtinctTitle'))
+    :_onlyLW?_stripIcon(T('winnerLoneWolf')):_beggarWon?_stripIcon(T('winnerWolfAndBeggar')):G.winner==='wolf'?_stripIcon(T('winnerWolf')):G.winner==='cult'?_stripIcon(T('winnerCult')):G.winner==='sk'?_stripIcon(T('winnerSk')):G.winner==='vampire'?_stripIcon(T('winnerVampire')):_stripIcon(T('winnerVillage'));
   return `<div class="vicOverlay vic-${key}" id="gVicSkip">
     <div class="vicBg"></div>
     <div class="vicEnv"></div>
@@ -733,6 +738,7 @@ function viewVictoryLogo(){
     <div class="vicRay vicRay2"></div>
     <div class="vicGlow"></div>
     <div class="vicLogoWrap"><img class="vicLogoImg" src="${src}" alt=""></div>
+    <div class="vicAnnounce">${esc(announceTxt)}</div>
     <div class="vicHint">${hint}</div>
   </div>`;
 }
@@ -2914,14 +2920,14 @@ function viewSettings(){
           <button class="tchip ${!S.bgmOn?'on':''}" id="bgmOff">${T('soundOff')}</button>
         </div>
       </div>
-      <div class="set-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+      <div class="set-row">
         <span class="set-label">${T('revealDeathSetting')}</span>
-        <div class="set-seg">
-          <button class="seg-btn ${S.revealOnDeath?'on':''}" id="revealOn">${T('revealOnLabel')}</button>
-          <button class="seg-btn ${!S.revealOnDeath?'on':''}" id="revealOff">${T('revealOffLabel')}</button>
+        <div class="lang-btns">
+          <button class="tchip ${S.revealOnDeath?'on':''}" id="revealOn">${T('soundOn')}</button>
+          <button class="tchip ${!S.revealOnDeath?'on':''}" id="revealOff">${T('soundOff')}</button>
         </div>
-        <p class="footnote gr-desc">${S.revealOnDeath?T('revealOnDesc'):T('revealOffDesc')}</p>
       </div>
+      <p class="footnote gr-desc" style="margin-top:-4px">${S.revealOnDeath?T('revealOnDesc'):T('revealOffDesc')}</p>
     </div>
   </div>`;
 }
