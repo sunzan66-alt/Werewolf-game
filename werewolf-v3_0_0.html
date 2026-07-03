@@ -548,9 +548,23 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.15.4</div>
+<div id="verbadge">v3.15.6-dbg</div>
 
 <script>
+window.__wwErrLog = [];
+window.onerror = function(msg, src, line, col, err){
+  try{
+    var d = document.getElementById('wwErrBox');
+    if(!d){
+      d = document.createElement('div');
+      d.id = 'wwErrBox';
+      d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#b00020;color:#fff;font:12px monospace;padding:8px;white-space:pre-wrap;max-height:35vh;overflow:auto;';
+      document.body.appendChild(d);
+    }
+    d.textContent += 'JS ERROR: '+msg+'\nat line '+line+' col '+col+'\n\n';
+  }catch(e){}
+  return false;
+};
 const ROLES = [
   {id:'moderator', th:'ผู้ดำเนินรายการ', en:'Moderator', emj:'🎙️', team:'mod',
    desc:'คุณได้เป็นผู้ดำเนินรายการ'},
@@ -3354,6 +3368,19 @@ document.addEventListener('pointerdown',e=>{
 });
 
 render();
+try{
+  var okBox=document.createElement('div');
+  okBox.id='wwOkBox';
+  var appEl=document.getElementById('app');
+  okBox.textContent='DEBUG v3.15.6: script finished OK. #app children='+(appEl?appEl.children.length:'NO#app')+' innerHTMLlen='+(appEl?appEl.innerHTML.length:'N/A')+' UA='+navigator.userAgent.slice(0,60);
+  okBox.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#0a7a2f;color:#fff;font:10px monospace;padding:6px;word-break:break-all;';
+  document.body.appendChild(okBox);
+}catch(e){
+  var errBox=document.createElement('div');
+  errBox.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#663c00;color:#fff;font:11px monospace;padding:6px;';
+  errBox.textContent='DEBUG: marker itself threw: '+e.message;
+  document.body.appendChild(errBox);
+}
 document.addEventListener('click',e=>{
   if(!_wwaCtx) try{_wwaCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(_){}
   else if(_wwaCtx.state==='suspended') _wwaCtx.resume();
