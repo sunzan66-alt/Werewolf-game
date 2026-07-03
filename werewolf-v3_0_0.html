@@ -548,7 +548,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.15.4</div>
+<div id="verbadge">v3.15.5-dbg</div>
 
 <script>
 window.__wwErrLog = [];
@@ -3369,16 +3369,13 @@ document.addEventListener('pointerdown',e=>{
 });
 
 render();
-document.addEventListener('click',e=>{
-  if(!_wwaCtx) try{_wwaCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(_){}
-  else if(_wwaCtx.state==='suspended') _wwaCtx.resume();
-  // BGM กลับมาเฉพาะเมื่อกดปุ่มบนหน้าจบเกม
-  if(G&&G.phase==='over'&&!_bgmOn) startBGM();
-  const _ct=e.target; const b=(_ct&&_ct.nodeType===1)?_ct.closest('button,.tchip,.group-chip'):null;
-  if(!b||b.dataset.inc||b.dataset.dec) return;
-  if(G&&G.phase&&['night','day','cupid','hunter','over'].includes(G.phase)) return;
-  playSound('click');
-},true);
-</script>
-</body>
-</html>
+try{
+  var okBox=document.createElement('div');
+  okBox.id='wwOkBox';
+  var appEl=document.getElementById('app');
+  okBox.textContent='DEBUG v3.15.4: script finished, render() called OK. #app children: '+(appEl?appEl.children.length:'NO #app FOUND')+' | #app innerHTML length: '+(appEl?appEl.innerHTML.length:'N/A');
+  okBox.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#0a7a2f;color:#fff;font:11px monospace;padding:6px;';
+  document.body.appendChild(okBox);
+}catch(e){
+  var errBox=document.createElement('div');
+  errBox.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:999999;backgr
