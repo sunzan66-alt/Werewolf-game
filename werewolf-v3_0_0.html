@@ -567,7 +567,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.16.3</div>
+<div id="verbadge">v3.16.4</div>
 
 <script>
 const ROLES = [
@@ -2813,6 +2813,7 @@ function viewMod(){
 
 let _lastKey=null;
 let _prevScreen=null;
+let _listScrollY=0;
 const viewKey=()=>S.screen+'|'+(G&&G.running?G.phase:'');
 function viewRules(){
   const lines=k=>T(k).split('\n').map(l=>`<p style="margin:0 0 6px">${l}</p>`).join('');
@@ -3166,6 +3167,9 @@ function render(){
   else if(_bgmOn&&_inGame) stopBGM(false);
   const sy=window.scrollY;
   const sameView=(_lastKey===viewKey());
+  const _enteringRevealFromList=(_prevScreen==='list'&&S.screen==='reveal');
+  const _returningToListFromReveal=(_prevScreen==='reveal'&&S.screen==='list');
+  if(_enteringRevealFromList) _listScrollY=sy;
   let html='';
   if(S.screen==='menu') html=viewMenu();
   else if(S.screen==='settings') html=viewSettings();
@@ -3188,7 +3192,9 @@ function render(){
   _prevScreen=S.screen;
   hideLoader();
   bind();
-  if(sameView) window.scrollTo(0,sy); else window.scrollTo(0,0);
+  if(_returningToListFromReveal) window.scrollTo(0,_listScrollY);
+  else if(sameView) window.scrollTo(0,sy);
+  else window.scrollTo(0,0);
   _lastKey=viewKey();
 }
 
@@ -3382,6 +3388,18 @@ document.addEventListener('click',e=>{
   if(G&&G.phase&&['night','day','cupid','hunter','over'].includes(G.phase)) return;
   playSound('click');
 },true);
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden) return;
+  // ── กลับมาจากพักหน้าจอ/สลับแอป: เช็คว่า AudioContext ยังไหวไหม ──
+  if(_wwaCtx){
+    if(_wwaCtx.state==='suspended') _wwaCtx.resume();
+    else if(_wwaCtx.state==='closed'){
+      // context ถูกระบบปิดทิ้งไปเงียบๆตอนอยู่เบื้องหลัง — ล้าง state เก่าที่ค้างอยู่ ไม่งั้น startBGM() จะคิดว่ายังเล่นอยู่แล้วไม่ทำอะไร
+      _wwaCtx=null; _bgmSrc=null; _bgmGain=null; _bgmOn=false;
+    }
+  }
+  render(); // ให้ render() ตัดสินใจใหม่ว่าควร startBGM()/stopBGM() ไหมตามหน้าจอปัจจุบัน (idempotent, ไม่กระทบตำแหน่ง scroll)
+});
 </script>
 </body>
 </html>
