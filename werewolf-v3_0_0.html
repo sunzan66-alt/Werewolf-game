@@ -568,7 +568,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.16.11</div>
+<div id="verbadge">v3.16.13</div>
 
 <script>
 const ROLES = [
@@ -999,16 +999,19 @@ th:{
   gsTotalPlayTime:'เวลาเล่นทั้งหมด', unitHour:' ชั่วโมง', unitMin:' นาที', unitSec:' วินาที',
   gsLongestSurvivor:'ผู้รอดชีวิต', gsFirstBlood:'คนแรกที่เสียชีวิต', gsNoSurvivors:'ไม่มี (ทุกคนเสียชีวิต)',
   actKilled:'{actor} ฆ่า {target}', actBlocked:'{actor} พยายามฆ่า {target} แต่ถูกป้องกันไว้ได้',
-  actToughGuyHit:'{target} ได้รับบาดเจ็บจากการถูกมนุษย์หมาป่าเล่นงาน',
-  actToughGuyDeath:'{target} ทนพิษบาดแผลไม่ไหว เสียชีวิต',
+  actToughGuyHit:'{target} บาดเจ็บสาหัส',
+  actToughGuyDeath:'{target} เสียชีวิตจากบาดแผล',
   actCursedConvert:'{target} ถูกสาปกลายเป็นหมาป่า',
-  actRecruited:'{actor} ชวน {target} เข้าลัทธิ', actBit:'{actor} กัด {target}', actVampireKilled:'{target} ถูกแวมไพร์กัดจนเสียชีวิต',
+  actRecruited:'{actor} ชวน {target} เข้าลัทธิ', actBit:'{actor} กัด {target}', actVampireKilled:'{target} เสียชีวิตจากพิษแวมไพร์',
   actConverted:'{actor} เปลี่ยน {target} เป็นหมาป่า', actShapeshifted:'{actor} จำแลงเป็น {target}',
   actSeerChecked:'เทพพยากรณ์ ตรวจสอบ {target}', actSorcChecked:'นางปีศาจ ตรวจสอบ {target}',
   actBeggarWin:'ยาจก {target} ถูกกำจัด — ชนะทันที!',
   actLoverDied:'{target} ตายตามคู่รัก', actVampireBlocked:'{actor} พยายามกัด {target} แต่ถูกป้องกันไว้ได้',
-  actPrinceRevealed:'{target} คือเจ้าชาย! เปิดเผยตัวตน', actSilenced:'{actor} สั่งห้าม {target} พูด',
-  actMarked:'{actor} จับตา {target}', actPaired:'จับคู่รัก {a} และ {b}',
+  actPrinceRevealed:'{target} คือเจ้าชาย! เปิดเผยตัวตน', actSilenced:'{actor} สั่งห้าม {target} พูด', actSpellcasterCurseDeath:'{target} เสียชีวิตจากคำสาปของจอมเวท',
+  actDoppleAcquired:'{doppel} ได้รับบทบาท {role} จาก {target}', actDrunkRevealed:'{target} เปลี่ยนบทบาทเป็น {role}',
+  actSeerSuccessor:'{target} กลายเป็นเทพพยากรณ์', actCultJoined:'{target} เข้าร่วมลัทธิ', actPacifistVeto:'ไม่มีการประหาร เพราะนักสันติวิธีประท้วง',
+  cultMemberLabel:'สมาชิกลัทธิ',
+  actMarked:'{actor} จับตา {target} ({role})', actPaired:'จับคู่รัก {a} และ {b}',
   actExecuted:'{target} ถูกประหาร', actHunterShot:'{actor} ยิง {target}',
   actHunterNoShot:'นายพรานไม่ยิงใคร', actSkipped:'{actor} ข้ามสกิล',
 
@@ -1130,7 +1133,9 @@ th:{
   beggarWin:'🏆 ยาจก {names} ชนะทันที! (เกมดำเนินต่อ)', convertedToWolf:'🌗➡️🐺 {names} ถูกสาปกลายเป็นหมาป่า!',
   convertedToVampire:'🩸 {name} เสียชีวิตจากพิษแวมไพร์',
   princeRevealed:'👑 {name} คือเจ้าชาย! เปิดเผยตัวตนและรอดชีวิตจากการประหารครั้งแรก',
-  pacifistVetoBanner:'🕊️ นักสันติวิธีออกเสียง — การประหารวันนี้ถูกยกเลิก ไม่มีใครตาย',
+  spellcasterCurseDeath:'💀 {name} เสียชีวิตจากคำสาปของจอมเวท',
+  toughGuyWoundedBanner:'💪 {name} บาดเจ็บสาหัส', toughGuyDeathBanner:'💀 {name} เสียชีวิตจากบาดแผล',
+  pacifistVetoBanner:'🕊️ ไม่มีการประหาร เพราะนักสันติวิธีประท้วง',
 
   // ===== game over =====
   winnerWolf:'🐺 ฝ่ายมนุษย์หมาป่าชนะ!', winnerLoneWolf:'🐺 หมาป่าเดียวดายชนะ!', winnerWolfAndBeggar:'🐺💔 ฝ่ายมนุษย์หมาป่าและยาจกชนะ!', winnerCult:'👁️ ลัทธิชนะ!', winnerSk:'🔪 ฆาตกรโรคจิตชนะ!',
@@ -1243,16 +1248,19 @@ en:{
   gsLongestSurvivor:'Survivors', gsFirstBlood:'First Blood', gsNoSurvivors:'None (everyone died)',
   actChecked:'{actor} checked {target}', actProtected:'{actor} protected {target}',
   actKilled:'{actor} killed {target}', actBlocked:'Werewolves attempted to kill {target}, but the attack was blocked.',
-  actToughGuyHit:'{target} was wounded by the werewolves',
-  actToughGuyDeath:'{target} could not survive the wounds and died',
+  actToughGuyHit:'{target} was critically wounded.',
+  actToughGuyDeath:'{target} died from the injuries.',
   actCursedConvert:'{target} was cursed and became a werewolf',
-  actRecruited:'{actor} recruited {target} into the cult', actBit:'{actor} bit {target}', actVampireKilled:'{target} died from a vampire bite',
+  actRecruited:'{actor} recruited {target} into the cult', actBit:'{actor} bit {target}', actVampireKilled:'{target} died from Vampire Poison.',
   actConverted:'{actor} converted {target} into a werewolf', actShapeshifted:'{actor} disguised as {target}',
   actSeerChecked:'Seer investigated {target}', actSorcChecked:'Sorcerer investigated {target}',
   actBeggarWin:'Beggar {target} was eliminated — instant win!',
   actLoverDied:"{target} died from Lover's Bond.", actVampireBlocked:'The Vampire attempted to bite {target}, but the attack was blocked.',
-  actPrinceRevealed:'{target} is the Prince! Revealed.', actSilenced:'{actor} silenced {target}.',
-  actMarked:'{actor} marked {target}', actPaired:'Paired lovers {a} and {b}',
+  actPrinceRevealed:'{target} is the Prince! Revealed.', actSilenced:'{actor} silenced {target}.', actSpellcasterCurseDeath:"{target} died from the Spellcaster's Curse.",
+  actDoppleAcquired:'{doppel} became {role} after {target} died.', actDrunkRevealed:'{target} became {role}.',
+  actSeerSuccessor:'{target} became the Seer.', actCultJoined:'{target} joined the Cult.', actPacifistVeto:"No execution. The Pacifist prevented today's execution.",
+  cultMemberLabel:'Cult Member',
+  actMarked:'{actor} marked {target} ({role})', actPaired:'Paired lovers {a} and {b}',
   actExecuted:'{target} was executed', actHunterShot:'{actor} shot {target}',
   actHunterNoShot:'Hunter did not shoot anyone', actSkipped:'{actor} skipped their turn',
 
@@ -1357,9 +1365,11 @@ en:{
   executedNames:'⚖️ {names} was executed.', noExecution:'No execution',
   loverBondDeath:"💘 {name} died from Lover's Bond.", hunterShotLine:'🏹 {shooter} shot {target}.',
   beggarWin:'🏆 Beggar {names} wins instantly! (game continues)', convertedToWolf:'🌗➡️🐺 {names} cursed into a werewolf!',
-  convertedToVampire:'🩸 {name} died from Vampire poison.',
+  convertedToVampire:'🩸 {name} died from Vampire Poison.',
   princeRevealed:'👑 {name} is the Prince! Revealed and survives the first execution',
-  pacifistVetoBanner:"🕊️ Pacifist used their veto — today's execution is cancelled, no one dies",
+  spellcasterCurseDeath:"💀 {name} died from the Spellcaster's Curse.",
+  toughGuyWoundedBanner:'💪 {name} was critically wounded.', toughGuyDeathBanner:"💀 {name} died from the injuries.",
+  pacifistVetoBanner:"🕊️ No execution. The Pacifist prevented today's execution.",
 
   winnerWolf:'🐺 Werewolves win!', winnerLoneWolf:'🐺 Lone Wolf wins!', winnerWolfAndBeggar:'🐺💔 Werewolf Team & Beggar win!', winnerCult:'👁️ Cult wins!', winnerSk:'🔪 Serial Killer wins!',
   winnerVampire:'🧛 Vampires win!', winnerVillage:'👥 Village wins!', winnerBeggar:'🏆 Beggar Wins!', winnerExtinctTitle:'☠️ Draw', winnerExtinctSub:'Everyone died.', backToSummaryBtn:'Back to summary'
@@ -1746,6 +1756,7 @@ function startRun(){
      drunkTrueRole:null, doppleTarget:null, doppleAcquired:false, doppleCopiedRole:null,
      tool:'kill', check:null, hunterQueue:[], afterHunter:null,
      vampKilledThisDay:null,
+     drunkRevealed:false,
      deaths:[], banner:null, winner:null, history:[], showHistory:false, historyCollapsed:{}, deathLog:[]};
   if(G.phase==='night') G.nightNo=1;
   S.players.forEach((p,i)=>{ if(p.role==='cultleader') G.cult.push(i); });
@@ -1767,11 +1778,16 @@ function killChain(seeds){
     G.deathLog.push({idx:i,name:S.players[i].name,role:effRole(i),night:G.nightNo,day:G.dayNo,phase:G.phase});
     if(roleOf(i)==='wolfcub') G.cubBonusPending=true;
     if(effRole(i)==='ghost'){ G.ghostVoteDay=(G.dayNo||0)+1; playSound('ghostDeath'); }
+    if(roleOf(i)==='seer'){
+      const apIdx=S.players.findIndex(p=>p.role==='apprentice');
+      if(apIdx>=0 && G.alive[apIdx]) logEvent('actSeerSuccessor',{target:S.players[apIdx].name});
+    }
     if(G.doppleTarget===i && !G.doppleAcquired){
       const dgIdx=S.players.findIndex(p=>p.role==='doppelganger');
       if(dgIdx>=0 && G.alive[dgIdx]){
         G.doppleAcquired=true; G.doppleCopiedRole=effRole(i);
         if(G.doppleCopiedRole==='cultleader' && !G.cult.includes(dgIdx)) G.cult.push(dgIdx);
+        logEvent('actDoppleAcquired',{doppel:S.players[dgIdx].name,role:roleLabel(roleById(G.doppleCopiedRole)),target:S.players[i].name});
       }
     }
     if(G.lovers&&G.lovers.includes(i)){
@@ -1782,7 +1798,7 @@ function killChain(seeds){
         if(G.banner&&Array.isArray(G.banner.loverDeaths)) G.banner.loverDeaths.push(S.players[p].name);
       }
     }
-    if(roleOf(i)==='hunter') G.hunterQueue.push(i);
+    if(effRole(i)==='hunter') G.hunterQueue.push(i);
   }
 }
 function seerSeesWolf(idx){
@@ -1850,7 +1866,10 @@ function enterDay(){
   G.wolfTargets=[]; G.check=null; G.dayVote=null; G.wolfKillCount=1; G.loneWolfTarget=null; G._wolfWakeDone=false;
   G.dayNo++;
   G.timerExpired=false; // กันไม่ให้ template render() เห็น flag ค้างจากเมื่อวาน (จะแก้อีกทีใน startDayTimer)
-  G.banner={type:'morning',deaths:[...G.deaths],converts:[...(G.justConverts||[])]};
+  const _toughDeathNames=(G.history||[]).filter(h=>h.key==='actToughGuyDeath'&&h.night===G.nightNo).map(h=>h.vars.target);
+  const _regularDeaths=G.deaths.filter(i=>!_toughDeathNames.includes(S.players[i].name));
+  const _woundedNow=G.toughDieNext!=null?[S.players[G.toughDieNext].name]:[];
+  G.banner={type:'morning',deaths:_regularDeaths,converts:[...(G.justConverts||[])],toughDeaths:_toughDeathNames,wounded:_woundedNow};
   G.phase=checkWin()?'over':'day';
   if(G.phase==='over'){ resetPhaseTransitionVisuals(); playWinSound(); render(); stopTimer(); return; }
   playPhaseTransition('day',()=>{ render(); startDayTimer(); });
@@ -1858,6 +1877,11 @@ function enterDay(){
 function enterNight(){
   stopTimer(); ACT=[];
   G.nightNo++;
+  if(!G.drunkRevealed && G.nightNo>=3 && hasRole('drunk')){
+    G.drunkRevealed=true;
+    const dIdx=S.players.findIndex(p=>p.role==='drunk');
+    if(dIdx>=0 && G.alive[dIdx]) logEvent('actDrunkRevealed',{target:S.players[dIdx].name,role:roleLabel(roleById(G.drunkTrueRole))});
+  }
   G.wolfKillCount=G.cubBonusPending?2:1; G.cubBonusPending=false;
   G.silencedPrev=G.silenced;   // จดจำคนที่โดนใบ้คืนก่อน (ใบ้ซ้ำติดกันไม่ได้)
   G.wolfTargets=[]; G.protectThis=null; G.silenced=null; G.check=null;
@@ -1920,13 +1944,16 @@ function resolveNight(){          // 🌅 เช้าแล้ว
   G.alphaConvert=null;
   // ฆาตกรโรคจิตฆ่า (อิสระ · บอดี้การ์ดกันได้)
   const _skTargetBefore=G.skTarget;
-  if(G.skTarget!=null && G.alive[G.skTarget] && G.skTarget!==G.protectThis && !victims.includes(G.skTarget)) victims.push(G.skTarget);
+  if(G.skTarget!=null && G.alive[G.skTarget] && G.skTarget!==G.protectThis && !victims.includes(G.skTarget)){
+    if(roleOf(G.skTarget)==='toughguy' && !G.toughWounded.includes(G.skTarget)){ G.toughWounded.push(G.skTarget); G.toughDieNext=G.skTarget; }
+    else victims.push(G.skTarget);
+  }
   G.skTarget=null;
   // หมาป่าเดียวดายฆ่า (อิสระ · บอดี้การ์ดกันได้)
   if(G.loneWolfTarget!=null&&G.alive[G.loneWolfTarget]&&G.loneWolfTarget!==G.protectThis&&!victims.includes(G.loneWolfTarget)) victims.push(G.loneWolfTarget);
   G.loneWolfTarget=null;
   // ผู้นำลัทธิชวนเข้าลัทธิ
-  if(G.cultRecruit!=null && G.alive[G.cultRecruit] && !G.cult.includes(G.cultRecruit)) G.cult.push(G.cultRecruit);
+  if(G.cultRecruit!=null && G.alive[G.cultRecruit] && !G.cult.includes(G.cultRecruit)){ G.cult.push(G.cultRecruit); logEvent('actCultJoined',{target:S.players[G.cultRecruit].name}); }
   G.cultRecruit=null;
   // แวมไพร์กัด (เงียบ ไม่ประกาศ) — ตายตอนหมดเวลาโหวตกลางวันถ้าไม่ได้รับการป้องกันจากบอดี้การ์ดคืนนี้
   if(G.vampireBite!=null && G.alive[G.vampireBite] && G.vampireBite!==G.protectThis){ G.vampireVictim=G.vampireBite; }
@@ -2011,11 +2038,14 @@ function resolveDay(){           // 🌙 มืดแล้ว
   const _execKilled=_didExec&&G.deaths.includes(G.dayVote);
   const _execIsBeggar=_execKilled&&effRole(G.dayVote)==='beggar';
   const _execName=_execKilled?S.players[G.dayVote].name:null;
-  Object.assign(G.banner,{deaths:[...G.deaths],princeSaved:princeName,pacifistVeto:G.pacifistVeto,vampireKilled:_vampKilledName,execName:_execName});
+  const _execIsLoverRoot=_execKilled && !!(G.lovers && G.lovers.includes(G.dayVote));
+  Object.assign(G.banner,{deaths:[...G.deaths],princeSaved:princeName,pacifistVeto:G.pacifistVeto,vampireKilled:_vampKilledName,execName:_execName,execIsLoverRoot:_execIsLoverRoot});
+  const _wasPacifist=G.pacifistVeto;
   G.pacifistVeto=false;
-  if(_execIsBeggar) logEvent('actBeggarWin',{target:S.players[G.dayVote].name});
-  else logEvent('actExecuted',{target:_execKilled?S.players[G.dayVote].name:''});
-  if(princeName) logEvent('actPrinceRevealed',{target:princeName});
+  if(_wasPacifist) logEvent('actPacifistVeto',{loverRoot:_execIsLoverRoot});
+  else if(_execIsBeggar) logEvent('actBeggarWin',{target:S.players[G.dayVote].name,loverRoot:_execIsLoverRoot});
+  else logEvent('actExecuted',{target:_execKilled?S.players[G.dayVote].name:'',loverRoot:_execIsLoverRoot});
+  if(princeName) logEvent('actPrinceRevealed',{target:princeName,loverRoot:_execIsLoverRoot});
   const _playNight=()=>{ if(!checkWin()) playSound('night'); };
   if(G.phase!=='over'){
     if(_lastSnd) playSoundThen(_lastSnd,_playNight);
@@ -2027,9 +2057,12 @@ function executeSilenced(){      // คนโดนใบ้เผลอพู�
   if(G.silenced==null||!G.alive[G.silenced]) return;
   pushUndo();
   G.deaths=[]; G.hunterQueue=[]; G.afterHunter='dayStay'; G.justConverts=[];
+  const _curseName=S.players[G.silenced].name;
+  G.history=G.history.filter(h=>!(h.key==='actSilenced'&&h.night===G.nightNo&&h.vars&&h.vars.target===_curseName)); // แทนที่ Event เดิม ไม่ให้ซ้ำซ้อนใน Timeline
   killChain([G.silenced]);
   playSound('executeSilenced');
-  G.banner={type:'exec',deaths:[...G.deaths]};
+  logEvent('actSpellcasterCurseDeath',{target:_curseName});
+  G.banner={type:'exec',deaths:[...G.deaths],curseDeath:_curseName};
   G.silenced=null;
   finishResolution();
 }
@@ -2105,7 +2138,7 @@ function nightTap(i){
   } else if(t==='skKill'){
     if(effRole(i)==='serialkiller'){ G.check={info:true,label:T('chkSkSelfKill')}; render(); return; }
     G.skTarget=(G.skTarget===i)?null:i;
-    if(G.skTarget===i){ logEvent('actKilled',{actor:roleLabel(roleById('serialkiller')),target:S.players[i].name}); playSound('skSelect'); }
+    if(G.skTarget===i){ logEvent('actKilled',{actor:roleLabel(roleById('serialkiller')),target:S.players[i].name,isSK:true}); playSound('skSelect'); }
   } else if(t==='lonewolfKill'){
     const lwIdx=S.players.findIndex((p,j)=>G.alive[j]&&p.role==='lonewolf');
     if(i===lwIdx){G.check={info:true,label:T('chkLoneWolfSelf')};render();return;}
@@ -2128,7 +2161,7 @@ function nightTap(i){
   } else if(t==='dopplePick'){
     if(roleOf(i)==='doppelganger'){ G.check={info:true,label:T('chkDoppleSelf')}; render(); return; }
     G.doppleTarget=(G.doppleTarget===i)?null:i;
-    if(G.doppleTarget===i) logEvent('actMarked',{actor:roleLabel(roleById('doppelganger')),target:S.players[i].name});
+    if(G.doppleTarget===i) logEvent('actMarked',{actor:roleLabel(roleById('doppelganger')),target:S.players[i].name,role:roleLabel(roleById(effRole(i)))});
   } else if(t==='seerCheck'){
     if(i===actingSeerIdx()){ G.check={info:true,label:T('chkSeerSelf')}; render(); return; }
     if(G.seerUsed){ G.check={info:true,label:T('chkSeerUsedNow')}; }
@@ -2276,22 +2309,54 @@ function phaseTitle(){
   if(G.phase==='hunter') return T('phaseHunter');
   return T('phaseOver');
 }
+function reorderDayEventCluster(events, loverRoot){
+  const rank=h=>{
+    if(h.key==='actVampireKilled') return 0;
+    if(h.key==='actExecuted'||h.key==='actBeggarWin'||h.key==='actPrinceRevealed'||h.key==='actPacifistVeto') return loverRoot?1:3;
+    if(h.key==='actLoverDied') return loverRoot?2:1;
+    if(h.key==='actHunterShot') return loverRoot?3:2;
+    return null;
+  };
+  const idxs=[]; events.forEach((h,idx)=>{ if(rank(h)!=null) idxs.push(idx); });
+  if(idxs.length<2) return events;
+  const items=idxs.map((idx,k)=>({h:events[idx],k}));
+  items.sort((a,b)=>rank(a.h)-rank(b.h)||a.k-b.k);
+  const out=events.slice();
+  idxs.forEach((idx,pos)=>{ out[idx]=items[pos].h; });
+  return out;
+}
 function bannerHTML(b, extra){
   const ex=extra||'';
   if(!b) return ex?`<div class="banner">${ex}</div>`:'';
   const names=b.deaths.map(i=>esc(S.players[i].name));
-  if(b.type==='morning')
-    return `<div class="banner">${names.length?T('morningDeaths',{names:'<b>'+names.join(', ')+'</b>'}):T('peacefulNight')}${ex}</div>`;
+  if(b.type==='morning'){
+    const lines=[];
+    if(names.length) lines.push(T('morningDeaths',{names:'<b>'+names.join(', ')+'</b>'}));
+    (b.toughDeaths||[]).forEach(n=>lines.push(T('toughGuyDeathBanner',{name:'<b>'+esc(n)+'</b>'})));
+    if(!lines.length) lines.push(T('peacefulNight'));
+    (b.wounded||[]).forEach(n=>lines.push(T('toughGuyWoundedBanner',{name:'<b>'+esc(n)+'</b>'})));
+    return `<div class="banner">${lines.map(l=>`<div style="margin-top:4px">${l}</div>`).join('')}${ex}</div>`;
+  }
   if(b.type==='voteEnd')
     return `<div class="banner">${b.vampireKilled?T('convertedToVampire',{name:'<b>'+esc(b.vampireKilled)+'</b>'}):''}${ex}</div>`;
   if(b.type==='exec'){
     const lines=[];
+    if(b.curseDeath) lines.push(T('spellcasterCurseDeath',{name:'<b>'+esc(b.curseDeath)+'</b>'}));
     if(b.vampireKilled) lines.push(T('convertedToVampire',{name:'<b>'+esc(b.vampireKilled)+'</b>'}));
-    if(b.execName) lines.push(T('executedNames',{names:'<b>'+esc(b.execName)+'</b>'}));
-    if(b.princeSaved) lines.push(T('princeRevealed',{name:esc(b.princeSaved)}));
-    if(b.pacifistVeto) lines.push(T('pacifistVetoBanner'));
-    (b.loverDeaths||[]).forEach(n=>lines.push(T('loverBondDeath',{name:'<b>'+esc(n)+'</b>'})));
-    (b.hunterShots||[]).forEach(h=>lines.push(T('hunterShotLine',{shooter:esc(h.shooter),target:'<b>'+esc(h.target)+'</b>'})));
+    const _execLine=b.execName?T('executedNames',{names:'<b>'+esc(b.execName)+'</b>'})
+      :b.princeSaved?T('princeRevealed',{name:esc(b.princeSaved)})
+      :b.pacifistVeto?T('pacifistVetoBanner')
+      :null;
+    const _loverHunterLines=[];
+    (b.loverDeaths||[]).forEach(n=>_loverHunterLines.push(T('loverBondDeath',{name:'<b>'+esc(n)+'</b>'})));
+    (b.hunterShots||[]).forEach(h=>_loverHunterLines.push(T('hunterShotLine',{shooter:esc(h.shooter),target:'<b>'+esc(h.target)+'</b>'})));
+    if(b.execIsLoverRoot){
+      if(_execLine) lines.push(_execLine);
+      lines.push(..._loverHunterLines);
+    } else {
+      lines.push(..._loverHunterLines);
+      if(_execLine) lines.push(_execLine);
+    }
     const beg=b.deaths.filter(i=>effRole(i)==='beggar').map(i=>esc(S.players[i].name));
     if(beg.length) lines.push(T('beggarWin',{names:beg.join(', ')}));
     if(!lines.length && !names.length) lines.push(T('noExecution'));
@@ -2362,17 +2427,28 @@ function viewHistory(){
     actVampireBlocked:['🛡️','clr-green'],
     actPrinceRevealed:['👑','clr-blue'],
     actSilenced:     ['🤐','clr-gray'],
+    actSpellcasterCurseDeath:['💀','clr-red'],
+    actDoppleAcquired:['✨','clr-purple'],
+    actDrunkRevealed:['🍺','clr-yellow'],
+    actSeerSuccessor:['🔮','clr-blue'],
+    actCultJoined:['👁️','clr-purple'],
+    actPacifistVeto:['🕊️','clr-green'],
   };
 
   const NIGHT_KEYS=new Set(['actKilled','actBlocked','actProtected','actChecked','actCursedConvert',
     'actToughGuyHit','actToughGuyDeath','actShapeshifted','actMarked','actRecruited','actBit',
-    'actConverted','actSkipped','actSorcChecked','actSeerChecked','actVampireBlocked','actSilenced']);
+    'actConverted','actSkipped','actSorcChecked','actSeerChecked','actVampireBlocked','actSilenced','actCultJoined','actDrunkRevealed']);
 
   const sections=[]; const seen={};
   G.history.forEach(h=>{
-    const sk=NIGHT_KEYS.has(h.key)||(!h.day&&h.key!=='actExecuted'&&h.key!=='actHunterShot'&&h.key!=='actHunterNoShot'&&h.key!=='actPaired')?'n'+h.night:'d'+(h.day||h.night);
+    const sk=NIGHT_KEYS.has(h.key)||(!h.day&&h.key!=='actExecuted'&&h.key!=='actHunterShot'&&h.key!=='actHunterNoShot'&&h.key!=='actPaired'&&h.key!=='actPacifistVeto')?'n'+h.night:'d'+(h.day||h.night);
     if(!seen[sk]){ seen[sk]=true; sections.push({sk,isNight:sk[0]==='n',num:parseInt(sk.slice(1)),events:[]}); }
     sections[sections.length-1].events.push(h);
+  });
+
+  sections.forEach(sec=>{
+    const _lrEntry=sec.events.find(h=>h.vars&&typeof h.vars.loverRoot==='boolean');
+    sec.events=reorderDayEventCluster(sec.events, _lrEntry?_lrEntry.vars.loverRoot:false);
   });
 
   const sectHTML=sections.map(sec=>{
@@ -2380,7 +2456,7 @@ function viewHistory(){
     const hdrClass=sec.isNight?'night':'day';
     const hdrLabel=sec.isNight?T('phaseNight',{n:sec.num}):T('phaseDay',{n:sec.num});
     const eventsHTML=sec.events.map(h=>{
-      const [ico,clr]=EVT[h.key]||['•','clr-gray'];
+      const [ico,clr]=(h.key==='actKilled'&&h.vars&&h.vars.isSK)?['🔪','clr-red']:(EVT[h.key]||['•','clr-gray']);
       const txt=(h.key==='actExecuted'&&(!h.vars||h.vars.target==='')?T('noExecution'):T(h.key,h.vars||{}));
       const disp=S.lang==='th'?txt.replace(/\s*\([A-Za-z][^)]*\)/g,''):txt;
       return `<div class="hist-event ${clr}"><span class="hist-ico">${ico}</span><span class="hist-txt">${esc(disp)}</span></div>`;
@@ -2537,7 +2613,20 @@ function viewGame(){
         :`<div class="banner win">${txt}</div>`;
       body=`${bannerHTML2}
         ${viewGameSummary()}
-        <div class="card">${S.players.map((p,i)=>{const r=(G.wolfConverts&&G.wolfConverts.includes(i))?roleById('werewolf'):roleById(effRole(i));return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':(effRole(i)==='beggar'?'🏆':'💀')}</div><div class="rl"><span class="teamtag t-${r.team}" style="margin:0">${roleLabel(r)}</span></div></div>`}).join('')}</div>
+        <div class="card">${S.players.map((p,i)=>{
+        const conv=G.wolfConverts&&G.wolfConverts.includes(i);
+        const r=conv?roleById('werewolf'):roleById(effRole(i));
+        const initR=roleById(p.role);
+        const isCultFollower=!conv&&G.cult&&G.cult.includes(i)&&p.role!=='cultleader';
+        const _nm=rr=>S.lang==='en'?rr.en:rr.th;
+        const finalLabel=isCultFollower?T('cultMemberLabel'):_nm(r);
+        const initLabel=_nm(initR);
+        const finalTeam=isCultFollower?'neutral':r.team;
+        const roleHTML=(finalLabel!==initLabel)
+          ?`<span class="teamtag t-${initR.team}" style="margin:0">${esc(initLabel)}</span> → <span class="teamtag t-${finalTeam}" style="margin:0">${esc(finalLabel)}</span>`
+          :`<span class="teamtag t-${finalTeam}" style="margin:0">${esc(finalLabel)}</span>`;
+        return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':(effRole(i)==='beggar'?'🏆':'💀')}</div><div class="rl">${roleHTML}</div></div>`;
+      }).join('')}</div>
         <button class="btn block ghost" id="gHistoryBtn">${T('historyTitle')}</button>
         <button class="btn block" id="gExit2">${T('backToSummaryBtn')}</button>`;
     }
