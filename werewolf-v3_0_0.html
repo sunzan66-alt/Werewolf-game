@@ -524,6 +524,10 @@
   .vic-sk{--vic-bg1:#101214;--vic-bg2:#1a1d20;--vic-bg3:#000;--vic-fog:rgba(140,150,160,.10);--vic-fog2:rgba(90,100,110,.08);--vic-particle:#9fb0bb;--vic-ray:rgba(160,175,185,.10);--vic-glow:rgba(168,180,190,.35)}
   .vic-extinct{--vic-bg1:#141416;--vic-bg2:#1c1c1f;--vic-bg3:#000;--vic-fog:rgba(120,120,130,.08);--vic-fog2:rgba(90,90,95,.06);--vic-particle:#8a8a8f;--vic-ray:rgba(130,130,135,.08);--vic-glow:rgba(120,120,130,.3)}
   .vic-beggar{--vic-bg1:#241a05;--vic-bg2:#3a2a08;--vic-bg3:#000;--vic-fog:rgba(224,184,74,.10);--vic-fog2:rgba(180,140,40,.08);--vic-particle:#f0d486;--vic-ray:rgba(240,212,134,.10);--vic-glow:rgba(240,212,134,.4)}
+  .cupid-gen2 .btn:not(.ghost){background:#e53e3e;border-color:#e53e3e}
+  .cupid-gen2 .gins{color:#ff8a8a}
+  .cupid-gen3 .btn:not(.ghost){background:#9b5de5;border-color:#9b5de5}
+  .cupid-gen3 .gins{color:#d9b3ff}
   @keyframes vicEnvPulse{0%,100%{opacity:.35}50%{opacity:.6}}
   @keyframes vicFogIn{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
   @keyframes vicParticleUp{0%{opacity:0;transform:translateY(0)}15%{opacity:1}90%{opacity:.6}100%{opacity:0;transform:translateY(-90px)}}
@@ -568,7 +572,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.18.2</div>
+<div id="verbadge">v3.18.7</div>
 
 <script>
 const ROLES = [
@@ -985,6 +989,7 @@ th:{
   scriptSilencedLine:'"[name] ห้ามพูดเช้านี้"',
 
   // ===== Game History (Phase B) =====
+  helpWolfPoisoned:'🐺 หมาป่าอาหารเป็นพิษ คืนนี้ออกล่าไม่ได้', helpLoneWolfPoisoned:'🐺 หมาป่าเดียวดายอาหารเป็นพิษ คืนนี้ออกล่าไม่ได้',
   historyTitle:'📜 ประวัติเกม', historyEmpty:'ยังไม่มีเหตุการณ์',
   histWinVillage:'🏆 ฝ่ายหมู่บ้านเป็นผู้ชนะ', histWinWolf:'🏆 ฝ่ายหมาป่าเป็นผู้ชนะ', histWinVampire:'🏆 ฝ่ายแวมไพร์เป็นผู้ชนะ',
   histWinCult:'🏆 ฝ่ายลัทธิเป็นผู้ชนะ', histWinSk:'🏆 ฆาตกรโรคจิตเป็นผู้ชนะ', histWinBeggar:'🏆 ยาจกเป็นผู้ชนะ', histWinNone:'☠️ ไม่มีผู้ชนะ',
@@ -1003,7 +1008,7 @@ th:{
   actKilled:'{actor} ฆ่า {target}', actBlocked:'{actor} พยายามฆ่า {target} แต่ถูกป้องกันไว้ได้',
   actToughGuyHit:'{target} บาดเจ็บสาหัส',
   actToughGuyDeath:'{target} เสียชีวิตจากบาดแผล',
-  actCursedConvert:'{target} กลายเป็นหมาป่า',
+  actCursedConvert:'{target} กลายเป็นหมาป่า', actWolfPoisoned:'🐺 หมาป่าอาหารเป็นพิษ คืนนี้ออกล่าไม่ได้', actLoneWolfPoisoned:'🐺 หมาป่าเดียวดายอาหารเป็นพิษ คืนนี้ออกล่าไม่ได้',
   actRecruited:'{actor} ชวน {target} เข้าลัทธิ', actBit:'{actor} กัด {target}', actVampireKilled:'{target} เสียชีวิตจากพิษแวมไพร์',
   actConverted:'{actor} เปลี่ยน {target} เป็นหมาป่า', actShapeshifted:'{actor} จำแลงเป็น {target}',
   actSeerChecked:'เทพพยากรณ์ ตรวจสอบ {target}', actSorcChecked:'นางปีศาจ ตรวจสอบ {target}',
@@ -1013,7 +1018,7 @@ th:{
   actDoppleAcquired:'{doppel} กลายเป็น {role}', actDrunkRevealed:'{target} กลายเป็น {role}',
   actSeerSuccessor:'{target} กลายเป็นเทพพยากรณ์', actCultJoined:'{target} เข้าร่วมลัทธิ', actPacifistVeto:'ไม่มีการประหาร เพราะนักสันติวิธีประท้วง',
   cultMemberLabel:'สมาชิกลัทธิ',
-  actMarked:'{actor} จับตา {target} ({role})', actPaired:'จับคู่รัก {a} และ {b}',
+  actMarked:'{actor} จับตา {target} ({role})', actPaired:'จับคู่ {a} และ {b}',
   actExecuted:'{target} ถูกประหาร', actHunterShot:'{actor} ยิง {target}',
   actHunterNoShot:'นายพรานไม่ยิงใคร', actSkipped:'{actor} ข้ามสกิล',
 
@@ -1236,6 +1241,7 @@ en:{
   scriptSilencedLine:'"[name] cannot speak this morning"',
 
   // ===== Game History (Phase B) =====
+  helpWolfPoisoned:'🐺 The Werewolves got food poisoning and cannot hunt tonight.', helpLoneWolfPoisoned:'🐺 The Lone Wolf got food poisoning and cannot hunt tonight.',
   historyTitle:'📜 Game History', historyEmpty:'No events yet',
   histWinVillage:'🏆 Village Team wins', histWinWolf:'🏆 Werewolf Team wins', histWinVampire:'🏆 Vampire Team wins',
   histWinCult:'🏆 Cult Team wins', histWinSk:'🏆 Serial Killer wins', histWinBeggar:'🏆 Beggar wins', histWinNone:'☠️ No winner',
@@ -1255,7 +1261,7 @@ en:{
   actKilled:'{actor} killed {target}', actBlocked:'Werewolves attempted to kill {target}, but the attack was blocked.',
   actToughGuyHit:'{target} was critically wounded.',
   actToughGuyDeath:'{target} died from the injuries.',
-  actCursedConvert:'{target} became a werewolf.',
+  actCursedConvert:'{target} became a werewolf.', actWolfPoisoned:'🐺 The Werewolves got food poisoning and could not hunt tonight.', actLoneWolfPoisoned:'🐺 The Lone Wolf got food poisoning and could not hunt tonight.',
   actRecruited:'{actor} recruited {target} into the cult', actBit:'{actor} bit {target}', actVampireKilled:'{target} died from Vampire Poison.',
   actConverted:'{actor} converted {target} into a werewolf', actShapeshifted:'{actor} disguised as {target}',
   actSeerChecked:'Seer investigated {target}', actSorcChecked:'Sorcerer investigated {target}',
@@ -1265,7 +1271,7 @@ en:{
   actDoppleAcquired:'{doppel} became the {role}.', actDrunkRevealed:'{target} became the {role}.',
   actSeerSuccessor:'{target} became the Seer.', actCultJoined:'{target} joined the Cult.', actPacifistVeto:"No execution. The Pacifist prevented today's execution.",
   cultMemberLabel:'Cult Member',
-  actMarked:'{actor} marked {target} ({role})', actPaired:'Paired lovers {a} and {b}',
+  actMarked:'{actor} marked {target} ({role})', actPaired:'{a} and {b} became lovers.',
   actExecuted:'{target} was executed', actHunterShot:'{actor} shot {target}',
   actHunterNoShot:'Hunter did not shoot anyone', actSkipped:'{actor} skipped their turn',
 
@@ -1750,9 +1756,9 @@ const sorcCanRepeat=()=>aliveHas('apprentice');
 function startRun(){
   G={running:true, phase:hasRole('cupid')?'cupid':'night', startedAt:Date.now(),
      nightNo:0, dayNo:0, alive:S.players.map(()=>true),
-     lovers:null, cupidPick:[], silenced:null,
+     lovers:null, loverPairs:[], cupidPick:[], silenced:null,
      protectPrev:null, protectThis:null, silencedPrev:null, wolfTargets:[], wolfKillCount:1,
-     cubBonusPending:false, infectedNext:false, dayVote:null,
+     cubBonusPending:false, infectedNext:false, loneWolfInfectedNext:false, dayVote:null,
      wolfConverts:[], toughWounded:[], toughDieNext:null, justConverts:[], loneWolfTarget:null,
      seerChecked:[], sorcChecked:[], seerUsed:false, sorcUsed:false,
      alphaUsed:false, alphaConvert:null,
@@ -1783,7 +1789,7 @@ function killChain(seeds){
     if(i==null||!G.alive[i]) continue;
     G.alive[i]=false; G.deaths.push(i);
     G.deathLog.push({idx:i,name:S.players[i].name,role:effRole(i),night:G.nightNo,day:G.dayNo,phase:G.phase});
-    if(roleOf(i)==='wolfcub') G.cubBonusPending=true;
+    if(effRole(i)==='wolfcub') G.cubBonusPending=true; // ผู้เลียนแบบ/ขี้เมาที่กลายเป็นลูกหมาป่าต้องให้ผลเหมือนกันทุกประการ
     if(effRole(i)==='ghost'){ G.ghostVoteDay=(G.dayNo||0)+1; playSound('ghostDeath'); }
     if(roleOf(i)==='seer'){
       const apIdx=S.players.findIndex(p=>p.role==='apprentice');
@@ -1794,17 +1800,20 @@ function killChain(seeds){
       if(dgIdx>=0 && G.alive[dgIdx]){
         G.doppleAcquired=true; G.doppleCopiedRole=effRole(i);
         if(G.doppleCopiedRole==='cultleader' && !G.cult.includes(dgIdx)) G.cult.push(dgIdx);
-        if(G.doppleCopiedRole==='cupid' && !G.lovers) G.pendingCupidGrant=dgIdx;
+        if(G.doppleCopiedRole==='cupid') G.pendingCupidGrant=dgIdx;
         logEvent('actDoppleAcquired',{doppel:S.players[dgIdx].name,role:roleLabel(roleById(G.doppleCopiedRole)),target:S.players[i].name});
       }
     }
-    if(G.lovers&&G.lovers.includes(i)){
-      const p=G.lovers[0]===i?G.lovers[1]:G.lovers[0];
-      if(G.alive[p]){
-        q.push(p); setTimeout(()=>playSound('loversDeath'),200);
-        logEvent('actLoverDied',{target:S.players[p].name});
-        if(G.banner&&Array.isArray(G.banner.loverDeaths)) G.banner.loverDeaths.push(S.players[p].name);
-      }
+    if(G.loverPairs && G.loverPairs.length){
+      G.loverPairs.forEach(pair=>{
+        if(!pair.includes(i)) return;
+        const p=pair[0]===i?pair[1]:pair[0];
+        if(G.alive[p]){
+          q.push(p); setTimeout(()=>playSound('loversDeath'),200);
+          logEvent('actLoverDied',{target:S.players[p].name});
+          if(G.banner&&Array.isArray(G.banner.loverDeaths)) G.banner.loverDeaths.push(S.players[p].name);
+        }
+      });
     }
     if(effRole(i)==='hunter') G.hunterQueue.push(i);
   }
@@ -1884,18 +1893,15 @@ function enterDay(){
 }
 function enterNight(){
   stopTimer(); ACT=[];
-  if(!G._resumeNightAfterCupid){
-    G.nightNo++;
-    if(!G.drunkRevealed && G.nightNo>=3 && hasRole('drunk')){
-      G.drunkRevealed=true;
-      const dIdx=S.players.findIndex(p=>p.role==='drunk');
-      if(dIdx>=0 && G.alive[dIdx]){
-        logEvent('actDrunkRevealed',{target:S.players[dIdx].name,role:roleLabel(roleById(G.drunkTrueRole))});
-        if(G.drunkTrueRole==='cupid' && !G.lovers) G.pendingCupidGrant=dIdx;
-      }
+  G.nightNo++;
+  if(!G.drunkRevealed && G.nightNo>=3 && hasRole('drunk')){
+    G.drunkRevealed=true;
+    const dIdx=S.players.findIndex(p=>p.role==='drunk');
+    if(dIdx>=0 && G.alive[dIdx]){
+      logEvent('actDrunkRevealed',{target:S.players[dIdx].name,role:roleLabel(roleById(G.drunkTrueRole))});
+      if(G.drunkTrueRole==='cupid') G.pendingCupidGrant=dIdx;
     }
   }
-  G._resumeNightAfterCupid=false;
   G.wolfKillCount=G.cubBonusPending?2:1; G.cubBonusPending=false;
   G.silencedPrev=G.silenced;   // จดจำคนที่โดนใบ้คืนก่อน (ใบ้ซ้ำติดกันไม่ได้)
   G.wolfTargets=[]; G.protectThis=null; G.silenced=null; G.check=null;
@@ -1903,7 +1909,7 @@ function enterNight(){
   G.dayVote=null; G.tool='kill';
   if(G.pendingCupidGrant!=null){
     const _pcg=G.pendingCupidGrant; G.pendingCupidGrant=null;
-    if(G.alive[_pcg]){ G.cupidPick=[]; G._resumeNightAfterCupid=true; G.phase='cupid'; render(); return; }
+    if(G.alive[_pcg]){ G.cupidPick=[]; G._cupidResumeMode='nightBegin'; resetPhaseTransitionVisuals(); G.phase='cupid'; render(); return; }
   }
   G.phase=checkWin()?'over':'night';
   if(G.phase==='over'){ resetPhaseTransitionVisuals(); playWinSound(); render(); return; }
@@ -1927,6 +1933,10 @@ function finishResolution(){
     G.hunterQueue.shift(); // ไม่มีผู้เล่นเหลือให้ยิง (คู่รักตายพร้อมกันจนไม่มีเป้าหมาย) — ข้ามหน้ายิงทันที ไม่รอ Skip ไม่สร้าง Action เปล่า
     return finishResolution();
   }
+  if(G.pendingCupidGrant!=null){
+    const _pcg=G.pendingCupidGrant; G.pendingCupidGrant=null;
+    if(G.alive[_pcg]){ G.cupidPick=[]; G._cupidResumeMode='resolution'; resetPhaseTransitionVisuals(); G.phase='cupid'; render(); return; }
+  }
   if(G.afterHunter==='night'){enterNight();return;}
   if(G.afterHunter==='dayStay'){
     if(checkWin()){ resetPhaseTransitionVisuals(); G.phase='over';playWinSound();render();return;}
@@ -1945,17 +1955,17 @@ function resolveNight(){          // 🌅 เช้าแล้ว
     logEvent('actToughGuyDeath',{target:S.players[G.toughDieNext].name});
   }
   G.toughDieNext=null;
-  if(G.infectedNext){ G.infectedNext=false; }
+  if(G.infectedNext){ G.infectedNext=false; logEvent('actWolfPoisoned',{}); }
   else if(G.alphaConvert!=null && G.alive[G.alphaConvert] && teamOf(G.alphaConvert)!=='wolf'){
     G.wolfConverts.push(G.alphaConvert); G.justConverts.push(G.alphaConvert); G.alphaUsed=true;
   }
   else{
     G.wolfTargets.forEach(t=>{
       if(t===G.protectThis) return;
-      const role=roleOf(t);
+      const role=effRole(t); // ใช้บทบาทที่แท้จริง (รองรับผู้เลียนแบบ/ขี้เมาที่กลายเป็นบทบาทนี้ ให้ทำงานเหมือนบทบาทนั้นทุกประการ)
       if(role==='cursed' && !G.wolfConverts.includes(t)){ G.wolfConverts.push(t); G.justConverts.push(t); return; }
       if(role==='toughguy' && !G.toughWounded.includes(t)){ G.toughWounded.push(t); G.toughDieNext=t; return; }
-      victims.push(t);
+      victims.push(t); // ผู้ติดเชื้อตายตามปกติ (Trigger Death Pipeline เต็มรูปแบบ) — การติดอาหารเป็นพิษเป็นผลที่ตามมา ไม่ใช่แทนที่การตาย
       if(role==='deceased') G.infectedNext=true;
     });
   }
@@ -1963,12 +1973,20 @@ function resolveNight(){          // 🌅 เช้าแล้ว
   // ฆาตกรโรคจิตฆ่า (อิสระ · บอดี้การ์ดกันได้)
   const _skTargetBefore=G.skTarget;
   if(G.skTarget!=null && G.alive[G.skTarget] && G.skTarget!==G.protectThis && !victims.includes(G.skTarget)){
-    if(roleOf(G.skTarget)==='toughguy' && !G.toughWounded.includes(G.skTarget)){ G.toughWounded.push(G.skTarget); G.toughDieNext=G.skTarget; }
+    if(effRole(G.skTarget)==='toughguy' && !G.toughWounded.includes(G.skTarget)){ G.toughWounded.push(G.skTarget); G.toughDieNext=G.skTarget; }
     else victims.push(G.skTarget);
   }
   G.skTarget=null;
-  // หมาป่าเดียวดายฆ่า (อิสระ · บอดี้การ์ดกันได้)
-  if(G.loneWolfTarget!=null&&G.alive[G.loneWolfTarget]&&G.loneWolfTarget!==G.protectThis&&!victims.includes(G.loneWolfTarget)) victims.push(G.loneWolfTarget);
+  // หมาป่าเดียวดายฆ่า (อิสระ · บอดี้การ์ดกันได้) — ใช้กฎผู้ติดเชื้อแบบเดียวกับฝูงหมาป่า (แยกสถานะอาหารเป็นพิษของตัวเอง)
+  if(G.loneWolfInfectedNext){ G.loneWolfInfectedNext=false; logEvent('actLoneWolfPoisoned',{}); }
+  else if(G.loneWolfTarget!=null&&G.alive[G.loneWolfTarget]&&G.loneWolfTarget!==G.protectThis){
+    const _lwRole=effRole(G.loneWolfTarget);
+    if(_lwRole==='toughguy' && !G.toughWounded.includes(G.loneWolfTarget)){ G.toughWounded.push(G.loneWolfTarget); G.toughDieNext=G.loneWolfTarget; } // หมาป่าเดียวดายฆ่าหนุ่มถึก — ใช้กฎบาดเจ็บสาหัสเดียวกับฝูงหมาป่า/ฆาตกร
+    else{
+      if(_lwRole==='deceased') G.loneWolfInfectedNext=true; // ตรวจสถานะติดเชื้อเสมอ ไม่ขึ้นกับว่าฝ่ายอื่นกัดเป้าหมายเดียวกันไปแล้วหรือยัง (ติดพิษของตัวเองอย่างอิสระเสมอ)
+      if(!victims.includes(G.loneWolfTarget)) victims.push(G.loneWolfTarget); // ผู้ติดเชื้อตายตามปกติเช่นกัน — ติดอาหารเป็นพิษเป็นผลตามมา ไม่ใช่แทนที่การตาย
+    }
+  }
   G.loneWolfTarget=null;
   // ผู้นำลัทธิชวนเข้าลัทธิ
   if(G.cultRecruit!=null && G.alive[G.cultRecruit] && !G.cult.includes(G.cultRecruit)){ G.cult.push(G.cultRecruit); }
@@ -2056,7 +2074,7 @@ function resolveDay(){           // 🌙 มืดแล้ว
   const _execKilled=_didExec&&G.deaths.includes(G.dayVote);
   const _execIsBeggar=_execKilled&&effRole(G.dayVote)==='beggar';
   const _execName=_execKilled?S.players[G.dayVote].name:null;
-  const _execIsLoverRoot=_execKilled && !!(G.lovers && G.lovers.includes(G.dayVote));
+  const _execIsLoverRoot=_execKilled && !!(G.loverPairs && G.loverPairs.some(pair=>pair.includes(G.dayVote)));
   Object.assign(G.banner,{deaths:[...G.deaths],princeSaved:princeName,pacifistVeto:G.pacifistVeto,vampireKilled:_vampKilledName,execName:_execName,execIsLoverRoot:_execIsLoverRoot});
   const _wasPacifist=G.pacifistVeto;
   G.pacifistVeto=false;
@@ -2118,12 +2136,26 @@ function confirmCupid(){
   setTimeout(()=>{
     ov.remove();
     G._cupidAnimBusy=false;
-    G.lovers=[...G.cupidPick];
-    logEvent('actPaired',{a:S.players[G.lovers[0]].name,b:S.players[G.lovers[1]].name});
-    enterNight();
+    const _newPair=[...G.cupidPick];
+    _newPair.gen=cupidGen(); // ผูกรุ่น(สี)ของกามเทพไว้กับคู่นี้ถาวร ไม่เปลี่ยนตามคู่ใหม่ที่เกิดขึ้นทีหลัง
+    G.loverPairs.push(_newPair);
+    if(!G.lovers) G.lovers=_newPair;
+    logEvent('actPaired',{a:S.players[_newPair[0]].name,b:S.players[_newPair[1]].name});
+    resumeAfterCupid();
   },700);
 }
-function skipCupid(){ G.lovers=null; enterNight(); }
+function skipCupid(){ if(!G._cupidResumeMode){ G.lovers=null; G.loverPairs=[]; } resumeAfterCupid(); }
+function resumeAfterCupid(){
+  if(G._cupidResumeMode==='resolution'){ G._cupidResumeMode=null; finishResolution(); return; }
+  if(G._cupidResumeMode==='nightBegin'){
+    G._cupidResumeMode=null;
+    G.phase=checkWin()?'over':'night';
+    if(G.phase==='over'){ resetPhaseTransitionVisuals(); playWinSound(); render(); return; }
+    playPhaseTransition('night',render);
+    return;
+  }
+  enterNight();
+}
 function logEvent(key, vars){
   G.history.push({night:G.nightNo, day:G.dayNo, key, vars});
 }
@@ -2136,6 +2168,7 @@ function nightTap(i){
   const b=actBegin();
   const t=G.tool;
   if(t==='kill'){
+    if(G.infectedNext){ G.check={info:true,label:T('helpWolfPoisoned')}; render(); return; }
     if(teamOf(i)==='wolf'&&S.players[i].role!=='lonewolf'){ G.check={info:true,label:T('chkWolfCantKillOwn')}; render(); return; }
     const k=G.wolfTargets.indexOf(i);
     if(k>=0) G.wolfTargets.splice(k,1);
@@ -2159,6 +2192,7 @@ function nightTap(i){
     G.skTarget=(G.skTarget===i)?null:i;
     if(G.skTarget===i){ logEvent('actKilled',{actor:roleLabel(roleById('serialkiller')),target:S.players[i].name,isSK:true}); playSound('skSelect'); }
   } else if(t==='lonewolfKill'){
+    if(G.loneWolfInfectedNext){ G.check={info:true,label:T('helpLoneWolfPoisoned')}; render(); return; }
     const lwIdx=S.players.findIndex((p,j)=>G.alive[j]&&p.role==='lonewolf');
     if(i===lwIdx){G.check={info:true,label:T('chkLoneWolfSelf')};render();return;}
     G.loneWolfTarget=G.loneWolfTarget===i?null:i;
@@ -2328,12 +2362,17 @@ function phaseTitle(){
   if(G.phase==='hunter') return T('phaseHunter');
   return T('phaseOver');
 }
+function cupidGen(){ return (G.loverPairs?G.loverPairs.length:0)+1; }
+function cupidGenIconFor(g){ return g===2?'❤️':(g>=3?'💜':'💘'); }
+function cupidGenIcon(){ return cupidGenIconFor(cupidGen()); }
 function reorderDayEventCluster(events, loverRoot){
   const rank=h=>{
     if(h.key==='actVampireKilled') return 0;
     if(h.key==='actExecuted'||h.key==='actBeggarWin'||h.key==='actPrinceRevealed'||h.key==='actPacifistVeto') return loverRoot?1:3;
     if(h.key==='actLoverDied') return loverRoot?2:1;
     if(h.key==='actHunterShot') return loverRoot?3:2;
+    if(h.key==='actDoppleAcquired'||h.key==='actDrunkRevealed'||h.key==='actSeerSuccessor') return 4;
+    if(h.key==='actPaired') return 5;
     return null;
   };
   const idxs=[]; events.forEach((h,idx)=>{ if(rank(h)!=null) idxs.push(idx); });
@@ -2400,7 +2439,7 @@ function gcell(i){
   if(G.phase==='night'&&G.sorcChecked&&G.sorcChecked.includes(i)) b+='🧙';
   if(G.protectThis===i) b+='🛡️';
   if(G.silenced===i) b+='🔇';
-  if(G.lovers&&G.lovers.includes(i)) b+='💘';
+  if(G.loverPairs) G.loverPairs.forEach(pair=>{ if(pair.includes(i)) b+=cupidGenIconFor(pair.gen||1); }); // แต่ละคู่แสดงสีตามรุ่นกามเทพของตัวเอง ไม่เปลี่ยนตามคู่ใหม่
   if(G.phase==='cupid'&&G.cupidPick.includes(i)) b+='💘';
   if(G.phase==='day'&&G.dayVote===i) b+='🗳️';
   let cls='gcell';
@@ -2429,6 +2468,7 @@ function viewHistory(){
     actProtected:    ['🛡️','clr-blue'],
     actChecked:      ['🔮','clr-blue'],
     actCursedConvert:['🌗','clr-green'],
+    actWolfPoisoned:['🐺','clr-gray'], actLoneWolfPoisoned:['🐺','clr-gray'],
     actToughGuyHit:  ['💪','clr-yellow'],
     actToughGuyDeath:['💀','clr-red'],
     actRecruited:    ['👁️','clr-purple'],
@@ -2437,7 +2477,7 @@ function viewHistory(){
     actVampireKilled:['🩸','clr-red'],
     actShapeshifted: ['🎭','clr-purple'],
     actMarked:       ['🎭','clr-gray'],
-    actPaired:       ['💘','clr-pink'],
+    actPaired:       ['💞','clr-pink'],
     actExecuted:     ['⚖️','clr-orange'],
     actHunterShot:   ['🏹','clr-red'],
     actHunterNoShot: ['🏹','clr-gray'],
@@ -2459,7 +2499,7 @@ function viewHistory(){
 
   const NIGHT_KEYS=new Set(['actKilled','actBlocked','actProtected','actChecked','actCursedConvert',
     'actToughGuyHit','actToughGuyDeath','actShapeshifted','actMarked','actRecruited','actBit',
-    'actConverted','actSkipped','actSorcChecked','actSeerChecked','actVampireBlocked','actSilenced','actCultJoined','actDrunkRevealed']);
+    'actConverted','actSkipped','actSorcChecked','actSeerChecked','actVampireBlocked','actSilenced','actCultJoined','actDrunkRevealed','actWolfPoisoned','actLoneWolfPoisoned']);
 
   const sections=[]; const seen={};
   G.history.forEach(h=>{
@@ -2546,11 +2586,12 @@ function viewGame(){
     </div></div>`;
   let body='';
   if(G.phase==='cupid'){
+    const _cGen=cupidGen(), _cIcon=cupidGenIcon(), _cCls=_cGen===2?' cupid-gen2':(_cGen>=3?' cupid-gen3':'');
     const miniRow=ACT.length?`<div class="mini-row"><button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ ${T('undoLabel')}(<b>${ACT.length}</b>)</button></div>`:'';
     const cupidScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptCupidWake')}</div></div>`:'';
-    body=`<p class="gins">${T('cupidInstruction')}</p>${cupidScript}${miniRow}${ggrid()}
+    body=`<div class="cupid-phase${_cCls}"><p class="gins">${_cIcon} ${T('cupidInstruction')}</p>${cupidScript}${miniRow}${ggrid()}
       <div class="bottombar"><button class="btn ghost" id="gCupidSkip">${T('skipBtn')}</button>
-      <button class="btn" id="gCupidOk" ${G.cupidPick.length===2?'':'disabled'}>${T('confirmLoversBtn')}</button></div>`;
+      <button class="btn" id="gCupidOk" ${G.cupidPick.length===2?'':'disabled'}>${_cIcon} ${T('confirmLoversBtn')}</button></div></div>`;
   } else if(G.phase==='night'){
     const tools=nightTools();
     const active=activeNightTool();
@@ -2569,8 +2610,8 @@ function viewGame(){
     if(activeIsDead){
       help=T('helpDeadSkipOnly');
     } else
-    if(G.tool==='kill') help=T('helpKill',{cur:G.wolfTargets.length,max:G.wolfKillCount})+(G.wolfKillCount>1?T('helpKillBonus'):'');
-    else if(G.tool==='lonewolfKill') help=T('helpLoneWolfKill');
+    if(G.tool==='kill') help=G.infectedNext?T('helpWolfPoisoned'):(T('helpKill',{cur:G.wolfTargets.length,max:G.wolfKillCount})+(G.wolfKillCount>1?T('helpKillBonus'):''));
+    else if(G.tool==='lonewolfKill') help=G.loneWolfInfectedNext?T('helpLoneWolfPoisoned'):T('helpLoneWolfKill');
     else if(G.tool==='protect') help=G.protectPrev!=null?T('helpProtectRepeat',{name:esc(S.players[G.protectPrev].name)}):T('helpProtect');
     else if(G.tool==='silence') help=T('helpSilence');
     else if(G.tool==='alphaConvert') help=T('helpAlphaConvert');
