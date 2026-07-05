@@ -572,7 +572,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.18.7</div>
+<div id="verbadge">v3.18.9</div>
 
 <script>
 const ROLES = [
@@ -1018,7 +1018,7 @@ th:{
   actDoppleAcquired:'{doppel} กลายเป็น {role}', actDrunkRevealed:'{target} กลายเป็น {role}',
   actSeerSuccessor:'{target} กลายเป็นเทพพยากรณ์', actCultJoined:'{target} เข้าร่วมลัทธิ', actPacifistVeto:'ไม่มีการประหาร เพราะนักสันติวิธีประท้วง',
   cultMemberLabel:'สมาชิกลัทธิ',
-  actMarked:'{actor} จับตา {target} ({role})', actPaired:'จับคู่ {a} และ {b}',
+  actMarked:'{actor} จับตา {target} ({role})', actPaired:'{actor} จับคู่ {a} และ {b}',
   actExecuted:'{target} ถูกประหาร', actHunterShot:'{actor} ยิง {target}',
   actHunterNoShot:'นายพรานไม่ยิงใคร', actSkipped:'{actor} ข้ามสกิล',
 
@@ -1271,7 +1271,7 @@ en:{
   actDoppleAcquired:'{doppel} became the {role}.', actDrunkRevealed:'{target} became the {role}.',
   actSeerSuccessor:'{target} became the Seer.', actCultJoined:'{target} joined the Cult.', actPacifistVeto:"No execution. The Pacifist prevented today's execution.",
   cultMemberLabel:'Cult Member',
-  actMarked:'{actor} marked {target} ({role})', actPaired:'{a} and {b} became lovers.',
+  actMarked:'{actor} marked {target} ({role})', actPaired:'{actor} paired {a} and {b}.',
   actExecuted:'{target} was executed', actHunterShot:'{actor} shot {target}',
   actHunterNoShot:'Hunter did not shoot anyone', actSkipped:'{actor} skipped their turn',
 
@@ -2140,7 +2140,10 @@ function confirmCupid(){
     _newPair.gen=cupidGen(); // ผูกรุ่น(สี)ของกามเทพไว้กับคู่นี้ถาวร ไม่เปลี่ยนตามคู่ใหม่ที่เกิดขึ้นทีหลัง
     G.loverPairs.push(_newPair);
     if(!G.lovers) G.lovers=_newPair;
-    logEvent('actPaired',{a:S.players[_newPair[0]].name,b:S.players[_newPair[1]].name});
+    const _cupidActorIdx=(G._cupidResumeMode==='resolution'&&S.players.findIndex(p=>p.role==='doppelganger')>=0)?S.players.findIndex(p=>p.role==='doppelganger')
+      :(G._cupidResumeMode==='nightBegin'&&S.players.findIndex(p=>p.role==='drunk')>=0)?S.players.findIndex(p=>p.role==='drunk')
+      :S.players.findIndex(p=>p.role==='cupid');
+    logEvent('actPaired',{actor:S.players[_cupidActorIdx].name,a:S.players[_newPair[0]].name,b:S.players[_newPair[1]].name});
     resumeAfterCupid();
   },700);
 }
@@ -2503,7 +2506,8 @@ function viewHistory(){
 
   const sections=[]; const seen={};
   G.history.forEach(h=>{
-    const sk=NIGHT_KEYS.has(h.key)||(!h.day&&h.key!=='actExecuted'&&h.key!=='actHunterShot'&&h.key!=='actHunterNoShot'&&h.key!=='actPaired'&&h.key!=='actPacifistVeto')?'n'+h.night:'d'+(h.day||h.night);
+    const _isNightPhaseEvt=h.day<h.night; // คืนของรอบนี้ที่วันยังไม่ทันตามคืน — ใช้แทน !h.day เพื่อให้ถูกต้องตั้งแต่คืนที่ 2 เป็นต้นไปด้วย ไม่ใช่แค่คืนแรก
+    const sk=NIGHT_KEYS.has(h.key)||((h.key==='actDoppleAcquired'||h.key==='actSeerSuccessor'||h.key==='actPaired')&&_isNightPhaseEvt)||(!h.day&&h.key!=='actExecuted'&&h.key!=='actHunterShot'&&h.key!=='actHunterNoShot'&&h.key!=='actPaired'&&h.key!=='actPacifistVeto')?'n'+h.night:'d'+(h.day||h.night);
     if(!seen[sk]){ seen[sk]=true; sections.push({sk,isNight:sk[0]==='n',num:parseInt(sk.slice(1)),events:[]}); }
     sections[sections.length-1].events.push(h);
   });
@@ -3613,7 +3617,8 @@ document.addEventListener('pointerdown',e=>{
   },true);
 });
 
-render();
+requestAnimationFrame(()=>requestAnimationFrame(render)); // รอ viewport/safe-area เซ็ตตัวก่อน bind ครั้งแรก (เหมือนทุก screen transition อื่นในไฟล์นี้) — ป้องกัน hit-test เพี้ยนตอนเปิดจาก Home Screen (PWA) ครั้งแรก
+window.addEventListener('resize',()=>{ if(S.screen==='menu') bind(); },{once:true}); // เผื่อบางเครื่อง safe-area ตั้งตัวช้ากว่า 2 frame — bind() ใหม่แบบ idempotent ไม่กระทบ state
 document.addEventListener('click',e=>{
   if(!_wwaCtx) try{_wwaCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(_){}
   else if(_wwaCtx.state==='suspended') _wwaCtx.resume();
