@@ -568,7 +568,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.18.1</div>
+<div id="verbadge">v3.18.2</div>
 
 <script>
 const ROLES = [
@@ -1076,15 +1076,15 @@ th:{
   confirmLoversBtn:'ยืนยันคู่รัก → คืนที่ 1', undoLastAction:'ย้อนการกระทำล่าสุด',
 
   // ===== night tool chip labels =====
-  toolCultLeader:'👁️ ผู้นำลัทธิ (Cult Leader)', toolVampire:'🧛 แวมไพร์ (Vampire)',
-  toolShapeshifter:'🎭 หมาป่าจำแลง (Shapeshifter)', toolSorcerer:'🧙 นางปีศาจ (Sorcerer)',
-  toolAlphaWolf:'🩸 หมาป่าจ่าฝูง (Alpha Wolf)', toolWerewolf:'🐺 หมาป่า (Werewolf)',
-  toolLoneWolf:'🌑 หมาป่าเดียวดาย (Lone Wolf)',
+  toolCultLeader:'👁️ ผู้นำลัทธิ', toolVampire:'🧛 แวมไพร์',
+  toolShapeshifter:'🎭 หมาป่าจำแลง', toolSorcerer:'🧙 นางปีศาจ',
+  toolAlphaWolf:'🩸 หมาป่าจ่าฝูง', toolWerewolf:'🐺 หมาป่า',
+  toolLoneWolf:'🌑 หมาป่าเดียวดาย',
   helpLoneWolfKill:'เลือก 1 คนที่จะฆ่า — รวมหมาป่าตัวอื่นได้ · ฆ่าตัวเองไม่ได้',
   scriptLoneWolfWake:'"🌑 หมาป่าเดียวดาย ลืมตา — ชี้ 1 คนที่จะฆ่า แล้วหลับตา (เลือกหมาป่าตัวอื่นได้)"',
   chkLoneWolfSelf:'🌑 ฆ่าตัวเองไม่ได้',
-  toolSerialKiller:'🔪 ฆาตกรโรคจิต (Serial Killer)', toolSeer:'🔮 เทพพยากรณ์ (Seer)',
-  toolBodyguard:'🛡️ บอดี้การ์ด (Bodyguard)', toolSpellcaster:'🤫 จอมเวท (Spellcaster)',
+  toolSerialKiller:'🔪 ฆาตกรโรคจิต', toolSeer:'🔮 เทพพยากรณ์',
+  toolBodyguard:'🛡️ บอดี้การ์ด', toolSpellcaster:'🤫 จอมเวท',
   toolDoppelganger:'🎭 ผู้เลียนแบบ (จับตาคืนแรก)',
 
   // ===== night help text =====
@@ -1760,6 +1760,7 @@ function startRun(){
      vampireBite:null, vampireVictim:null, skipped:[],
      princeSaved:false, pacifistVeto:false, ghostVoteDay:0,
      drunkTrueRole:null, doppleTarget:null, doppleAcquired:false, doppleCopiedRole:null,
+     pendingCupidGrant:null, _resumeNightAfterCupid:false,
      tool:'kill', check:null, hunterQueue:[], afterHunter:null,
      vampKilledThisDay:null,
      drunkRevealed:false,
@@ -1793,6 +1794,7 @@ function killChain(seeds){
       if(dgIdx>=0 && G.alive[dgIdx]){
         G.doppleAcquired=true; G.doppleCopiedRole=effRole(i);
         if(G.doppleCopiedRole==='cultleader' && !G.cult.includes(dgIdx)) G.cult.push(dgIdx);
+        if(G.doppleCopiedRole==='cupid' && !G.lovers) G.pendingCupidGrant=dgIdx;
         logEvent('actDoppleAcquired',{doppel:S.players[dgIdx].name,role:roleLabel(roleById(G.doppleCopiedRole)),target:S.players[i].name});
       }
     }
@@ -1882,17 +1884,27 @@ function enterDay(){
 }
 function enterNight(){
   stopTimer(); ACT=[];
-  G.nightNo++;
-  if(!G.drunkRevealed && G.nightNo>=3 && hasRole('drunk')){
-    G.drunkRevealed=true;
-    const dIdx=S.players.findIndex(p=>p.role==='drunk');
-    if(dIdx>=0 && G.alive[dIdx]) logEvent('actDrunkRevealed',{target:S.players[dIdx].name,role:roleLabel(roleById(G.drunkTrueRole))});
+  if(!G._resumeNightAfterCupid){
+    G.nightNo++;
+    if(!G.drunkRevealed && G.nightNo>=3 && hasRole('drunk')){
+      G.drunkRevealed=true;
+      const dIdx=S.players.findIndex(p=>p.role==='drunk');
+      if(dIdx>=0 && G.alive[dIdx]){
+        logEvent('actDrunkRevealed',{target:S.players[dIdx].name,role:roleLabel(roleById(G.drunkTrueRole))});
+        if(G.drunkTrueRole==='cupid' && !G.lovers) G.pendingCupidGrant=dIdx;
+      }
+    }
   }
+  G._resumeNightAfterCupid=false;
   G.wolfKillCount=G.cubBonusPending?2:1; G.cubBonusPending=false;
   G.silencedPrev=G.silenced;   // จดจำคนที่โดนใบ้คืนก่อน (ใบ้ซ้ำติดกันไม่ได้)
   G.wolfTargets=[]; G.protectThis=null; G.silenced=null; G.check=null;
   G.seerUsed=false; G.sorcUsed=false; G.alphaConvert=null; G.skTarget=null; G.cultRecruit=null; G.shapeTarget=null; G.vampireBite=null; G.skipped=[]; G.loneWolfTarget=null;
   G.dayVote=null; G.tool='kill';
+  if(G.pendingCupidGrant!=null){
+    const _pcg=G.pendingCupidGrant; G.pendingCupidGrant=null;
+    if(G.alive[_pcg]){ G.cupidPick=[]; G._resumeNightAfterCupid=true; G.phase='cupid'; render(); return; }
+  }
   G.phase=checkWin()?'over':'night';
   if(G.phase==='over'){ resetPhaseTransitionVisuals(); playWinSound(); render(); return; }
   playPhaseTransition('night',render);
@@ -1959,7 +1971,7 @@ function resolveNight(){          // 🌅 เช้าแล้ว
   if(G.loneWolfTarget!=null&&G.alive[G.loneWolfTarget]&&G.loneWolfTarget!==G.protectThis&&!victims.includes(G.loneWolfTarget)) victims.push(G.loneWolfTarget);
   G.loneWolfTarget=null;
   // ผู้นำลัทธิชวนเข้าลัทธิ
-  if(G.cultRecruit!=null && G.alive[G.cultRecruit] && !G.cult.includes(G.cultRecruit)){ G.cult.push(G.cultRecruit); logEvent('actCultJoined',{target:S.players[G.cultRecruit].name}); }
+  if(G.cultRecruit!=null && G.alive[G.cultRecruit] && !G.cult.includes(G.cultRecruit)){ G.cult.push(G.cultRecruit); }
   G.cultRecruit=null;
   // แวมไพร์กัด (เงียบ ไม่ประกาศ) — ตายตอนหมดเวลาโหวตกลางวันถ้าไม่ได้รับการป้องกันจากบอดี้การ์ดคืนนี้
   if(G.vampireBite!=null && G.alive[G.vampireBite] && G.vampireBite!==G.protectThis){ G.vampireVictim=G.vampireBite; }
@@ -2638,7 +2650,7 @@ function viewGame(){
         const roleHTML=(finalLabel!==initLabel)
           ?`<span class="teamtag t-${initR.team}" style="margin:0">${esc(initLabel)}</span> → <span class="teamtag t-${finalTeam}" style="margin:0">${esc(finalLabel)}</span>`
           :`<span class="teamtag t-${finalTeam}" style="margin:0">${esc(finalLabel)}</span>`;
-        return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)}${isCultFollower?' 👁️':''} ${G.alive[i]?'':(effRole(i)==='beggar'?'🏆':'💀')}</div><div class="rl">${roleHTML}</div></div>`;
+        return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':(effRole(i)==='beggar'?'🏆':'💀')}${isCultFollower?'👁️':''}</div><div class="rl">${roleHTML}</div></div>`;
       }).join('')}</div>
         <button class="btn block ghost" id="gHistoryBtn">${T('historyTitle')}</button>
         <button class="btn block" id="gExit2">${T('backToSummaryBtn')}</button>`;
