@@ -568,7 +568,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.18.0</div>
+<div id="verbadge">v3.18.1</div>
 
 <script>
 const ROLES = [
@@ -611,7 +611,7 @@ const ROLES = [
   {id:'cursed', th:'ผู้ต้องคำสาป', en:'Cursed', emj:'🌗', team:'village',
    desc:'ปกติอยู่ฝ่ายชาวบ้าน แต่ถ้าถูกหมาป่ากัด (เลือกฆ่า) จะไม่ตาย แต่กลายเป็นหมาป่าและย้ายไปฝ่ายหมาป่า'},
   {id:'apprentice', th:'ผู้สืบทอดเทพยากรณ์', en:'Apprentice Seer', emj:'👓', team:'village',
-   desc:'ไม่มีพลังในช่วงแรก แต่ทันทีที่เทพพยากรณ์ (Seer) ตาย จะได้รับพลังของ Seer ทันที'},
+   desc:'ผู้สืบทอดเทพพยากรณ์ลืมตาพร้อมเทพพยากรณ์ทุกคืน ทั้งสองรู้จักกัน เมื่อเทพพยากรณ์เสียชีวิต ผู้สืบทอดจะกลายเป็นเทพพยากรณ์ทันที'},
   {id:'pacifist', th:'นักสันติวิธี', en:'Pacifist', emj:'🕊️', team:'village',
    desc:'หากเปิดใช้งานวันที่มีการประหาร — การประหารวันนั้นจะถูกยกเลิก ไม่มีใครตาย'},
   {id:'prince', th:'เจ้าชาย', en:'Prince', emj:'👑', team:'village',
@@ -655,7 +655,7 @@ const ROLE_DESC_EN = {
   toughguy: "On the Village team. If attacked by werewolves, doesn't die immediately — survives until the next night, then dies.",
   idiot: "On the Village team. Must always vote to eliminate someone every round (cannot abstain).",
   cursed: "Normally on the Village team, but if targeted by the werewolves, doesn't die — instead becomes a werewolf and switches to the Werewolf team.",
-  apprentice: "No power at first. The moment the Seer dies, immediately gains the Seer's ability.",
+  apprentice: "The Seer Successor wakes up together with the Seer every night. They know each other's identities. When the Seer dies, the Successor immediately becomes the Seer.",
   pacifist: "If activated on a day with an execution, that execution is cancelled — no one dies.",
   prince: "If voted for execution for the first time, reveals themselves and survives (one-time only — can be executed normally afterward).",
   mason: "Knows the identity of other Masons from the start of the game (can include multiple — the more there are, the more they know each other).",
@@ -986,6 +986,8 @@ th:{
 
   // ===== Game History (Phase B) =====
   historyTitle:'📜 ประวัติเกม', historyEmpty:'ยังไม่มีเหตุการณ์',
+  histWinVillage:'🏆 ฝ่ายหมู่บ้านเป็นผู้ชนะ', histWinWolf:'🏆 ฝ่ายหมาป่าเป็นผู้ชนะ', histWinVampire:'🏆 ฝ่ายแวมไพร์เป็นผู้ชนะ',
+  histWinCult:'🏆 ฝ่ายลัทธิเป็นผู้ชนะ', histWinSk:'🏆 ฆาตกรโรคจิตเป็นผู้ชนะ', histWinBeggar:'🏆 ยาจกเป็นผู้ชนะ', histWinNone:'☠️ ไม่มีผู้ชนะ',
   historyBackBtn:'← กลับไปหน้าสรุป',
   backToMenuBtn:'← กลับไปเมนูหลัก',
   sfxSetting:'🔊 เสียงเอฟเฟกต์', ambSetting:'🎵 เสียง Ambient',
@@ -1001,14 +1003,14 @@ th:{
   actKilled:'{actor} ฆ่า {target}', actBlocked:'{actor} พยายามฆ่า {target} แต่ถูกป้องกันไว้ได้',
   actToughGuyHit:'{target} บาดเจ็บสาหัส',
   actToughGuyDeath:'{target} เสียชีวิตจากบาดแผล',
-  actCursedConvert:'{target} ถูกสาปกลายเป็นหมาป่า',
+  actCursedConvert:'{target} กลายเป็นหมาป่า',
   actRecruited:'{actor} ชวน {target} เข้าลัทธิ', actBit:'{actor} กัด {target}', actVampireKilled:'{target} เสียชีวิตจากพิษแวมไพร์',
   actConverted:'{actor} เปลี่ยน {target} เป็นหมาป่า', actShapeshifted:'{actor} จำแลงเป็น {target}',
   actSeerChecked:'เทพพยากรณ์ ตรวจสอบ {target}', actSorcChecked:'นางปีศาจ ตรวจสอบ {target}',
   actBeggarWin:'ยาจก {target} ถูกกำจัด — ชนะทันที!',
   actLoverDied:'{target} ตายตามคู่รัก', actVampireBlocked:'{actor} พยายามกัด {target} แต่ถูกป้องกันไว้ได้',
   actPrinceRevealed:'{target} คือเจ้าชาย! เปิดเผยตัวตน', actSilenced:'{actor} สั่งห้าม {target} พูด', actSpellcasterCurseDeath:'{target} เสียชีวิตจากคำสาปของจอมเวท',
-  actDoppleAcquired:'{doppel} ได้รับบทบาท {role} จาก {target}', actDrunkRevealed:'{target} เปลี่ยนบทบาทเป็น {role}',
+  actDoppleAcquired:'{doppel} กลายเป็น {role}', actDrunkRevealed:'{target} กลายเป็น {role}',
   actSeerSuccessor:'{target} กลายเป็นเทพพยากรณ์', actCultJoined:'{target} เข้าร่วมลัทธิ', actPacifistVeto:'ไม่มีการประหาร เพราะนักสันติวิธีประท้วง',
   cultMemberLabel:'สมาชิกลัทธิ',
   actMarked:'{actor} จับตา {target} ({role})', actPaired:'จับคู่รัก {a} และ {b}',
@@ -1056,6 +1058,7 @@ th:{
   tapToOpen:'แตะเพื่อเปิด', confirmPassNext:'ตกลง — ส่งให้คนต่อไป', viewAloneFootnote:'ดูคนเดียวเท่านั้น อย่าให้คนอื่นเห็น',
   loneWolfReveal:'🌑 คุณคือหมาป่าเดียวดาย — ไม่รู้จักหมาป่าตัวอื่น และไม่มีใครรู้ว่าคุณเป็นหมาป่า',
   noOtherMasons:'— ไม่มีสมาชิกสมาคมคนอื่นในเกมนี้ —', otherMasons:'🤝 สมาชิกสมาคมคนอื่น',
+  yourSeerLabel:'🔮 เทพพยากรณ์ของคุณ', yourSuccessorLabel:'👓 ผู้สืบทอดของคุณ',
   noOtherWolves:'— ไม่มีหมาป่าตัวอื่น —', wolvesYouKnow:'🗡️ หมาป่าที่คุณรู้จัก', yourWolfTeam:'🐺 ทีมหมาป่าของคุณ',
 
   // ===== viewMod =====
@@ -1234,6 +1237,8 @@ en:{
 
   // ===== Game History (Phase B) =====
   historyTitle:'📜 Game History', historyEmpty:'No events yet',
+  histWinVillage:'🏆 Village Team wins', histWinWolf:'🏆 Werewolf Team wins', histWinVampire:'🏆 Vampire Team wins',
+  histWinCult:'🏆 Cult Team wins', histWinSk:'🏆 Serial Killer wins', histWinBeggar:'🏆 Beggar wins', histWinNone:'☠️ No winner',
   historyBackBtn:'← Back to summary',
   backToMenuBtn:'← Back to Main Menu',
   sfxSetting:'🔊 Sound Effects', ambSetting:'🎵 Ambient Sound',
@@ -1250,14 +1255,14 @@ en:{
   actKilled:'{actor} killed {target}', actBlocked:'Werewolves attempted to kill {target}, but the attack was blocked.',
   actToughGuyHit:'{target} was critically wounded.',
   actToughGuyDeath:'{target} died from the injuries.',
-  actCursedConvert:'{target} was cursed and became a werewolf',
+  actCursedConvert:'{target} became a werewolf.',
   actRecruited:'{actor} recruited {target} into the cult', actBit:'{actor} bit {target}', actVampireKilled:'{target} died from Vampire Poison.',
   actConverted:'{actor} converted {target} into a werewolf', actShapeshifted:'{actor} disguised as {target}',
   actSeerChecked:'Seer investigated {target}', actSorcChecked:'Sorcerer investigated {target}',
   actBeggarWin:'Beggar {target} was eliminated — instant win!',
   actLoverDied:"{target} died from Lover's Bond.", actVampireBlocked:'The Vampire attempted to bite {target}, but the attack was blocked.',
   actPrinceRevealed:'{target} is the Prince! Revealed.', actSilenced:'{actor} silenced {target}.', actSpellcasterCurseDeath:"{target} died from the Spellcaster's Curse.",
-  actDoppleAcquired:'{doppel} became {role} after {target} died.', actDrunkRevealed:'{target} became {role}.',
+  actDoppleAcquired:'{doppel} became the {role}.', actDrunkRevealed:'{target} became the {role}.',
   actSeerSuccessor:'{target} became the Seer.', actCultJoined:'{target} joined the Cult.', actPacifistVeto:"No execution. The Pacifist prevented today's execution.",
   cultMemberLabel:'Cult Member',
   actMarked:'{actor} marked {target} ({role})', actPaired:'Paired lovers {a} and {b}',
@@ -1300,6 +1305,7 @@ en:{
   tapToOpen:'Tap to open', confirmPassNext:'OK — Pass to next player', viewAloneFootnote:"View alone — don't let others see",
   loneWolfReveal:"🌑 You are the Lone Wolf — you don't know other werewolves, and no one knows you're a werewolf",
   noOtherMasons:'— No other Masons in this game —', otherMasons:'🤝 Other Masons',
+  yourSeerLabel:'🔮 Your Seer', yourSuccessorLabel:'👓 Your Successor',
   noOtherWolves:'— No other werewolves —', wolvesYouKnow:'🗡️ Werewolves you know', yourWolfTeam:'🐺 Your werewolf team',
 
   modSummaryTitle:'Role Summary', modOnlySub:'For the moderator only — shows all player roles.',
@@ -2114,6 +2120,7 @@ function nightTap(i){
   const act=activeNightTool();
   if(act===null) return;              // ทำครบทุกสกิลแล้ว
   if(G.tool!==act) G.tool=act;        // บังคับให้ทำตามลำดับเท่านั้น
+  G.check=null;                       // เคลียร์กล่องข้อความเก่า (เช่น "เลือกไม่ได้") ก่อนประมวลผลการแตะครั้งใหม่เสมอ
   const b=actBegin();
   const t=G.tool;
   if(t==='kill'){
@@ -2397,9 +2404,12 @@ function gcell(i){
 const ggrid=()=>`<div class="ggrid">${S.players.map((p,i)=>teamOf(i)==='mod'?'':gcell(i)).join('')}</div>`;
 
 function viewHistory(){
-  if(!G.history||!G.history.length)
-    return `<div class="hist-empty">${T('historyEmpty')}</div>
+  if(!G.history||!G.history.length){
+    const _winMapEmpty={village:'histWinVillage',wolf:'histWinWolf',vampire:'histWinVampire',cult:'histWinCult',sk:'histWinSk',beggar:'histWinBeggar',extinct:'histWinNone'};
+    const _winHTMLEmpty=G.winner?`<div class="hist-event ${G.winner==='extinct'?'clr-gray':'clr-gold'}" style="font-weight:700"><span class="hist-txt">${esc(T(_winMapEmpty[G.winner]||'histWinVillage'))}</span></div>`:'';
+    return `<div class="hist-empty">${T('historyEmpty')}</div>${_winHTMLEmpty}
     <button class="btn block ghost" id="gHistoryBack" style="margin-top:14px">${T('historyBackBtn')}</button>`;
+  }
 
   const EVT={
     actKilled:       ['🐺','clr-red'],
@@ -2470,7 +2480,10 @@ function viewHistory(){
     </div>`;
   }).join('');
 
-  return `<div style="padding:0 2px">${sectHTML}</div>
+  const _winMap={village:'histWinVillage',wolf:'histWinWolf',vampire:'histWinVampire',cult:'histWinCult',sk:'histWinSk',beggar:'histWinBeggar',extinct:'histWinNone'};
+  const _winKey=_winMap[G.winner]||'histWinVillage';
+  const winnerEventHTML=`<div class="hist-event ${G.winner==='extinct'?'clr-gray':'clr-gold'}" style="font-weight:700"><span class="hist-txt">${esc(T(_winKey))}</span></div>`;
+  return `<div style="padding:0 2px">${sectHTML}${winnerEventHTML}</div>
     <button class="btn block ghost" id="gHistoryBack" style="margin-top:14px">${T('historyBackBtn')}</button>`;
 }
 function fmtDuration(ms){
@@ -2619,13 +2632,13 @@ function viewGame(){
         const initR=roleById(p.role);
         const isCultFollower=!conv&&G.cult&&G.cult.includes(i)&&p.role!=='cultleader';
         const _nm=rr=>S.lang==='en'?rr.en:rr.th;
-        const finalLabel=isCultFollower?T('cultMemberLabel'):_nm(r);
+        const finalLabel=_nm(r);
         const initLabel=_nm(initR);
-        const finalTeam=isCultFollower?'neutral':r.team;
+        const finalTeam=r.team;
         const roleHTML=(finalLabel!==initLabel)
           ?`<span class="teamtag t-${initR.team}" style="margin:0">${esc(initLabel)}</span> → <span class="teamtag t-${finalTeam}" style="margin:0">${esc(finalLabel)}</span>`
           :`<span class="teamtag t-${finalTeam}" style="margin:0">${esc(finalLabel)}</span>`;
-        return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)} ${G.alive[i]?'':(effRole(i)==='beggar'?'🏆':'💀')}</div><div class="rl">${roleHTML}</div></div>`;
+        return `<div class="sumrow"><div class="emj">${iconHTML(r,30)}</div><div class="nm">${esc(p.name)}${isCultFollower?' 👁️':''} ${G.alive[i]?'':(effRole(i)==='beggar'?'🏆':'💀')}</div><div class="rl">${roleHTML}</div></div>`;
       }).join('')}</div>
         <button class="btn block ghost" id="gHistoryBtn">${T('historyTitle')}</button>
         <button class="btn block" id="gExit2">${T('backToSummaryBtn')}</button>`;
@@ -2809,6 +2822,15 @@ function revealPackInfo(selfIdx){
     const others=S.players.filter((q,j)=>j!==selfIdx&&q.role==='mason').map(q=>q.name);
     const list=others.length?others.map(esc).join(', '):T('noOtherMasons');
     return `<div class="packbox" style="background:rgba(91,155,213,.14);border-color:rgba(91,155,213,.4);color:#cfe3f5">${T('otherMasons')}: <b>${list}</b></div>`;
+  }
+  if(self==='apprentice'){
+    const seerP=S.players.find(q=>q.role==='seer');
+    return `<div class="packbox" style="background:rgba(91,155,213,.14);border-color:rgba(91,155,213,.4);color:#cfe3f5">${T('yourSeerLabel')}: <b>${esc(seerP?seerP.name:'')}</b></div>`;
+  }
+  if(self==='seer'){
+    const apP=S.players.find(q=>q.role==='apprentice');
+    if(!apP) return '';
+    return `<div class="packbox" style="background:rgba(91,155,213,.14);border-color:rgba(91,155,213,.4);color:#cfe3f5">${T('yourSuccessorLabel')}: <b>${esc(apP.name)}</b></div>`;
   }
   let names=[];
   if(PACK.includes(self)) names=S.players.filter((q,j)=>j!==selfIdx&&PACK.includes(q.role)).map(q=>q.name);
