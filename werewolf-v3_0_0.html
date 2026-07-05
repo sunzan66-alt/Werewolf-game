@@ -572,7 +572,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.18.9</div>
+<div id="verbadge">v3.18.11</div>
 
 <script>
 const ROLES = [
@@ -922,6 +922,8 @@ th:{
   rulesModTitle:'ผู้ดำเนินรายการ',
   rulesMod:'ถือมือถือเครื่องเดียวตลอดเกม ทำหน้าที่เรียกแต่ละบทบาทตอนกลางคืน นับโหวตตอนกลางวัน และประกาศผล ผู้เล่นคนอื่นไม่ต้องมีมือถือ',
   rulesNote:'รายละเอียดความสามารถของแต่ละบทบาท ดูได้ตอนเปิดไพ่บทบาทของตัวเอง',
+  rulesIconsTitle:'🇹🇭 สัญลักษณ์ที่ใช้ในเกม',
+  rulesIconsList:'👁️ = สมาชิกลัทธิ\n💞 = จับคู่เป็นคู่รัก\n💘 / ❤️ / 💜 = อยู่ในสถานะคู่รัก สีแสดงรุ่นของกามเทพที่จับคู่ (ชมพู = รุ่นที่ 1, แดง = รุ่นที่ 2, ม่วง = รุ่นที่ 3)\n💘 (ในประวัติเกม) = คู่รักเสียชีวิตตาม\n🩸 = เสียชีวิตจากพิษแวมไพร์\n🛡️ = ถูกป้องกัน\n✨ = ได้รับบทบาทใหม่\n🍺 = เปลี่ยนบทบาทจากขี้เมา\n💀 = เสียชีวิต\n👑 = เจ้าชายเปิดเผยตัวตน\n🏆 = ผู้ชนะ\n💪 = บาดเจ็บสาหัส\n🎭 = ผู้เลียนแบบจับตา / หมาป่าจำแลงแปลงร่าง\n🏹 = นายพรานยิง\n⚖️ = ถูกประหาร\n🐺 = หมาป่าโจมตี\n🧛 = แวมไพร์กัด\n🔮 = เทพพยากรณ์ตรวจสอบ\n🪄 = จอมเวทสั่งห้ามพูด\n👤 = นางปีศาจตรวจสอบ\n🍷 = ฆาตกรโรคจิตสังหาร\n☠️🐺 = หมาป่าอาหารเป็นพิษ คืนนี้ออกล่าไม่ได้',
 
   // ===== กฎเกม (Game Rules) — หน้าใหม่แยกจาก How to Play =====
   gameRulesTitle:'📜 กฎเกม',
@@ -1174,6 +1176,8 @@ en:{
   rulesModTitle:'The Moderator',
   rulesMod:'Holds the single phone for the whole game — calls each role at night, counts votes during the day, and announces results. Other players don\'t need a phone.',
   rulesNote:'Each role\'s full ability is shown when you open your own role card.',
+  rulesIconsTitle:'🇺🇸 Game Icons',
+  rulesIconsList:'👁️ = Cult Member\n💞 = Paired as Lovers\n💘 / ❤️ / 💜 = Currently Bonded as Lovers (Pink = 1st Cupid, Red = 2nd Cupid, Purple = 3rd Cupid)\n💘 (Game History) = Died From a Lover\'s Death\n🩸 = Died from Vampire Poison\n🛡️ = Protected\n✨ = Became a New Role\n🍺 = Drunk Changed Role\n💀 = Dead\n👑 = Prince Revealed\n🏆 = Victory\n💪 = Severely Wounded\n🎭 = Doppelganger Mimic / Shapeshifter Transform\n🏹 = Hunter Shot\n⚖️ = Executed\n🐺 = Werewolf Attack\n🧛 = Vampire Bite\n🔮 = Seer Checked\n🪄 = Spellcaster Silenced\n👤 = Sorcerer Checked\n🍷 = Serial Killer Attack\n☠️🐺 = Werewolves Are Food Poisoned and Cannot Hunt Tonight',
 
   // ===== Game Rules — new page separate from How to Play =====
   gameRulesTitle:'📜 Game Rules',
@@ -3061,6 +3065,11 @@ function viewRules(){
     </div>
 
     <p class="footnote">${T('rulesNote')}</p>
+
+    <div class="card">
+      <p class="section-label">${T('rulesIconsTitle')}</p>
+      ${lines('rulesIconsList')}
+    </div>
   </div>`;
 }
 function viewGameRules(){
