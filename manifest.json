@@ -1,0 +1,20 @@
+{
+  "id": "./werewolf-v3_0_0.html",
+  "name": "Werewolf Party: Village of Secrets",
+  "short_name": "Werewolf Party",
+  "description": "เกมปาร์ตี้หมาป่า Village of Secrets เล่นแบบส่งต่อโทรศัพท์เครื่องเดียว รองรับภาษาไทย/อังกฤษ เล่นออฟไลน์ได้",
+  "start_url": "./werewolf-v3_0_0.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0a0a14",
+  "theme_color": "#0a0a14",
+  "lang": "th",
+  "dir": "ltr",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
