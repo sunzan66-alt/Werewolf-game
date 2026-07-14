@@ -589,7 +589,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.20.7</div>
+<div id="verbadge">v3.20.8</div>
 
 <script>
 const ROLES = [
@@ -2794,13 +2794,17 @@ function viewPassPhoneNight(){
     </div>`;
   }
   if(G.ppStage==='sorcMsg'){
+    // หมายเหตุ: ห้ามใช้ .bottombar ที่นี่ (position:fixed ทับช่องพิมพ์ข้อความ เพราะการ์ดนี้ไม่มี .ggrid padding-bottom:96px มารองรับเหมือนหน้าอื่น) ใช้ปุ่ม inline ในโฟลว์ปกติแทน
     const c=G.check||{label:''};
     const cls=c.info?'i':(c.green?'g':'r');
     return `<div class="card" style="text-align:center;padding:24px 16px">
       <div class="checkbar ${cls}" style="display:inline-block">${c.name?esc(c.name)+' — ':''}${c.label}</div>
       <p class="gins" style="margin-top:14px">${T('ppSorcMsgPrompt')}</p>
       <div class="row" style="margin-top:10px"><input type="text" id="ppSorcMsgInput" maxlength="120" placeholder="${T('ppSorcMsgPlaceholder')}" value="${esc(G.ppSorcMsgDraft||'')}"></div>
-      <div class="bottombar"><button class="btn ghost" id="ppSorcMsgSkip">${T('skipBtn')}</button><button class="btn block" id="ppSorcMsgSend">${T('ppSorcMsgSendBtn')}</button></div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn ghost" id="ppSorcMsgSkip" style="flex:1">${T('skipBtn')}</button>
+        <button class="btn block" id="ppSorcMsgSend" style="flex:2">${T('ppSorcMsgSendBtn')}</button>
+      </div>
     </div>`;
   }
   if(G.ppStage==='submitted'){
