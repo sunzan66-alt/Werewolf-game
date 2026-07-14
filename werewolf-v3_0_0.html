@@ -589,7 +589,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.19.6</div>
+<div id="verbadge">v3.20.7</div>
 
 <script>
 const ROLES = [
@@ -900,6 +900,7 @@ S.counts.werewolf=1; S.counts.villager=0;
 S._focusName=true;
 S.timerMin=3;
 S.modLevel='beginner';
+S.noMod=false; S.modSubMode='random'; S.modChosenIdx=null;
 try{
   S.soundFX=localStorage.getItem('ww_sfx')!=='off';
   S.soundAmbient=localStorage.getItem('ww_amb')!=='off';
@@ -1069,7 +1070,7 @@ th:{
   tutStep2Title:'🎯 เลือกชุดที่เหมาะกับผู้เล่นของคุณ',
   tutStep2Body:'😊 มือใหม่ · 🎲 คลาสสิก · 🔥 ขั้นสูง · 🔮 ผู้วิเศษ<br>เลือกโหมดแล้วระบบจะจัดทีมให้อัตโนมัติ',
   tutStep3Title:'🎙 ผู้ดำเนินรายการ',
-  tutStep3Body:'เลือกว่าจะให้ระบบสุ่มบทบาท "ผู้ดำเนินรายการ" หรือไม่<br>• สุ่ม = ผู้เล่นหนึ่งคนจะได้รับบทบาทผู้ดำเนินรายการ และจะไม่ได้ร่วมเล่น<br>• ไม่สุ่ม = ใช้ผู้ดำเนินรายการภายนอก ผู้เล่นทุกคนจะได้รับบทบาทครบ',
+  tutStep3Body:'เลือกว่าจะเล่นแบบ "มีผู้ดำเนินรายการ" หรือ "ไม่มีผู้ดำเนินรายการ" (Pass-the-Phone)<br>• มีผู้ดำเนินรายการ = ผู้เล่นหนึ่งคนถือโทรศัพท์ควบคุมเกม (สุ่ม หรือเลือกเอง)<br>• ไม่มีผู้ดำเนินรายการ = ส่งโทรศัพท์ให้ผู้เล่นทีละคนตอนกลางคืน ทุกคนได้เล่นครบ',
   tutStep4Title:'⚙️ อยากปรับแต่งเอง?',
   tutStep4Body:'แตะ "เลือกตัวละครเอง" เพื่อเพิ่มหรือลดบทบาทได้อย่างอิสระ',
   tutStep5Title:'⏱️ ตั้งเวลากลางวัน',
@@ -1187,7 +1188,21 @@ th:{
 
   // ===== game over =====
   winnerWolf:'🐺 ฝ่ายมนุษย์หมาป่าชนะ!', winnerLoneWolf:'🐺 หมาป่าเดียวดายชนะ!', winnerWolfAndBeggar:'🐺💔 ฝ่ายมนุษย์หมาป่าและยาจกชนะ!', winnerCult:'👁️ ลัทธิชนะ!', winnerSk:'🔪 ฆาตกรโรคจิตชนะ!',
-  winnerVampire:'🧛 ฝ่ายแวมไพร์ชนะ!', winnerVillage:'👥 ฝ่ายหมู่บ้านชนะ!', winnerBeggar:'🏆 ยาจกชนะ!', winnerExtinctTitle:'☠️ ไม่มีผู้ชนะ', winnerExtinctSub:'ผู้เล่นทุกคนเสียชีวิต', backToSummaryBtn:'กลับไปหน้าสรุป'
+  winnerVampire:'🧛 ฝ่ายแวมไพร์ชนะ!', winnerVillage:'👥 ฝ่ายหมู่บ้านชนะ!', winnerBeggar:'🏆 ยาจกชนะ!', winnerExtinctTitle:'☠️ ไม่มีผู้ชนะ', winnerExtinctSub:'ผู้เล่นทุกคนเสียชีวิต', backToSummaryBtn:'กลับไปหน้าสรุป',
+  modHasModBtn:'มีผู้ดำเนินรายการ', modNoModBtn:'ไม่มีผู้ดำเนินรายการ (beta)',
+  modHasModTooltip:'ผู้ดำเนินเกมถือโทรศัพท์และดำเนินเกมตามปกติ',
+  modNoModTooltip:'โทรศัพท์จะถูกส่งต่อให้ผู้เล่นทีละคนในช่วงกลางคืน ทุกคนสามารถเล่นได้ ไม่มีใครต้องเสียสละเป็นผู้ดำเนินเกม',
+  modChooseBtn:'เลือกเอง', modChooseTooltip:'เลือกผู้เล่นที่ต้องการให้เป็นผู้ดำเนินรายการด้วยตัวเอง',
+  ppNightFalls:'กลางคืนแล้ว<br>ทุกคนหลับตา', ppMorning:'เช้าแล้ว<br>ลืมตาได้',
+  ppNextPlayer:'ผู้เล่นคนถัดไป', ppOnlyName:'เฉพาะ {name} เท่านั้น', ppTapContinue:'แตะเพื่อดำเนินการต่อ',
+  ppSubmitted:'✓ ส่งการกระทำแล้ว', ppPassPhone:'ส่งโทรศัพท์ให้ผู้เล่นคนถัดไป',
+  ppPickTarget:'เลือกเป้าหมาย', ppConfirmBtn:'ยืนยัน', ppPassBtn:'ส่งต่อ',
+  ppSorcMsgPrompt:'ต้องการพิมพ์ข้อความบอกฝ่ายหมาป่าเพิ่มเติมไหม?', ppSorcMsgPlaceholder:'พิมพ์ข้อความ...', ppSorcMsgSendBtn:'ส่งข้อความ',
+  wolfInboxTitle:'🐺 กล่องข้อความทีมหมาป่า', wolfVoteMsg:'โหวต: {name}',
+  wolfSorcYes:'🟢 {name} คือเทพพยากรณ์ (Seer)', wolfSorcNo:'🔴 {name} ไม่ใช่เทพพยากรณ์ (Seer)',
+  wolfInboxResult:'🌙 ผลโหวต: หมาป่าเลือกโจมตี {name}',
+  ppPopupBody:'โหมดนี้จะปรับกติกาของตัวละครบางตัวโดยอัตโนมัติ\nเพื่อรองรับการเล่นโดยไม่มีผู้ดำเนินรายการ\nและใช้โทรศัพท์เพียงเครื่องเดียว', ppPopupOk:'ตกลง',
+  ppNoActionTonight:'คืนนี้ไม่มีการกระทำ'
 },
 en:{
   start:'Start Game', settings:'Settings', language:'Language', save:'Save', cancel:'Cancel', back:'Back',
@@ -1340,7 +1355,7 @@ en:{
   tutStep2Title:'🎯 Pick a setup that fits your group',
   tutStep2Body:'😊 Beginner · 🎲 Classic · 🔥 Advanced · 🔮 Special<br>Choose a mode and the game builds a balanced team for you.',
   tutStep3Title:'🎙 Moderator',
-  tutStep3Body:'Choose whether the Moderator role should be randomly assigned.<br>• Random = One player becomes the Moderator and does not participate.<br>• Not Random = Use an external moderator. All players receive playable roles.',
+  tutStep3Body:'Choose whether to play \'With Moderator\' or \'Without Moderator\' (Pass-the-Phone)<br>• With Moderator = one player holds the phone and runs the game (random or chosen)<br>• Without Moderator = the phone is passed to each player during the night, everyone gets to play',
   tutStep4Title:'⚙️ Want more control?',
   tutStep4Body:'Tap "Custom Roles" to add or remove any role yourself.',
   tutStep5Title:'⏱️ Set the day timer',
@@ -1446,7 +1461,21 @@ en:{
   pacifistVetoBanner:"🕊️ No execution. The Pacifist prevented today's execution.",
 
   winnerWolf:'🐺 Werewolves win!', winnerLoneWolf:'🐺 Lone Wolf wins!', winnerWolfAndBeggar:'🐺💔 Werewolf Team & Beggar win!', winnerCult:'👁️ Cult wins!', winnerSk:'🔪 Serial Killer wins!',
-  winnerVampire:'🧛 Vampires win!', winnerVillage:'👥 Village wins!', winnerBeggar:'🏆 Beggar Wins!', winnerExtinctTitle:'☠️ Draw', winnerExtinctSub:'Everyone died.', backToSummaryBtn:'Back to summary'
+  winnerVampire:'🧛 Vampires win!', winnerVillage:'👥 Village wins!', winnerBeggar:'🏆 Beggar Wins!', winnerExtinctTitle:'☠️ Draw', winnerExtinctSub:'Everyone died.', backToSummaryBtn:'Back to summary',
+  modHasModBtn:'With Moderator', modNoModBtn:'Without Moderator (beta)',
+  modHasModTooltip:'One player manages the game as usual.',
+  modNoModTooltip:'The phone is passed to each player during the night. Everyone gets to play. No dedicated moderator is required.',
+  modChooseBtn:'Choose Yourself', modChooseTooltip:'Pick which player you want to be the Moderator.',
+  ppNightFalls:'Night falls.<br>Everyone close your eyes.', ppMorning:'Morning has come.<br>Everyone open your eyes.',
+  ppNextPlayer:'Next Player', ppOnlyName:'Only {name} may continue.', ppTapContinue:'Tap to Continue',
+  ppSubmitted:'✓ Action Submitted', ppPassPhone:'Pass the phone to the next player',
+  ppPickTarget:'Choose a target', ppConfirmBtn:'Confirm', ppPassBtn:'Pass',
+  ppSorcMsgPrompt:'Want to send an extra message to the Wolf team?', ppSorcMsgPlaceholder:'Type a message...', ppSorcMsgSendBtn:'Send Message',
+  wolfInboxTitle:'🐺 Wolf Team Inbox', wolfVoteMsg:'Vote: {name}',
+  wolfSorcYes:'🟢 {name} is the Seer', wolfSorcNo:'🔴 {name} is not the Seer',
+  wolfInboxResult:'🌙 Vote result: the wolves chose to attack {name}',
+  ppPopupBody:'Some character rules are automatically adjusted\nto support one-phone gameplay\nwithout a moderator.', ppPopupOk:'OK',
+  ppNoActionTonight:'No action tonight'
 }
 };
 const SCRIPT_LINE = {
@@ -1675,19 +1704,39 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 
 function startGame(){
   G=null; UNDO=null;
+  S._revealOrder=[]; // roll ใหม่ -> ลำดับเปิดบทบาทเดิมใช้ไม่ได้แล้ว ต้องเริ่มนับใหม่ (No Moderator Mode เท่านั้นที่ใช้ค่านี้)
   const pool=[];
   ROLES.forEach(r=>{for(let k=0;k<S.counts[r.id];k++)pool.push(r.id);});
-  shuffle(pool);
-  S.players.forEach((p,i)=>{p.role=pool[i];p.revealed=false;});
+  if(S.modSubMode==='choose'&&S.modChosenIdx!=null&&S.counts.moderator>0&&S.modChosenIdx<S.players.length){
+    const modIdx=pool.indexOf('moderator');
+    if(modIdx>=0) pool.splice(modIdx,1);
+    shuffle(pool);
+    const order=S.players.map((p,i)=>i).filter(i=>i!==S.modChosenIdx);
+    S.players[S.modChosenIdx].role='moderator'; S.players[S.modChosenIdx].revealed=false;
+    order.forEach((idx,k)=>{S.players[idx].role=pool[k];S.players[idx].revealed=false;});
+  } else {
+    shuffle(pool);
+    S.players.forEach((p,i)=>{p.role=pool[i];p.revealed=false;});
+  }
   S.screen='list'; S.active=null; S.modUnlocked=false;
   render();
 }
 function reshuffle(){
   G=null; UNDO=null;
+  S._revealOrder=[]; // roll ใหม่ -> ลำดับเปิดบทบาทเดิมใช้ไม่ได้แล้ว ต้องเริ่มนับใหม่ (No Moderator Mode เท่านั้นที่ใช้ค่านี้)
   const pool=[];
   ROLES.forEach(r=>{for(let k=0;k<S.counts[r.id];k++)pool.push(r.id);});
-  shuffle(pool);
-  S.players.forEach((p,i)=>{p.role=pool[i];p.revealed=false;});
+  if(S.modSubMode==='choose'&&S.modChosenIdx!=null&&S.counts.moderator>0&&S.modChosenIdx<S.players.length){
+    const modIdx=pool.indexOf('moderator');
+    if(modIdx>=0) pool.splice(modIdx,1);
+    shuffle(pool);
+    const order=S.players.map((p,i)=>i).filter(i=>i!==S.modChosenIdx);
+    S.players[S.modChosenIdx].role='moderator'; S.players[S.modChosenIdx].revealed=false;
+    order.forEach((idx,k)=>{S.players[idx].role=pool[k];S.players[idx].revealed=false;});
+  } else {
+    shuffle(pool);
+    S.players.forEach((p,i)=>{p.role=pool[i];p.revealed=false;});
+  }
   S.screen='list'; S.active=null; S.modUnlocked=false;
   render();
 }
@@ -1695,6 +1744,7 @@ function resetAll(){
   G=null; UNDO=null;
   S.screen='setup'; S.active=null; S.flipped=false; S.modUnlocked=false; S.modLevel='beginner';
   S.players.forEach(p=>{p.role=null;p.revealed=false;});
+  S._revealOrder=[];
   render();
 }
 function openReveal(i){
@@ -1710,6 +1760,9 @@ function openReveal(i){
   setTimeout(()=>{ S.spinning=false; S.flipped=true; render(); }, 700);
 }
 function confirmReveal(){
+  // บันทึกลำดับการเปิดดูบทบาทจริง — ใช้เฉพาะ No Moderator Mode (playerTurnOrder), ไม่กระทบ Moderator Mode ที่ไม่เคยอ่านค่านี้
+  if(!S._revealOrder) S._revealOrder=[];
+  if(!S._revealOrder.includes(S.active)) S._revealOrder.push(S.active);
   S.players[S.active].revealed=true; S.active=null; S.flipped=false; S.spinning=false; S.screen='list'; render();
 }
 
@@ -1840,7 +1893,11 @@ function startRun(){
      vampKilledThisDay:null,
      drunkRevealed:false,
      deaths:[], banner:null, winner:null, history:[], showHistory:false, historyCollapsed:{}, deathLog:[]};
+  // No Moderator Mode: ห้ามเริ่มเกมที่ Cupid Gate เด็ดขาด -- ต้องแก้ก่อน render() ครั้งแรกข้างล่าง ไม่ใช่หลังจากนั้น (แก้ทีหลังทำให้เฟรมแรกที่ผู้ใช้เห็นยังเป็น Cupid Gate ค้างอยู่ก่อนค่อยถูกต้องในเฟรมถัดไป)
+  if(S.noMod && G.phase==='cupid'){ G.phase='night'; }
   if(G.phase==='night') G.nightNo=1;
+  // playerTurnOrder: ลำดับที่แต่ละคนกด "เปิดดูบทบาท" จริง (No Moderator Mode) — สำรองเป็นลำดับที่นั่ง/index ปกติถ้าข้อมูลไม่ครบ (เช่นเกมเก่าก่อนอัปเดตนี้)
+  G.playerTurnOrder=(S._revealOrder&&S._revealOrder.length===S.players.length)?S._revealOrder.slice():S.players.map((p,i)=>i);
   S.players.forEach((p,i)=>{ if(p.role==='cultleader') G.cult.push(i); });
   if(hasRole('drunk')){
     const pool=S.players.map(p=>p.role).filter(r=>!['drunk','doppelganger','moderator','vampire','cultleader','serialkiller','beggar'].includes(r));
@@ -2427,6 +2484,453 @@ function toolDone(key){
 function pendingNightTools(){
   return nightTools().map(t=>t[0]).filter(k=>!toolDone(k) && !(G.skipped&&G.skipped.includes(k)));
 }
+
+/* =================== PASS-THE-PHONE (ไม่มีผู้ดำเนินรายการ) =================== */
+let SUPPRESS_SFX=false;
+function ppAlphaFirstNight(){ return aliveHas('alphawolf')&&!G.alphaUsed&&G.nightNo===1; }
+function ppResetIfNewNight(){
+  if(G.ppNightNo!==G.nightNo){
+    // เริ่มคืนใหม่ -> ไปที่ผู้เล่นคนแรกในคิวทันที ไม่มีหน้าจอ "Night Falls" คั่นก่อนหน้าจอ Gate ของผู้เล่นคนแรก
+    G.ppNightNo=G.nightNo; G.ppQueueIdx=0; G.ppStage='gate';
+    G.wolfVotes={}; G.wolfInbox=[]; G.ppSelTarget=null;
+  }
+}
+function ppQueueOrder(){
+  // ลำดับผู้เล่นใน No Moderator Mode ต้องตามลำดับที่เปิดดูบทบาทจริง (G.playerTurnOrder) ไม่ใช่ลำดับ index/ที่นั่งเฉยๆ
+  const order=(G.playerTurnOrder&&G.playerTurnOrder.length===S.players.length)?G.playerTurnOrder:S.players.map((p,i)=>i);
+  return order.filter(i=>G.alive[i]);
+}
+function ppWolfVoterIdxs(){
+  return S.players.map((p,i)=>i).filter(i=>{
+    if(!G.alive[i]) return false;
+    const r=effRole(i);
+    if(r==='alphawolf'&&ppAlphaFirstNight()) return false;
+    return ['werewolf','alphawolf','shapeshifter'].includes(r);
+  });
+}
+function ppPlayerAction(i){
+  const r=effRole(i);
+  if(r==='cupid'&&G.nightNo===1&&(!G.loverPairs||G.loverPairs.length===0)) return {type:'cupid'};
+  if(r==='alphawolf'&&ppAlphaFirstNight()&&G.alphaConvert==null) return {type:'tool',tool:'alphaConvert'};
+  if(['werewolf','alphawolf','shapeshifter'].includes(r)&&G.wolfVotes[i]===undefined) return {type:'wolfvote'};
+  if(r==='shapeshifter'&&G.shapeTarget==null) return {type:'tool',tool:'shapeShift'};
+  if(r==='sorcerer'&&!G.sorcUsed) return {type:'sorcerer'};
+  if(r==='seer'&&!G.seerUsed) return {type:'tool',tool:'seerCheck'};
+  if(r==='bodyguard'&&G.protectThis==null) return {type:'tool',tool:'protect'};
+  if(r==='spellcaster'&&G.silenced==null) return {type:'tool',tool:'silence'};
+  if(r==='serialkiller'&&G.skTarget==null) return {type:'tool',tool:'skKill'};
+  if(r==='cultleader'&&G.cultRecruit==null) return {type:'tool',tool:'cultRecruit'};
+  if(r==='vampire'&&G.vampireBite==null) return {type:'tool',tool:'vampireBite'};
+  if(r==='lonewolf'&&G.loneWolfTarget==null) return {type:'tool',tool:'lonewolfKill'};
+  if(r==='doppelganger'&&G.nightNo===1&&!G.doppleAcquired&&G.doppleTarget==null) return {type:'tool',tool:'dopplePick'};
+  return {type:'none'};
+}
+function ppTallyWolfVotes(){
+  const tally={};
+  Object.values(G.wolfVotes).forEach(t=>{ tally[t]=(tally[t]||0)+1; });
+  const groups={};
+  Object.entries(tally).forEach(([idx,cnt])=>{ (groups[cnt]=groups[cnt]||[]).push(Number(idx)); });
+  const counts=Object.keys(groups).map(Number).sort((a,b)=>b-a);
+  const ordered=[];
+  counts.forEach(c=>{ const g=groups[c]; shuffle(g); ordered.push(...g); });
+  const need=Math.max(0,G.wolfKillCount-G.wolfTargets.length);
+  for(let k=0;k<need&&k<ordered.length;k++){ if(!G.wolfTargets.includes(ordered[k])) G.wolfTargets.push(ordered[k]); }
+  const names=G.wolfTargets.map(t=>S.players[t].name).join(', ');
+  G.wolfInbox.push({sys:true,text:T('wolfInboxResult',{name:names||'-'})});
+}
+function ppTargetList(excludeWolfTeam){
+  const order=(G.playerTurnOrder&&G.playerTurnOrder.length===S.players.length)?G.playerTurnOrder:S.players.map((p,i)=>i);
+  return order.filter(i=>G.alive[i]).filter(i=>!excludeWolfTeam||teamOf(i)!=='wolf');
+}
+function ppBadgeFor(t,tool){
+  // สโคปตาม tool ปัจจุบันของผู้เล่นคนนี้เท่านั้น — ห้ามเห็นความจำ/ร่องรอยของบทบาทอื่น (Private Memory)
+  let b='';
+  if(tool==='protect'){ if(G.protectThis===t) b+='🛡️'; }
+  else if(tool==='silence'){ if(G.silenced===t) b+='🔇'; }
+  else if(tool==='seerCheck'){ if(G.seerChecked&&G.seerChecked.includes(t)) b+='🔮'; }
+  else if(tool==='sorcCheck'){ if(G.sorcChecked&&G.sorcChecked.includes(t)) b+='🧙'; }
+  else if(tool==='cultRecruit'){ if(G.cult&&G.cult.includes(t)) b+='👁️'; if(G.cultRecruit===t) b+='✨'; }
+  else if(tool==='vampireBite'){ if(G.vampireBite===t) b+='🩸'; }
+  else if(tool==='shapeShift'){ if(G.shapeTarget===t) b+='🎭'; }
+  else if(tool==='dopplePick'){ if(G.doppleTarget===t&&!G.doppleAcquired) b+='🔖'; }
+  else if(tool==='wolfvote'){ if(G.wolfTargets&&G.wolfTargets.includes(t)) b+='🎯'; }
+  else if(tool==='skKill'){ if(G.skTarget===t) b+='🔪'; }
+  else if(tool==='lonewolfKill'){ if(G.loneWolfTarget===t) b+='🎯'; }
+  return b;
+}
+function ppContinueOrPass(){
+  const i=ppQueueOrder()[G.ppQueueIdx];
+  if(i!=null && ppPlayerAction(i).type!=='none'){
+    G.ppSelTarget=null; G.check=null; G.ppStage='action'; render();
+  } else {
+    G.ppStage='pass'; render(); playSound('tick');
+    setTimeout(()=>{ ppAdvance(); },800);
+  }
+}
+function ppFlashAndPass(){
+  G.ppStage='submitted';
+  haptic('light'); render();
+  setTimeout(()=>{ ppContinueOrPass(); },500);
+}
+function ppShowResultThenPass(){
+  G.ppStage='result';
+  haptic('light'); render();
+  setTimeout(()=>{ G.ppStage='submitted'; render(); },1400);
+  setTimeout(()=>{ ppContinueOrPass(); },1900);
+}
+/* ปรับใช้ logic เดียวกับ nightTap() ทุกประการ แต่ไม่ผ่าน activeNightTool() (ซึ่งบังคับลำดับ role-priority
+   แบบโหมดมีผู้ดำเนินรายการ) เพราะโหมดนี้ประมวลผลตามลำดับผู้เล่น (seat order) ไม่ใช่ลำดับบทบาท
+   คืนค่า true = การกระทำสำเร็จ (state เปลี่ยน), false = ถูกปฏิเสธ (target ไม่ถูกต้อง ให้เลือกใหม่) */
+function ppApplyTool(tool,i){
+  G.check=null;
+  const b=actBegin();
+  let ok=true;
+  if(tool==='seerCheck'){
+    if(i===actingSeerIdx()){ G.check={info:true,label:T('chkSeerSelf')}; ok=false; }
+    else if(G.seerUsed){ G.check={info:true,label:T('chkSeerUsedNow')}; ok=false; }
+    else if(G.seerChecked.includes(i)&&!seerCanRepeat()){ G.check={info:true,label:T('chkSeerCheckedAlready',{name:esc(S.players[i].name)})}; ok=false; }
+    else{
+      let ci=i;
+      if(effRole(i)==='shapeshifter'&&G.shapeTarget!=null) ci=G.shapeTarget;
+      const green=seerSeesWolf(ci);
+      G.check={name:S.players[i].name,green,label:green?T('chkSeerWolf'):T('chkSeerNotWolf')};
+      if(!G.seerChecked.includes(i)) G.seerChecked.push(i);
+      G.seerUsed=true;
+      playSound('seerCheck');
+      logEvent('actSeerChecked',{target:S.players[i].name});
+    }
+  } else if(tool==='sorcCheck'){
+    if(teamOf(i)==='wolf'){ G.check={info:true,label:T('chkSorcWolfOnly')}; ok=false; }
+    else if(G.sorcUsed){ G.check={info:true,label:T('chkSorcUsedNow')}; ok=false; }
+    else if(G.sorcChecked.includes(i)&&!sorcCanRepeat()){ G.check={info:true,label:T('chkSorcCheckedAlready',{name:esc(S.players[i].name)})}; ok=false; }
+    else{
+      const green=effRole(i)==='seer';
+      G.check={name:S.players[i].name,green,label:green?T('chkSorcIsSeer'):T('chkSorcNotSeer')};
+      if(!G.sorcChecked.includes(i)) G.sorcChecked.push(i);
+      G.sorcUsed=true;
+      playSound('sorcCheck');
+      logEvent('actSorcChecked',{target:S.players[i].name});
+    }
+  } else if(tool==='protect'){
+    if(i===G.protectPrev){ ok=false; }
+    else{ G.protectThis=i; logEvent('actProtected',{actor:roleLabel(roleById('bodyguard')),target:S.players[i].name}); }
+  } else if(tool==='silence'){
+    if(i===G.silencedPrev){ G.check={info:true,label:T('chkSilenceRepeat')}; ok=false; }
+    else{ G.silenced=i; playSound('spellcaster'); logEvent('actSilenced',{actor:roleLabel(roleById('spellcaster')),target:S.players[i].name}); }
+  } else if(tool==='alphaConvert'){
+    if(teamOf(i)==='wolf'){ G.check={info:true,label:T('chkAlphaWolfOnly')}; ok=false; }
+    else{ G.alphaConvert=i; logEvent('actConverted',{actor:roleLabel(roleById('alphawolf')),target:S.players[i].name}); }
+  } else if(tool==='skKill'){
+    if(effRole(i)==='serialkiller'){ G.check={info:true,label:T('chkSkSelfKill')}; ok=false; }
+    else{ G.skTarget=i; logEvent('actKilled',{actor:roleLabel(roleById('serialkiller')),target:S.players[i].name,isSK:true}); playSound('skSelect'); }
+  } else if(tool==='lonewolfKill'){
+    const lwIdx=S.players.findIndex((p,j)=>G.alive[j]&&p.role==='lonewolf');
+    if(i===lwIdx){ G.check={info:true,label:T('chkLoneWolfSelf')}; ok=false; }
+    else{ G.loneWolfTarget=i; logEvent('actKilled',{actor:roleLabel(roleById('lonewolf')),target:S.players[i].name}); }
+  } else if(tool==='cultRecruit'){
+    if(G.cult.includes(i)){ G.check={info:true,label:T('chkAlreadyInCult')}; ok=false; }
+    else{ G.cultRecruit=i; logEvent('actRecruited',{actor:roleLabel(roleById('cultleader')),target:S.players[i].name}); playSound('cultSelect'); }
+  } else if(tool==='vampireBite'){
+    const vIdx=S.players.findIndex((p,j)=>G.alive[j]&&effRole(j)==='vampire');
+    if(i===vIdx){ G.check={info:true,label:T('chkAlreadyVampire')}; ok=false; }
+    else{ G.vampireBite=i; logEvent('actBit',{actor:roleLabel(roleById('vampire')),target:S.players[i].name}); playSound('vampireSelect'); }
+  } else if(tool==='shapeShift'){
+    if(effRole(i)==='shapeshifter'){ G.check={info:true,label:T('chkShapeshiftSelf')}; ok=false; }
+    else{ G.shapeTarget=i; logEvent('actShapeshifted',{actor:roleLabel(roleById('shapeshifter')),target:S.players[i].name}); playSound('transform'); }
+  } else if(tool==='dopplePick'){
+    if(roleOf(i)==='doppelganger'){ G.check={info:true,label:T('chkDoppleSelf')}; ok=false; }
+    else{ G.doppleTarget=i; logEvent('actMarked',{actor:roleLabel(roleById('doppelganger')),target:S.players[i].name,role:roleLabel(roleById(effRole(i)))}); }
+  }
+  actCommit(b);
+  return ok;
+}
+function ppHandlePostApply(ok){
+  if(!ok){ render(); return; }
+  if(G.check&&!G.check.info){ ppShowResultThenPass(); return; }
+  ppFlashAndPass();
+}
+function ppSubmitWolfVote(target){
+  const i=ppQueueOrder()[G.ppQueueIdx];
+  G.wolfVotes[i]=target;
+  G.wolfInbox.push({name:S.players[i].name,text:T('wolfVoteMsg',{name:S.players[target].name})});
+  if(Object.keys(G.wolfVotes).length>=ppWolfVoterIdxs().length) ppTallyWolfVotes();
+  ppFlashAndPass();
+}
+function ppSubmitSorcerer(target){
+  const i=ppQueueOrder()[G.ppQueueIdx];
+  const ok=ppApplyTool('sorcCheck',target);
+  if(!ok){ render(); return; }
+  if(G.check&&!G.check.info){
+    G.wolfInbox.push({name:S.players[i].name,text:G.check.green?T('wolfSorcYes',{name:S.players[target].name}):T('wolfSorcNo',{name:S.players[target].name})});
+    ppShowSorcResultThenMsg();
+    return;
+  }
+  ppHandlePostApply(ok);
+}
+function ppShowSorcResultThenMsg(){
+  // แสดงผลตรวจ (ใช่/ไม่ใช่เทพพยากรณ์) ค้างไว้บนหน้าเดียวกับช่องพิมพ์ข้อความเลย ไม่ต้องสลับหน้าแยก
+  G.ppSorcMsgDraft='';
+  G.ppStage='sorcMsg';
+  haptic('light'); render();
+}
+function ppSendSorcMsg(){
+  const i=ppQueueOrder()[G.ppQueueIdx];
+  const txt=(G.ppSorcMsgDraft||'').trim().slice(0,120);
+  if(txt) G.wolfInbox.push({name:S.players[i].name,text:txt});
+  G.ppSorcMsgDraft='';
+  ppFlashAndPass();
+}
+function ppSubmitTool(tool,target){
+  const ok=ppApplyTool(tool,target);
+  ppHandlePostApply(ok);
+}
+function ppPlayCupidFx(a,b,cb){
+  // เอฟเฟกต์เดียวกับ confirmCupid() ของโหมดมีผู้ดำเนินรายการ (หัวใจ/ริบบิ้น) แต่ผูกกับปุ่ม data-ppcupid ของ Pass-the-Phone แทน data-gp
+  // ทำซ้ำแยกต่างหาก ไม่เรียก confirmCupid() ตรงๆ เพราะฟังก์ชันนั้นผูกกับ resumeAfterCupid()/enterNight() ของโหมดมีผู้ดำเนินรายการ
+  const elA=document.querySelector('[data-ppcupid="'+a+'"]');
+  const elB=document.querySelector('[data-ppcupid="'+b+'"]');
+  const rA=elA?elA.getBoundingClientRect():null;
+  const rB=elB?elB.getBoundingClientRect():null;
+  const ov=document.createElement('div');
+  ov.className='cupidFx';
+  const ax=rA?(rA.left+rA.width/2):window.innerWidth/2-40, ay=rA?(rA.top+rA.height/2):window.innerHeight/2;
+  const bx=rB?(rB.left+rB.width/2):window.innerWidth/2+40, by=rB?(rB.top+rB.height/2):window.innerHeight/2;
+  const mx=(ax+bx)/2, my=(ay+by)/2;
+  const dist=Math.hypot(bx-ax,by-ay);
+  const ang=Math.atan2(by-ay,bx-ax)*180/Math.PI;
+  ov.innerHTML='<div class="cfGlow" style="left:'+ax+'px;top:'+ay+'px"></div>'+
+    '<div class="cfGlow" style="left:'+bx+'px;top:'+by+'px"></div>'+
+    '<div class="cfRibbonWrap" style="left:'+ax+'px;top:'+ay+'px;width:'+dist+'px;transform:rotate('+ang+'deg)"><div class="cfRibbon"></div></div>'+
+    '<div class="cfHeart" style="left:'+mx+'px;top:'+my+'px">💗</div>'+
+    '<div class="cfSpark" style="left:'+(mx-14)+'px;top:'+my+'px"></div>'+
+    '<div class="cfSpark" style="left:'+(mx+10)+'px;top:'+(my+6)+'px;animation-delay:.12s"></div>';
+  document.body.appendChild(ov);
+  setTimeout(()=>{ ov.remove(); cb(); },700);
+}
+function ppSubmitCupid(){
+  const i=ppQueueOrder()[G.ppQueueIdx];
+  if(G.ppCupidSel&&G.ppCupidSel.length===2&&!G._ppCupidAnimBusy){
+    const [a,b]=G.ppCupidSel;
+    G._ppCupidAnimBusy=true;
+    playSound('cupid');
+    ppPlayCupidFx(a,b,()=>{
+      G._ppCupidAnimBusy=false;
+      const _newPair=[a,b];
+      _newPair.gen=cupidGen();
+      G.loverPairs.push(_newPair);
+      if(!G.lovers) G.lovers=_newPair;
+      logEvent('actPaired',{actor:S.players[i].name,a:S.players[a].name,b:S.players[b].name});
+      G.ppCupidSel=[];
+      ppFlashAndPass();
+    });
+  }
+}
+function ppAdvance(){
+  G.ppQueueIdx++; G.ppSelTarget=null; G.ppCupidSel=[];
+  const order=ppQueueOrder();
+  if(G.ppQueueIdx>=order.length){
+    nightTools().forEach(t=>{ if(t[2]&&!toolDone(t[0])&&!(G.skipped&&G.skipped.includes(t[0]))){ if(!G.skipped)G.skipped=[]; G.skipped.push(t[0]); } });
+    G.ppStage='morning';
+    render();
+    setTimeout(()=>{ resolveNight(); },900);
+    return;
+  }
+  G.ppStage='gate';
+  render();
+}
+function ppInboxHtml(){
+  if(!G.wolfInbox.length) return '';
+  return `<div class="card" style="margin-top:10px"><p class="section-label">${T('wolfInboxTitle')}</p>${G.wolfInbox.map(m=>`<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px">${m.sys?`<i>${m.text}</i>`:`<b>${esc(m.name)}</b><br>${esc(m.text)}`}</div>`).join('')}</div>`;
+}
+function ppTargetPickerHtml(targets,tool){
+  return `<div class="ggrid">${targets.map(t=>{
+    const badge=ppBadgeFor(t,tool);
+    return `<button class="tchip ${G.ppSelTarget===t?'on':''}" data-pptarget="${t}">${esc(S.players[t].name)}${badge?' '+badge:''}</button>`;
+  }).join('')}</div>`;
+}
+function viewPassPhoneCupidGate(){
+  const idx=S.players.findIndex(p=>p.role==='cupid');
+  const name=idx>=0?S.players[idx].name:'';
+  return `<div class="card" style="text-align:center;padding:24px 16px">
+    <p class="eyebrow">${T('ppNextPlayer')}</p>
+    <h1 class="title" style="font-size:26px">${esc(name)}</h1>
+    <p class="footnote" style="margin-top:8px">${T('ppOnlyName',{name:esc(name)})}</p>
+    <button class="btn block" id="ppCupidGateBtn" style="margin-top:18px">${T('ppTapContinue')}</button>
+  </div>`;
+}
+function viewPassPhoneNight(){
+  ppResetIfNewNight();
+  if(!G.ppCupidSel) G.ppCupidSel=[];
+  const order=ppQueueOrder();
+  if(!order.length) return `<div class="banner">-</div>`;
+  if(G.ppStage==='intro'){
+    return `<div class="card" style="text-align:center;padding:28px 16px">
+      <div style="font-size:40px;margin-bottom:10px">🌙</div>
+      <h1 class="title" style="font-size:22px">${T('ppNightFalls')}</h1>
+      <button class="btn block" id="ppIntroBtn" style="margin-top:18px">${T('ppTapContinue')}</button>
+    </div>`;
+  }
+  if(G.ppStage==='morning'){
+    return `<div class="card" style="text-align:center;padding:28px 16px">
+      <div style="font-size:40px;margin-bottom:10px">🌅</div>
+      <h1 class="title" style="font-size:22px">${T('ppMorning')}</h1>
+    </div>`;
+  }
+  const i=order[Math.min(G.ppQueueIdx,order.length-1)];
+  const p=S.players[i];
+  if(G.ppStage==='gate'){
+    return `<div class="card" style="text-align:center;padding:24px 16px">
+      <p class="eyebrow">${T('ppNextPlayer')}</p>
+      <h1 class="title" style="font-size:26px">${esc(p.name)}</h1>
+      <p class="footnote" style="margin-top:8px">${T('ppOnlyName',{name:esc(p.name)})}</p>
+      <button class="btn block" id="ppGateBtn" style="margin-top:18px">${T('ppTapContinue')}</button>
+    </div>`;
+  }
+  if(G.ppStage==='result'){
+    const c=G.check||{label:''};
+    const cls=c.info?'i':(c.green?'g':'r');
+    return `<div class="card" style="text-align:center;padding:30px 16px">
+      <div class="checkbar ${cls}" style="display:inline-block">${c.name?esc(c.name)+' — ':''}${c.label}</div>
+    </div>`;
+  }
+  if(G.ppStage==='sorcMsg'){
+    const c=G.check||{label:''};
+    const cls=c.info?'i':(c.green?'g':'r');
+    return `<div class="card" style="text-align:center;padding:24px 16px">
+      <div class="checkbar ${cls}" style="display:inline-block">${c.name?esc(c.name)+' — ':''}${c.label}</div>
+      <p class="gins" style="margin-top:14px">${T('ppSorcMsgPrompt')}</p>
+      <div class="row" style="margin-top:10px"><input type="text" id="ppSorcMsgInput" maxlength="120" placeholder="${T('ppSorcMsgPlaceholder')}" value="${esc(G.ppSorcMsgDraft||'')}"></div>
+      <div class="bottombar"><button class="btn ghost" id="ppSorcMsgSkip">${T('skipBtn')}</button><button class="btn block" id="ppSorcMsgSend">${T('ppSorcMsgSendBtn')}</button></div>
+    </div>`;
+  }
+  if(G.ppStage==='submitted'){
+    return `<div class="card" style="text-align:center;padding:36px 16px">
+      <div style="font-size:36px">✅</div>
+      <p class="title" style="font-size:20px;margin-top:8px">${T('ppSubmitted')}</p>
+    </div>`;
+  }
+  if(G.ppStage==='pass'){
+    return `<div class="card" style="text-align:center;padding:36px 16px">
+      <div style="font-size:32px;letter-spacing:6px">➡️➡️➡️</div>
+      <p class="title" style="font-size:18px;margin-top:10px">${T('ppPassPhone')}</p>
+    </div>`;
+  }
+  const act=ppPlayerAction(i);
+  const r=roleById(effRole(i));
+  const roleCard=`<div class="card" style="text-align:center;padding:20px 16px">
+    <div style="font-size:44px">${iconHTML(r,54)}</div>
+    <h1 class="title" style="font-size:22px;margin-top:6px">${roleLabel(r)}</h1>
+    <p class="footnote" style="margin-top:6px">${esc(r.desc||'')}</p>
+  </div>`;
+  const errBanner=(G.check&&G.check.info)?`<div class="checkbar i">${G.check.label}</div>`:'';
+  let actionUI='';
+  if(act.type==='none'){
+    actionUI=`<p class="gins">${T('ppNoActionTonight')}</p><div class="bottombar"><button class="btn block" id="ppNoneBtn">${T('ppPassBtn')}</button></div>`;
+  } else if(act.type==='cupid'){
+    const targets=ppTargetList(false).filter(t=>t!==i);
+    actionUI=`<p class="gins">${T('cupidInstruction')}</p>
+      <div class="ggrid">${targets.map(t=>`<button class="tchip ${G.ppCupidSel.includes(t)?'on':''}" data-ppcupid="${t}">${esc(S.players[t].name)}</button>`).join('')}</div>
+      <div class="bottombar"><button class="btn ghost" id="ppCupidSkip">${T('skipBtn')}</button><button class="btn block" id="ppCupidConfirm" ${G.ppCupidSel.length===2?'':'disabled'}>${T('confirmLoversBtn')}</button></div>`;
+  } else if(act.type==='wolfvote'){
+    const targets=ppTargetList(true);
+    actionUI=`<p class="gins">${T('ppPickTarget')}</p>${errBanner}${ppTargetPickerHtml(targets,'wolfvote')}${ppInboxHtml()}
+      <div class="bottombar"><button class="btn block" id="ppConfirmBtn" ${G.ppSelTarget==null?'disabled':''}>${T('ppConfirmBtn')}</button></div>`;
+  } else if(act.type==='sorcerer'){
+    const targets=ppTargetList(true).filter(t=>t!==i);
+    actionUI=`<p class="gins">${T('ppPickTarget')}</p>${errBanner}${ppTargetPickerHtml(targets,'sorcCheck')}${ppInboxHtml()}
+      <div class="bottombar"><button class="btn block" id="ppConfirmBtn" ${G.ppSelTarget==null?'disabled':''}>${T('ppConfirmBtn')}</button></div>`;
+  } else if(act.type==='tool'){
+    const targets=ppTargetList(false);
+    actionUI=`<p class="gins">${T('ppPickTarget')}</p>${errBanner}${ppTargetPickerHtml(targets,act.tool)}
+      <div class="bottombar"><button class="btn block" id="ppConfirmBtn" ${G.ppSelTarget==null?'disabled':''}>${T('ppConfirmBtn')}</button></div>`;
+  }
+  return roleCard+actionUI;
+}
+function ppSafeCell(i){
+  // การ์ดผู้เล่นแบบ "สาธารณะ" สำหรับ Day/Hunter ใน No-Moderator Mode — ไม่แสดงไอคอน/บทบาทของผู้เล่นคนอื่นเด็ดขาด
+  // (คนละอย่างกับ gcell() ซึ่งเป็นมุมมองผู้ดำเนินรายการที่เห็นทุกอย่าง) เปิดเผยบทบาทเฉพาะผู้ที่ตายแล้ว และเมื่อ S.revealOnDeath เปิดอยู่เท่านั้น
+  const p=S.players[i], dead=!G.alive[i];
+  const showRole=dead&&S.revealOnDeath;
+  const r=showRole?roleById(effRole(i)):null;
+  let b='';
+  if(dead) b+=(showRole&&effRole(i)==='beggar'?'🏆':'💀');
+  if(G.silenced===i&&G.alive[i]) b+='🔇';
+  if(G.phase==='day'&&G.dayVote===i) b+='🗳️';
+  let cls='gcell';
+  if(dead) cls+=' dead';
+  if(G.phase==='day'&&G.dayVote===i) cls+=' sel';
+  return `<div class="${cls}" data-gp="${i}">
+    ${showRole?iconHTML(r,30):'<div style="width:30px"></div>'}
+    <div style="flex:1;min-width:0"><div class="gnm">${esc(p.name)}</div>${showRole?`<div class="grole">${roleLabel(r)}</div>`:''}</div>
+    <span class="gbadge">${b}</span></div>`;
+}
+const ppSafeGrid=()=>{ const order=(G.playerTurnOrder&&G.playerTurnOrder.length===S.players.length)?G.playerTurnOrder:S.players.map((p,i)=>i); return `<div class="ggrid">${order.map(i=>teamOf(i)==='mod'?'':ppSafeCell(i)).join('')}</div>`; };
+function viewPassPhoneDay(){
+  const tm=S.timerMin>0?`<div class="daytimer ${G.timerExpired?'up':''}" id="daytimer">${G.timerExpired?T('timerExpired'):fmtTimer()}</div>`:'';
+  const silentAlive=G.silenced!=null&&G.alive[G.silenced];
+  const notes=[];
+  if(silentAlive) notes.push(T('silencedAliveNote',{name:'<b>'+esc(S.players[G.silenced].name)+'</b>'}));
+  if(aliveHas('mayor')) notes.push(T('mayorVoteNote'));
+  if(G.ghostVoteDay===G.dayNo) notes.push(T('ghostVoteNote'));
+  const noteExtra=notes.length?`<div class="bnotes">${notes.map(n=>`<div class="bnote">${n}</div>`).join('')}</div>`:'';
+  // หมายเหตุ: ไม่มี morningScript/บทบรรยายผู้ดำเนินรายการในโหมดนี้ — Day Log มีแค่ Deaths/Role reveal/Events
+  const acts=[];
+  if(silentAlive) acts.push(`<button class="mini-btn danger" id="gExecSil">${T('executeSilencedBtn')}</button>`);
+  if(aliveHas('pacifist')) acts.push(`<button class="mini-btn ${G.pacifistVeto?'on-pac':'pac'}" id="gPacifist">${T('pacifistBtn')}${G.pacifistVeto?' ✓':''}</button>`);
+  const actRow=acts.length?`<div class="day-actions">${acts.join('')}</div>`:'';
+  const dayBtnLabel=G.pacifistVeto?T('nightBtnPacifist'):(G.dayVote!=null?T('nightBtnExecute',{name:esc(S.players[G.dayVote].name)}):T('nightBtnNoVote'));
+  return `${bannerHTML(G.banner, noteExtra)}${tm}${actRow}<p class="gins">${T('dayInstruction')}</p>${ppSafeGrid()}
+    <div class="bottombar"><button class="btn block" id="gDay">${dayBtnLabel}</button></div>`;
+}
+function viewPassPhoneHunter(){
+  const h=G.hunterQueue[0];
+  if(h==null){ G.phase=G.afterHunter==='night'?'night':'day'; return viewGame(); }
+  return `<div class="banner">${T('hunterDied',{name:'<b>'+esc(S.players[h].name)+'</b>'})}</div>${ppSafeGrid()}
+    <div class="bottombar"><button class="btn ghost block" id="gHunterSkip">${T('hunterSkipBtn')}</button></div>`;
+}
+function bindPassPhone(){
+  const $=id=>document.getElementById(id);
+  const ib=$('ppIntroBtn'); if(ib) ib.onclick=()=>{ G.ppStage='gate'; render(); };
+  const gb=$('ppGateBtn'); if(gb) gb.onclick=()=>{ G.ppStage='action'; G.ppSelTarget=null; G.check=null; render(); };
+  const cg=$('ppCupidGateBtn'); if(cg) cg.onclick=()=>{ G._ppCupidOk=true; render(); };
+  const nb=$('ppNoneBtn'); if(nb) nb.onclick=()=>{ ppFlashAndPass(); };
+  document.querySelectorAll('[data-pptarget]').forEach(el=>{
+    el.onclick=()=>{ G.ppSelTarget=Number(el.dataset.pptarget); G.check=null; haptic('light'); render(); };
+  });
+  document.querySelectorAll('[data-ppcupid]').forEach(el=>{
+    el.onclick=()=>{
+      const t=Number(el.dataset.ppcupid);
+      if(!G.ppCupidSel) G.ppCupidSel=[];
+      const idx=G.ppCupidSel.indexOf(t);
+      if(idx>=0) G.ppCupidSel.splice(idx,1);
+      else if(G.ppCupidSel.length<2) G.ppCupidSel.push(t);
+      haptic('light'); render();
+    };
+  });
+  const ccs=$('ppCupidSkip'); if(ccs) ccs.onclick=()=>{ G.ppCupidSel=[]; ppFlashAndPass(); };
+  const ccc=$('ppCupidConfirm'); if(ccc) ccc.onclick=()=>{ if(G.ppCupidSel.length===2&&!G._ppCupidAnimBusy) ppSubmitCupid(); };
+  const cb=$('ppConfirmBtn'); if(cb) cb.onclick=()=>{
+    if(G.ppSelTarget==null) return;
+    const i=ppQueueOrder()[G.ppQueueIdx];
+    const act=ppPlayerAction(i);
+    if(act.type==='wolfvote'){ ppSubmitWolfVote(G.ppSelTarget); }
+    else if(act.type==='sorcerer'){ ppSubmitSorcerer(G.ppSelTarget); }
+    else if(act.type==='tool'){ ppSubmitTool(act.tool,G.ppSelTarget); }
+  };
+  const smi=$('ppSorcMsgInput'); if(smi) smi.oninput=()=>{ G.ppSorcMsgDraft=smi.value; };
+  const sms=$('ppSorcMsgSend'); if(sms) sms.onclick=()=>{ ppSendSorcMsg(); };
+  const smk=$('ppSorcMsgSkip'); if(smk) smk.onclick=()=>{ G.ppSorcMsgDraft=''; ppFlashAndPass(); };
+}
+function viewPPPopup(){
+  return `<div class="screen-pad" style="display:flex;align-items:center;min-height:70vh">
+    <div class="card" style="text-align:center;padding:26px 18px">
+      <div style="font-size:36px;margin-bottom:8px">📱</div>
+      <p style="white-space:pre-line;line-height:1.6">${T('ppPopupBody')}</p>
+      <button class="btn block" id="ppPopupOk" style="margin-top:16px">${T('ppPopupOk')}</button>
+    </div>
+  </div>`;
+}
+
 function phaseTitle(){
   if(G.phase==='cupid') return T('phaseCupid');
   if(G.phase==='night') return T('phaseNight',{n:G.nightNo});
@@ -2659,13 +3163,16 @@ function viewGame(){
     </div></div>`;
   let body='';
   if(G.phase==='cupid'){
+   if(S.noMod&&!G._ppCupidOk){ body=viewPassPhoneCupidGate(); } else {
     const _cGen=cupidGen(), _cIcon=cupidGenIcon(), _cCls=_cGen===2?' cupid-gen2':(_cGen>=3?' cupid-gen3':'');
     const miniRow=ACT.length?`<div class="mini-row"><button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ ${T('undoLabel')}(<b>${ACT.length}</b>)</button></div>`:'';
     const cupidScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptCupidWake')}</div></div>`:'';
     body=`<div class="cupid-phase${_cCls}"><p class="gins">${_cIcon} ${T('cupidInstruction')}</p>${cupidScript}${miniRow}${ggrid()}
       <div class="bottombar"><button class="btn ghost" id="gCupidSkip">${T('skipBtn')}</button>
       <button class="btn" id="gCupidOk" ${G.cupidPick.length===2?'':'disabled'}>${_cIcon} ${T('confirmLoversBtn')}</button></div></div>`;
+   }
   } else if(G.phase==='night'){
+   if(S.noMod){ body=viewPassPhoneNight(); } else {
     const tools=nightTools();
     const active=activeNightTool();
     G.tool=active||(tools.length?tools[tools.length-1][0]:'kill');
@@ -2710,7 +3217,9 @@ function viewGame(){
     body=`${bannerHTML(G.banner&&G.banner.type==='exec'?G.banner:null)}
       <div class="tools">${chips}</div>${stepBlock}<p class="gins">${help}</p>${ck}${miniRow}${activeIsDead?'':ggrid()}
       <div class="bottombar">${nightBtn}</div>`;
+   }
   } else if(G.phase==='day'){
+   if(S.noMod){ body=viewPassPhoneDay(); } else {
     const tm=S.timerMin>0?`<div class="daytimer ${G.timerExpired?'up':''}" id="daytimer">${G.timerExpired?T('timerExpired'):fmtTimer()}</div>`:'';
     const silentAlive=G.silenced!=null&&G.alive[G.silenced];
     // เตือนความจำ — รวมไว้ในกล่องสรุปด้านบน (ตัวอักษรเล็ก ไม่มีกรอบ)
@@ -2731,11 +3240,14 @@ function viewGame(){
     const dayBtnLabel=G.pacifistVeto?T('nightBtnPacifist'):(G.dayVote!=null?T('nightBtnExecute',{name:esc(S.players[G.dayVote].name)}):T('nightBtnNoVote'));
     body=`${morningScript}${bannerHTML(G.banner, noteExtra)}${tm}${actRow}<p class="gins">${T('dayInstruction')}</p>${ggrid()}
       <div class="bottombar"><button class="btn block" id="gDay">${dayBtnLabel}</button></div>`;
+   }
   } else if(G.phase==='hunter'){
+   if(S.noMod){ body=viewPassPhoneHunter(); } else {
     const h=G.hunterQueue[0];
     if(h==null){ G.phase=G.afterHunter==='night'?'night':'day'; return viewGame(); }
     body=`<div class="banner">${T('hunterDied',{name:'<b>'+esc(S.players[h].name)+'</b>'})}</div>${ggrid()}
       <div class="bottombar"><button class="btn ghost block" id="gHunterSkip">${T('hunterSkipBtn')}</button></div>`;
+   }
   } else if(G.phase==='over'){
     if(!G.vicShown){
       body=viewVictoryLogo();
@@ -2820,10 +3332,18 @@ function viewSetup(){
   <div class="card" id="tutModerator">
     <p class="section-label">${T('catMod')}</p>
     <div class="recmode">
-      <button class="tchip ${S.counts.moderator>0?'on':''}" id="modRandom">${T('modRandomBtn')}</button>
-      <button class="tchip ${!(S.counts.moderator>0)?'on':''}" id="modNotRandom">${T('modNotRandomBtn')}</button>
+      <button class="tchip ${!S.noMod?'on':''}" id="modHasMod">${T('modHasModBtn')}</button>
+      <button class="tchip ${S.noMod?'on':''}" id="modNoMod">${T('modNoModBtn')}</button>
     </div>
-    <p class="footnote" style="text-align:left;margin-top:8px">${S.counts.moderator>0?T('modRandomTooltip'):T('modNotRandomTooltip')}</p>
+    <p class="footnote" style="text-align:left;margin-top:8px">${S.noMod?T('modNoModTooltip'):T('modHasModTooltip')}</p>
+    ${!S.noMod?`
+    <div class="recmode" style="margin-top:10px">
+      <button class="tchip ${S.modSubMode==='random'?'on':''}" id="modRandom">${T('modRandomBtn')}</button>
+      <button class="tchip ${S.modSubMode==='choose'?'on':''}" id="modChooseBtn">${T('modChooseBtn')}</button>
+    </div>
+    <p class="footnote" style="text-align:left;margin-top:8px">${S.modSubMode==='choose'?T('modChooseTooltip'):T('modRandomTooltip')}</p>
+    ${S.modSubMode==='choose'?`<div class="ggrid" style="margin-top:8px">${S.players.map((p,i)=>`<button class="tchip ${S.modChosenIdx===i?'on':''}" data-modpick="${i}">${esc(p.name)}</button>`).join('')}</div>`:''}
+    `:''}
   </div>
 
   <div class="card" id="tutAutoRec">
@@ -3084,7 +3604,7 @@ function viewScript(){
   </div>`;
 }
 function viewMod(){
-  if(!S.modUnlocked){
+  if(!S.modUnlocked&&!S.noMod){
     return `
     <div class="modwarn card">
       <div class="ico">🤫</div>
@@ -3520,7 +4040,12 @@ function fadeTransition(cb,holdMs){
 function playPhaseTransition(kind, cb){
   cb(); // instant, no cinematic overlay -- per user request, day/night switch has zero animation now
 }
+function ppNightMuted(type){
+  // No-Moderator Mode ระหว่างกลางคืน: เงียบสนิททุกเสียง เหลือแค่ปุ่มกด (click) และเอฟเฟกต์กามเทพ (cupid) ที่ผู้ใช้ขอให้คงไว้เหมือนเดิม -- กันคนข้างๆได้ยินแล้วเดาข้อมูลลับออก
+  return !!(S.noMod && G && G.phase==='night' && type!=='click' && type!=='cupid');
+}
 function playSoundThen(type,cb){
+  if(ppNightMuted(type)){ cb(); return; }
   const isAmb=['night','morning','gameStart'].includes(type);
   if((isAmb?!S.soundAmbient:!S.soundFX)||!SFX[type]){ cb(); return; }
   if(!_wwaCtx||_wwaCtx.state==='closed'){ try{_wwaCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){ cb(); return; } }
@@ -3552,6 +4077,8 @@ function _loadSFX(key,cb){
   }catch(e){cb(null);}
 }
 function playSound(type){
+  if(SUPPRESS_SFX) return;
+  if(ppNightMuted(type)) return;
   const isAmb=['night','morning','gameStart'].includes(type);
   if(isAmb?!S.soundAmbient:!S.soundFX) return;
   if(!_wwaCtx||_wwaCtx.state==='closed')
@@ -3644,6 +4171,7 @@ function render(){
   else if(S.screen==='list') html=viewList();
   else if(S.screen==='reveal') html=viewReveal();
   else if(S.screen==='mod') html=viewMod();
+  else if(S.screen==='ppPopup') html=viewPPPopup();
   app.innerHTML=html;
   let ph='';
   if(S.screen==='mod'&&G){
@@ -3728,9 +4256,13 @@ function bind(){
     const afb=$('autofill'); if(afb) afb.onclick=autoFillVillagers;
     const ar=$('applyRec'); if(ar) ar.onclick=applyRecommendation;
     document.querySelectorAll('[data-recmode]').forEach(el=>el.onclick=()=>{S.recMode=el.dataset.recmode;render();});
-    const modR=$('modRandom'), modNR=$('modNotRandom');
-    if(modR) modR.onclick=()=>{haptic('light');playSound('addRole');S.counts.moderator=1;render();};
-    if(modNR) modNR.onclick=()=>{haptic('light');playSound('removeRole');S.counts.moderator=0;render();};
+    const modHM=$('modHasMod'), modNM=$('modNoMod');
+    if(modHM) modHM.onclick=()=>{haptic('light');playSound('addRole');S.noMod=false;if(S.modSubMode==='external')S.modSubMode='random';S.counts.moderator=1;render();};
+    if(modNM) modNM.onclick=()=>{haptic('light');playSound('removeRole');S.noMod=true;S.counts.moderator=0;render();};
+    const modR=$('modRandom'), modCB=$('modChooseBtn');
+    if(modR) modR.onclick=()=>{haptic('light');playSound('addRole');S.modSubMode='random';S.counts.moderator=1;S.modChosenIdx=null;render();};
+    if(modCB) modCB.onclick=()=>{haptic('light');playSound('addRole');S.modSubMode='choose';S.counts.moderator=1;render();};
+    document.querySelectorAll('[data-modpick]').forEach(el=>el.onclick=()=>{haptic('light');S.modChosenIdx=Number(el.dataset.modpick);render();});
     $('startBtn').onclick=()=>{
       const tot=totalRoles(),pc=S.players.length;
       if(tot!==pc||pc<3){playSound('error');haptic('error');return;}
@@ -3777,7 +4309,7 @@ function bind(){
       S.active=i; S.flipped=true; S.spinning=false; S.screen='reveal'; render();
     };
     const rx=$('rcCancel'); if(rx) rx.onclick=()=>{S.reviewTarget=null;render();};
-    const tm=$('toMod'); if(tm) tm.onclick=()=>{S.screen='mod';render();};
+    const tm=$('toMod'); if(tm) tm.onclick=()=>{ if(S.noMod){ if(!S.ppPopupShown){S.screen='ppPopup';render();return;} S.screen='mod'; S.modUnlocked=true; startRun(); if(G&&G.phase==='cupid'){G.phase='night';G.nightNo=1;} } else {S.screen='mod';render();} };
     $('backSetup').onclick=()=>{S.screen='setup';S.reviewTarget=null;render();};
   }
   else if(S.screen==='reveal'){
@@ -3798,6 +4330,9 @@ function bind(){
   else if(S.screen==='script'){
     const bb=$('scriptBack'); if(bb) bb.onclick=()=>{S.screen=S.scriptFrom||'mod';render();};
     const bb2=$('scriptBack2'); if(bb2) bb2.onclick=()=>{S.screen=S.scriptFrom||'mod';render();};
+  }
+  else if(S.screen==='ppPopup'){
+    const pok=$('ppPopupOk'); if(pok) pok.onclick=()=>{ S.ppPopupShown=true; S.screen='mod'; S.modUnlocked=true; startRun(); if(G&&G.phase==='cupid'){G.phase='night';G.nightNo=1;} };
   }
 }
 function bindGame(){
@@ -3837,6 +4372,7 @@ function bindGame(){
       render();
     };
   });
+  if(S.noMod) bindPassPhone();
 }
 
 // ── HAPTIC FEEDBACK ──────────────────────────────────────
