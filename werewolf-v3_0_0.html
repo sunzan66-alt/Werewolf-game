@@ -336,6 +336,13 @@
   .bottombar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px 16px calc(14px + env(safe-area-inset-bottom));
     background:linear-gradient(180deg,rgba(10,14,34,0),rgba(8,11,28,.94) 28%);display:flex;gap:10px;max-width:520px;margin:0 auto}
   .bottombar .btn{flex:1}
+  /* ===== No-Moderator silent night timer ring (2026-07-15) — เฉพาะ Confirm/Pass ใน Role Action Screen ===== */
+  .ppring{position:relative;width:88px;height:88px;flex:0 0 auto;margin:0 auto}
+  .ppring-svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+  .ppring-track{fill:none;stroke:rgba(255,255,255,.14);stroke-width:5}
+  .ppring-fill{fill:none;stroke:var(--gold);stroke-width:5;stroke-linecap:round}
+  .ppring-btn{position:absolute;inset:8px;border-radius:50%;overflow:hidden;display:flex}
+  .ppring-btn .btn{width:100%;height:100%;border-radius:50%;font-size:12px;line-height:1.2;padding:4px;margin:0}
   #verbadge{position:fixed;top:6px;left:10px;z-index:80;font-size:10px;letter-spacing:.08em;color:var(--muted);opacity:.5;pointer-events:none}
   /* ===== Main Menu (v35) ===== */
   .menu{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background:#0a0e1a}
@@ -589,7 +596,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.22.2</div>
+<div id="verbadge">v3.22.8</div>
 
 <script>
 const ROLES = [
@@ -1202,7 +1209,9 @@ th:{
   wolfSorcYes:'🟢 {name} คือเทพพยากรณ์ (Seer)', wolfSorcNo:'🔴 {name} ไม่ใช่เทพพยากรณ์ (Seer)',
   wolfInboxResult:'🌙 ผลโหวต: หมาป่าเลือกโจมตี {name}',
   ppPopupBody:'โหมดนี้จะปรับกติกาของตัวละครบางตัวโดยอัตโนมัติ\nเพื่อรองรับการเล่นโดยไม่มีผู้ดำเนินรายการ\nและใช้โทรศัพท์เพียงเครื่องเดียว', ppPopupOk:'ตกลง',
-  ppNoActionTonight:'คืนนี้ไม่มีการกระทำ'
+  ppNoActionTonight:'คืนนี้ไม่มีการกระทำ',
+  teamLoneWolf:'หมาป่าเดียวดาย', teamVampire:'ฝ่ายแวมไพร์', werewolfPlural:'หมาป่า',
+  ppTimerAbilityPrompt:'กรุณาเลือกเป้าหมายแล้วกดดำเนินการต่อ', ppTimerPassiveWait:'กรุณารอสักครู่...\nอีกไม่นานจะกดดำเนินการต่อได้'
 },
 en:{
   start:'Start Game', settings:'Settings', language:'Language', save:'Save', cancel:'Cancel', back:'Back',
@@ -1475,7 +1484,9 @@ en:{
   wolfSorcYes:'🟢 {name} is the Seer', wolfSorcNo:'🔴 {name} is not the Seer',
   wolfInboxResult:'🌙 Vote result: the wolves chose to attack {name}',
   ppPopupBody:'Some character rules are automatically adjusted\nto support one-phone gameplay\nwithout a moderator.', ppPopupOk:'OK',
-  ppNoActionTonight:'No action tonight'
+  ppNoActionTonight:'No action tonight',
+  teamLoneWolf:'Lone Wolf', teamVampire:'Vampire Team', werewolfPlural:'Werewolves',
+  ppTimerAbilityPrompt:'Please choose a target and continue.', ppTimerPassiveWait:'Please wait a moment...\nYou can continue shortly.'
 }
 };
 const SCRIPT_LINE = {
@@ -1540,7 +1551,9 @@ function canInc(id){
 function setCount(id,d){
   if(d>0 && !canInc(id)) return;
   const mx=(roleById(id)||{}).max||99;
-  S.counts[id]=Math.max(0,Math.min(mx,S.counts[id]+d));
+  let next=S.counts[id]+d;
+  if(id==='mason' && next===1) next=(d>0)?2:0;  // สมาชิกสมาคมห้ามค้างที่ 1 คน — ขั้นต่ำคือ 2 คนเสมอถ้าจะมี (ข้ามจาก 0 ไป 2 ตอนกด+ และจาก 2 ไป 0 ตอนกด-)
+  S.counts[id]=Math.max(0,Math.min(mx,next));
   if(id==='seer' && !(S.counts.seer>0)) S.counts.apprentice=0;
   render();
 }
@@ -1584,7 +1597,7 @@ function mysticBalanceTune(counts){
   // ดันสมดุลเข้า [-3,+3] โดย "ไม่แตะ villager เด็ดขาด" — สลับหมาป่า/บทบาทพลังกันเอง (remove 1 ↔ add 1, จำนวนคนคงเดิม)
   const cnt=id=>counts[id]||0;
   // บทบาทพลังที่ยอมให้เพิ่ม/ลดได้ ครอบหลายระดับสมดุลเพื่อปรับละเอียด (กันบทบาทบังคับ seer/bodyguard/mayor/prince ไว้)
-  const REMOVE=['toughguy','hunter','spellcaster','idiot','lycan','cursed','minion','sorcerer','werewolf'];
+  const REMOVE=['toughguy','spellcaster','idiot','lycan','cursed','minion','sorcerer','werewolf'];  // เอา hunter ออกจากรายการที่สลับได้ 2026-07-15 — ตอนนี้เป็นบทบาทบังคับ (n>=6) เหมือน seer/bodyguard/mayor ห้ามสลับทิ้ง
   const ADD=['toughguy','hunter','spellcaster','idiot','lycan','cursed','minion','sorcerer','werewolf','mason'];
   let guard=0;
   while(guard++<400){
@@ -1623,18 +1636,21 @@ function mysticSetup(n){
   if(wolfBudget>=3){ add('werewolf',2); add('lonewolf',1); used+=3; }
   else { add('werewolf',wolfBudget); used+=wolfBudget; }
   // Neutral killer เพิ่มทีละตัวตาม threshold เดิม (7/9/10) แต่สูงสุด ~1 ตัวต่อ 8 คน
-  const neutralPool=[['serialkiller',7],['vampire',9],['cultleader',10]];
+  const neutralPool=[['vampire',9],['serialkiller',7],['cultleader',10]];  // สลับลำดับ 2026-07-15 — เมื่อที่นั่งนักฆ่ากลางมีจำกัด (maxNeutral) ให้แวมไพร์มาก่อนฆาตกรโรคจิตเสมอ (threshold แต่ละตัวเหมือนเดิม แค่สลับ priority ตอนแย่งที่นั่ง)
   const maxNeutral=Math.max(1,Math.floor(n/8));
   let neutrals=0;
   for(const [id,thr] of neutralPool){ if(n>=thr && neutrals<maxNeutral && left()>1){ add(id); used++; neutrals++; } }
   // บทบาทบังคับ: ข้อมูล / ป้องกัน / ผู้นำ / จอมเวท / คิวปิด
   if(n>=5 && left()>0){ add('seer'); used++; }        // info
   if(n>=6 && left()>0){ add('bodyguard'); used++; }   // protection
+  if(n>=6 && left()>0){ add('hunter'); used++; }      // เพิ่มตามคำขอ 2026-07-15 — เลื่อนจาก filler มาเป็นบังคับ ปลดล็อกพร้อม Bodyguard
   if(n>=7 && left()>0){ add('mayor'); used++; }       // leadership
   if(n>=8 && left()>0){ add('cupid'); used++; }       // คิวปิด
+  if(n>=9 && left()>0){ add('beggar'); used++; }      // เพิ่มตามคำขอ 2026-07-15 — บทบาทกลาง (neutral) บังคับใหม่
   if(n>=10 && left()>0){ add('spellcaster'); used++; } // silence mechanic เพิ่มความสนุก
   // ที่นั่งที่เหลือ: เติมด้วย village special (ห้าม villager) ลำดับตาม priority — ห้ามเติมหมาป่าเพิ่ม (จำกัดไม่เกิน 2 ตัวเสมอในโหมดนี้)
-  const dupPool=['hunter','spellcaster','lycan','toughguy','idiot','bodyguard','cultleader','beggar','cursed','apprentice','pacifist','prince','ghost','drunk','doppelganger','sorcerer','wolfcub','minion','shapeshifter','deceased'];
+  // หมายเหตุ: hunter/beggar ถูกเลื่อนไปเป็นบทบาทบังคับด้านบนแล้ว จึงเอาออกจาก pool นี้ (UNIQUE cap เดิมจะกันซ้ำอยู่แล้ว แต่เอาออกให้ชัดเจนกว่า)
+  const dupPool=['spellcaster','lycan','toughguy','idiot','bodyguard','cultleader','cursed','apprentice','pacifist','prince','ghost','drunk','doppelganger','sorcerer','wolfcub','minion','shapeshifter','deceased'];
   let di=0, guard=0;
   while(left()>0 && guard++<300){
     if(left()>=2 && cnt('mason')===0 && n>=8){ add('mason',2); used+=2; continue; }   // คู่ Mason
@@ -1649,21 +1665,47 @@ function mysticSetup(n){
   delete counts.villager;                              // ไม่มีชาวบ้านเด็ดขาด
   return mysticBalanceTune(counts);
 }
+function advancedSetup(n){
+  // โหมดขั้นสูง (ปรับใหม่ตามคำขอ 2026-07-15): ลำดับปลดล็อกอิงตามผู้วิเศษ — ต่างกันแค่มีชาวบ้านเป็น fallback สุดท้าย
+  // (ผู้วิเศษไม่มีชาวบ้านเลย วนเติม flavor role ไม่รู้จบแทน) สูตรงบหมาป่าและนักฆ่ากลางยืมมาจาก mysticSetup()
+  const counts={}; const add=(id,k=1)=>{counts[id]=(counts[id]||0)+k;};
+  const cnt=id=>counts[id]||0;
+  const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+  let used=0; const left=()=>n-used;
+
+  // หมาป่า ~27% ของผู้เล่น (สูตรเดียวกับผู้วิเศษ) — แยกเป็นหมาป่า×2 + หมาป่าเดียวดาย×1 เมื่องบ≥3 และ n≥18 (ตามลำดับปลดล็อกที่กำหนด)
+  const wolfBudget=clamp(Math.round(n*0.27),1,Math.floor((n-1)/2));
+  if(wolfBudget>=3 && n>=18){ add('werewolf',2); add('lonewolf',1); used+=3; }
+  else { add('werewolf',wolfBudget); used+=wolfBudget; }
+
+  // ลำดับปลดล็อกแบบ threshold เดี่ยว เรียงตามที่ผู้ใช้กำหนดไว้ (ตารางจัดลำดับใหม่ 2026-07-15) — นักฆ่ากลาง 3 ตัวเป็นอิสระต่อกัน ไม่ใช่เลือกแค่ 1 แบบผู้วิเศษ
+  const THRESH=[
+    ['seer',5],['bodyguard',6],['hunter',7],['spellcaster',8],['sorcerer',9],['cupid',10],
+    ['lycan',11],['deceased',12],['cursed',13],['toughguy',15],['mayor',16],['beggar',17],
+    ['vampire',19],['wolfcub',20],['apprentice',21],['shapeshifter',22],['cultleader',23],
+    ['prince',24],['idiot',25],['pacifist',26],['serialkiller',27],['ghost',28],['minion',29],
+    ['drunk',30],['doppelganger',31],
+  ];
+  for(const [id,thr] of THRESH){ if(n>=thr && left()>0){ add(id); used++; } }
+  if(n>=14 && left()>1){ add('mason',2); used+=2; }   // คู่ Mason ตั้งเป้าไว้ที่ลำดับ 11 (n>=14) แต่ที่นั่งมักไม่พอจนกว่างบหมาป่าจะแยกเป็น Lone Wolf ที่ n=18 (ที่นั่งเหลือมากขึ้น) — ปรากฏจริงราว n=18 ขึ้นไป ไม่ใช่บั๊ก เป็นผลข้างเคียงจากสูตรงบหมาป่าแบบผู้วิเศษ
+
+  if(n-used>0) add('villager', n-used);  // ชาวบ้าน = fallback สุดท้าย (จุดต่างหลักจากผู้วิเศษ)
+  balanceTune(counts);   // ใช้ตัวเดียวกับมือใหม่/คลาสสิก (มีชาวบ้าน ไม่ใช่ mysticBalanceTune)
+  return counts;
+}
 function recommendSetup(n, mode){
   mode=mode||'beginner';
   if(mode==='mystic') return mysticSetup(n);
+  if(mode==='advanced') return advancedSetup(n);
   const counts={}; const add=(id,k=1)=>{counts[id]=(counts[id]||0)+k;};
   const wolfBudget=Math.max(1, Math.min(Math.floor((n-1)/2), Math.round(n/4)));
   let villageSpecials, wolfSpecials=[];
   if(mode==='beginner'){
     villageSpecials=[['seer',5],['bodyguard',6],['hunter',7]];
     wolfSpecials=[['sorcerer',10]];  // นางปีศาจมาก่อนหมาป่าตัวที่ 3 เสมอ
-  } else if(mode==='casual'){
-    villageSpecials=[['seer',5],['bodyguard',6],['hunter',7],['spellcaster',8],['cupid',10],['lycan',11],['mayor',12]];
+  } else { // casual (advanced ถูกแยกไป advancedSetup() แล้ว — ดูจุด dispatch ด้านบนของฟังก์ชันนี้)
+    villageSpecials=[['seer',5],['bodyguard',6],['hunter',7],['spellcaster',8],['cupid',10],['lycan',11]];  // เอา Mayor ออกตามคำขอ 2026-07-15 (ย้ายไปอยู่ใน advancedSetup แทน)
     wolfSpecials=[['sorcerer',9],['wolfcub',13]];
-  } else { // advanced — บทบาทเชิงกลยุทธ์ (Alpha/Cupid/Mayor/Prince/Mason/Apprentice) เลี่ยง Expert/Master
-    villageSpecials=[['seer',5],['bodyguard',6],['hunter',7],['mayor',8],['apprentice',9],['cupid',10],['prince',11]];
-    wolfSpecials=[['sorcerer',9],['shapeshifter',12],['minion',16]];
   }
   // ฝั่งหมาป่า: รวมบทบาทพิเศษ + หมาป่าธรรมดา ให้อยู่ใน "งบ" เดียว (ไม่นับซ้ำ)
   let wolfUsed=0;
@@ -1672,7 +1714,6 @@ function recommendSetup(n, mode){
   add('werewolf',plainWolves); wolfUsed+=plainWolves;
   let used=wolfUsed;
   for(const [id,thr] of villageSpecials){ if(n>=thr && used<n-1){ add(id); used++; } }
-  if(mode==='advanced' && n>=13 && used<=n-3){ add('mason',2); used+=2; }   // คู่ Mason (เปิด synergy)
   if(n-used>0) add('villager', n-used);
   balanceTune(counts);     // ดันเข้า [-2,+2]
   return counts;
@@ -1741,6 +1782,7 @@ function reshuffle(){
   render();
 }
 function resetAll(){
+  if(typeof PP_ACTION_TIMER!=='undefined'&&PP_ACTION_TIMER){ clearTimeout(PP_ACTION_TIMER); PP_ACTION_TIMER=null; }  // กันตัวจับเวลาเงียบของเกมเก่าค้างยิงข้ามเกมใหม่
   G=null; UNDO=null;
   S.screen='setup'; S.active=null; S.flipped=false; S.modUnlocked=false; S.modLevel='beginner';
   S.players.forEach(p=>{p.role=null;p.revealed=false;});
@@ -2761,6 +2803,66 @@ function viewPassPhoneCupidGate(){
     <button class="btn block" id="ppCupidGateBtn" style="margin-top:18px">${T('ppTapContinue')}</button>
   </div>`;
 }
+/* ===== Shared Team Information (No-Moderator Mode เท่านั้น) =====
+   ระบบกลาง: ตรวจสอบจาก config ว่า Role ใดอยู่ทีมไหน/รู้ข้อมูลทีมไหนบ้าง ไม่เขียน Logic แยกเฉพาะ Mason หรือ Wolf
+   รองรับการเพิ่มทีมใหม่ในอนาคต (Vampire Team/Cult/Coven ฯลฯ) โดยเพิ่ม entry ใน SHARED_TEAM_INFO เท่านั้น ไม่ต้องแก้ UI */
+const SHARED_TEAM_INFO=[
+  {key:'wolf', teamLabelKey:'teamWolf', members:['werewolf','wolfcub','alphawolf','shapeshifter','sorcerer'], alsoSees:['minion'], mode:'byRole'},
+  {key:'village', teamLabelKey:'teamVillage', members:['mason'], alsoSees:[], mode:'flat', flatLabelKey:'otherMasons'},
+];
+function ppSharedTeamHtml(selfIdx){
+  const self=S.players[selfIdx].role;
+  for(const cfg of SHARED_TEAM_INFO){
+    if(!cfg.members.includes(self)&&!cfg.alsoSees.includes(self)) continue;
+    const excludeSelf=cfg.members.includes(self); // สมาชิกจริงไม่เห็นชื่อตัวเอง ส่วนคนที่แค่ "รู้" (เช่น minion) เห็นทุกคนรวมถึงตัวเองไม่ได้เพราะตัวเองไม่ใช่สมาชิกกลุ่มนี้
+    const members=S.players.filter((q,j)=>(!excludeSelf||j!==selfIdx)&&cfg.members.includes(q.role));
+    if(!members.length) continue;
+    if(cfg.mode==='flat'){
+      const names=members.map(m=>esc(m.name)).join(', ');
+      return `<div class="packbox" style="text-align:left;margin-top:12px"><div style="font-size:11px;font-weight:700;opacity:.7;text-transform:uppercase;letter-spacing:.06em">${T(cfg.teamLabelKey)}</div><div style="margin-top:8px"><div style="font-size:12px;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.04em">${T(cfg.flatLabelKey)}</div><div style="font-size:14px;margin-top:2px">${names}</div></div></div>`;
+    }
+    const groups=cfg.members.map(rid=>({rid,names:members.filter(m=>m.role===rid).map(m=>m.name)})).filter(g=>g.names.length);
+    if(!groups.length) continue;
+    const rows=groups.map(g=>{
+      const rr=roleById(g.rid);
+      const totalOfRole=S.players.filter(p=>p.role===g.rid).length; // นับรวมตัวเองด้วย เพราะ "หมาป่า" หลายตัวควรพหูพจน์แม้ตอนแสดงชื่อจะไม่มีตัวเอง
+      const label=(g.rid==='werewolf'&&totalOfRole>1)?T('werewolfPlural'):roleLabel(rr);
+      return `<div style="margin-top:8px"><div style="font-size:12px;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.04em">${label}</div><div style="font-size:14px;margin-top:2px">${g.names.map(esc).join(', ')}</div></div>`;
+    }).join('');
+    return `<div class="packbox" style="text-align:left;margin-top:12px"><div style="font-size:11px;font-weight:700;opacity:.7;text-transform:uppercase;letter-spacing:.06em">${T(cfg.teamLabelKey)}</div>${rows}</div>`;
+  }
+  return '';
+}
+/* ===== No-Moderator Silent Night Timer (2026-07-15) =====
+   สุ่มเวลาเงียบต่อผู้เล่นแต่ละคน (ไม่มีเสียง/ไม่มี TTS/ไม่มีตัวเลขนับถอยหลัง — เฉพาะ Progress Ring รอบปุ่ม)
+   ตัวละครมีสกิล (act.type!=='none'): 13-17 วินาที, ห้าม auto-confirm, แค่โชว์ข้อความเตือนเมื่อครบเวลา
+   ตัวละคร passive (act.type==='none'): 9-12 วินาที, ปุ่ม Pass ถูก disable จนกว่าจะครบเวลา */
+let PP_ACTION_TIMER=null;
+const PP_RING_R=35, PP_RING_CIRC=2*Math.PI*PP_RING_R;
+function ppScheduleTimerDone(){
+  if(PP_ACTION_TIMER){ clearTimeout(PP_ACTION_TIMER); PP_ACTION_TIMER=null; }
+  const remain=Math.max(0,(G.ppTimerEnd||0)-Date.now());
+  PP_ACTION_TIMER=setTimeout(()=>{ G.ppTimerDone=true; PP_ACTION_TIMER=null; render(); }, remain);
+}
+function ppTimerInit(isPassive){
+  if(G.ppTimerQueueIdx===G.ppQueueIdx) return; // สุ่มครั้งเดียวต่อผู้เล่น 1 คน ไม่สุ่มใหม่ทุก render()
+  G.ppTimerQueueIdx=G.ppQueueIdx;
+  const durMs=isPassive?(9000+Math.random()*3000):(13000+Math.random()*4000);
+  G.ppTimerEnd=Date.now()+durMs;
+  G.ppTimerTotalMs=durMs;
+  G.ppTimerDone=false;
+  ppScheduleTimerDone();
+}
+function ppRingWrap(btnHtml){
+  const remain=Math.max(0,(G.ppTimerEnd||0)-Date.now());
+  const total=G.ppTimerTotalMs||1;
+  const remainFrac=Math.min(1,Math.max(0,remain/total));
+  const curOffset=(1-remainFrac)*PP_RING_CIRC;
+  return `<div class="ppring" data-ppring data-remain-ms="${Math.round(remain)}">
+    <svg viewBox="0 0 80 80" class="ppring-svg"><circle cx="40" cy="40" r="${PP_RING_R}" class="ppring-track"/><circle cx="40" cy="40" r="${PP_RING_R}" class="ppring-fill" stroke-dasharray="${PP_RING_CIRC.toFixed(2)}" stroke-dashoffset="${curOffset.toFixed(2)}"/></svg>
+    <div class="ppring-btn">${btnHtml}</div>
+  </div>`;
+}
 function viewPassPhoneNight(){
   ppResetIfNewNight();
   if(!G.ppCupidSel) G.ppCupidSel=[];
@@ -2824,32 +2926,43 @@ function viewPassPhoneNight(){
   }
   const act=ppPlayerAction(i);
   const r=roleById(effRole(i));
+  const ppBadgeLabel=r.id==='lonewolf'?T('teamLoneWolf'):(r.id==='vampire'?T('teamVampire'):TEAM_LABEL[r.team]);
   const roleCard=`<div class="card" style="text-align:center;padding:26px 20px;display:flex;flex-direction:column;justify-content:center;align-items:center">
     <div>${iconHTML(r,182)}</div>
     <h1 class="title" style="font-size:27px;margin-top:10px">${roleLabel(r)}</h1>
-    <p class="footnote" style="margin-top:10px;font-size:15px;line-height:1.65;max-width:92%">${esc(r.desc||'')}</p>
+    <div class="teamtag t-${r.team}" style="margin-top:8px">${ppBadgeLabel}</div>
+    <p class="footnote" style="margin-top:10px;font-size:15px;line-height:1.65;max-width:92%">${esc(roleDesc(r)||'')}</p>
+    ${ppSharedTeamHtml(i)}
   </div>`;
+  ppTimerInit(act.type==='none');
+  const ppTimerPromptHtml=(act.type!=='none'&&G.ppTimerDone)?`<div class="checkbar i">${T('ppTimerAbilityPrompt')}</div>`:'';
   const errBanner=(G.check&&G.check.info)?`<div class="checkbar i">${G.check.label}</div>`:'';
   let actionUI='';
   if(act.type==='none'){
-    actionUI=`<p class="gins">${T('ppNoActionTonight')}</p><div class="bottombar"><button class="btn block" id="ppNoneBtn">${T('ppPassBtn')}</button></div>`;
+    const passBtn=`<button class="btn block" id="ppNoneBtn" ${G.ppTimerDone?'':'disabled'}>${T('ppPassBtn')}</button>`;
+    const waitMsgHtml=G.ppTimerDone?T('ppNoActionTonight'):T('ppTimerPassiveWait').replace(/\n/g,'<br>');
+    actionUI=`<p class="gins">${waitMsgHtml}</p><div class="bottombar">${G.ppTimerDone?passBtn:ppRingWrap(passBtn)}</div>`;
   } else if(act.type==='cupid'){
     const targets=ppTargetList(false).filter(t=>t!==i);
-    actionUI=`<p class="gins">${T('cupidInstruction')}</p>
+    const confirmBtn=`<button class="btn block" id="ppCupidConfirm" ${G.ppCupidSel.length===2?'':'disabled'}>${T('confirmLoversBtn')}</button>`;
+    actionUI=`<p class="gins">${T('cupidInstruction')}</p>${ppTimerPromptHtml}
       <div class="ggrid">${targets.map(t=>`<button class="tchip ${G.ppCupidSel.includes(t)?'on':''}" data-ppcupid="${t}">${esc(S.players[t].name)}</button>`).join('')}</div>
-      <div class="bottombar"><button class="btn ghost" id="ppCupidSkip">${T('skipBtn')}</button><button class="btn block" id="ppCupidConfirm" ${G.ppCupidSel.length===2?'':'disabled'}>${T('confirmLoversBtn')}</button></div>`;
+      <div class="bottombar"><button class="btn ghost" id="ppCupidSkip">${T('skipBtn')}</button>${G.ppTimerDone?confirmBtn:ppRingWrap(confirmBtn)}</div>`;
   } else if(act.type==='wolfvote'){
     const targets=ppTargetList(true);
-    actionUI=`<p class="gins">${T('ppPickTarget')}</p>${errBanner}${ppTargetPickerHtml(targets,'wolfvote')}${ppInboxHtml()}
-      <div class="bottombar"><button class="btn block" id="ppConfirmBtn" ${G.ppSelTarget==null?'disabled':''}>${T('ppConfirmBtn')}</button></div>`;
+    const confirmBtn=`<button class="btn block" id="ppConfirmBtn" ${G.ppSelTarget==null?'disabled':''}>${T('ppConfirmBtn')}</button>`;
+    actionUI=`<p class="gins">${T('ppPickTarget')}</p>${ppTimerPromptHtml}${errBanner}${ppTargetPickerHtml(targets,'wolfvote')}${ppInboxHtml()}
+      <div class="bottombar">${G.ppTimerDone?confirmBtn:ppRingWrap(confirmBtn)}</div>`;
   } else if(act.type==='sorcerer'){
     const targets=ppTargetList(true).filter(t=>t!==i);
-    actionUI=`<p class="gins">${T('ppPickTarget')}</p>${errBanner}${ppTargetPickerHtml(targets,'sorcCheck')}${ppInboxHtml()}
-      <div class="bottombar"><button class="btn block" id="ppConfirmBtn" ${G.ppSelTarget==null?'disabled':''}>${T('ppConfirmBtn')}</button></div>`;
+    const confirmBtn=`<button class="btn block" id="ppConfirmBtn" ${G.ppSelTarget==null?'disabled':''}>${T('ppConfirmBtn')}</button>`;
+    actionUI=`<p class="gins">${T('ppPickTarget')}</p>${ppTimerPromptHtml}${errBanner}${ppTargetPickerHtml(targets,'sorcCheck')}${ppInboxHtml()}
+      <div class="bottombar">${G.ppTimerDone?confirmBtn:ppRingWrap(confirmBtn)}</div>`;
   } else if(act.type==='tool'){
     const targets=ppTargetList(false);
-    actionUI=`<p class="gins">${T('ppPickTarget')}</p>${errBanner}${ppTargetPickerHtml(targets,act.tool)}
-      <div class="bottombar"><button class="btn block" id="ppConfirmBtn" ${G.ppSelTarget==null?'disabled':''}>${T('ppConfirmBtn')}</button></div>`;
+    const confirmBtn=`<button class="btn block" id="ppConfirmBtn" ${G.ppSelTarget==null?'disabled':''}>${T('ppConfirmBtn')}</button>`;
+    actionUI=`<p class="gins">${T('ppPickTarget')}</p>${ppTimerPromptHtml}${errBanner}${ppTargetPickerHtml(targets,act.tool)}
+      <div class="bottombar">${G.ppTimerDone?confirmBtn:ppRingWrap(confirmBtn)}</div>`;
   }
   return roleCard+actionUI;
 }
@@ -2927,6 +3040,17 @@ function bindPassPhone(){
   const smi=$('ppSorcMsgInput'); if(smi) smi.oninput=()=>{ G.ppSorcMsgDraft=smi.value; };
   const sms=$('ppSorcMsgSend'); if(sms) sms.onclick=()=>{ ppSendSorcMsg(); };
   const smk=$('ppSorcMsgSkip'); if(smk) smk.onclick=()=>{ G.ppSorcMsgDraft=''; ppFlashAndPass(); };
+  // Silent Night Timer Ring — เริ่ม transition หลังแทรก DOM แล้วเท่านั้น (double rAF กันกระตุกเหมือนจุดอื่นในไฟล์นี้ทุกประการ)
+  document.querySelectorAll('[data-ppring]').forEach(el=>{
+    const remainMs=Number(el.dataset.remainMs)||0;
+    const fillEl=el.querySelector('.ppring-fill');
+    if(fillEl&&remainMs>0){
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        fillEl.style.transition=`stroke-dashoffset ${(remainMs/1000).toFixed(2)}s linear`;
+        fillEl.style.strokeDashoffset=PP_RING_CIRC.toFixed(2);
+      }));
+    }
+  });
 }
 function viewPPPopup(){
   return `<div class="screen-pad" style="display:flex;align-items:center;min-height:70vh">
