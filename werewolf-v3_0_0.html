@@ -589,7 +589,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.22.0</div>
+<div id="verbadge">v3.22.2</div>
 
 <script>
 const ROLES = [
@@ -2492,7 +2492,10 @@ function ppResetIfNewNight(){
   if(G.ppNightNo!==G.nightNo){
     // เริ่มคืนใหม่ -> ไปที่ผู้เล่นคนแรกในคิวทันที ไม่มีหน้าจอ "Night Falls" คั่นก่อนหน้าจอ Gate ของผู้เล่นคนแรก
     G.ppNightNo=G.nightNo; G.ppQueueIdx=0; G.ppStage='gate';
-    G.wolfVotes={}; G.wolfInbox=[]; G.ppSelTarget=null;
+    G.wolfVotes={}; G.ppSelTarget=null;
+    // Wolf Team Inbox เป็น Log สะสมทั้งเกม ห้ามล้างทุกคืน ล้างเฉพาะตอนเริ่มเกมใหม่ (G.wolfInbox ยังไม่เคยถูกสร้าง) แล้วแทรกหัวข้อคืนใหม่ต่อท้ายเสมอ
+    if(!G.wolfInbox) G.wolfInbox=[];
+    G.wolfInbox.push({sys:true,divider:true,text:T('phaseNight',{n:G.nightNo})});
   }
 }
 function ppQueueOrder(){
@@ -2740,7 +2743,7 @@ function ppAdvance(){
 }
 function ppInboxHtml(){
   if(!G.wolfInbox.length) return '';
-  return `<div class="card" style="margin-top:10px"><p class="section-label">${T('wolfInboxTitle')}</p>${G.wolfInbox.map(m=>`<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px">${m.sys?`<i>${m.text}</i>`:`<b>${esc(m.name)}</b><br>${esc(m.text)}`}</div>`).join('')}</div>`;
+  return `<div class="card" style="margin-top:10px"><p class="section-label">${T('wolfInboxTitle')}</p>${G.wolfInbox.map((m,idx)=>m.divider?`<div style="padding:${idx?10:0}px 0 4px;font-size:14px;font-weight:700;opacity:.85;${idx?'border-top:1px solid rgba(255,255,255,.15);margin-top:6px':''}">${m.text}</div>`:`<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px">${m.sys?`<i>${m.text}</i>`:`<b>${esc(m.name)}</b><br>${esc(m.text)}`}</div>`).join('')}</div>`;
 }
 function ppTargetPickerHtml(targets,tool){
   return `<div class="ggrid">${targets.map(t=>{
@@ -2823,8 +2826,8 @@ function viewPassPhoneNight(){
   const r=roleById(effRole(i));
   const roleCard=`<div class="card" style="text-align:center;padding:26px 20px;display:flex;flex-direction:column;justify-content:center;align-items:center">
     <div>${iconHTML(r,182)}</div>
-    <h1 class="title" style="font-size:30px;margin-top:14px">${roleLabel(r)}</h1>
-    <p class="footnote" style="margin-top:14px;font-size:17px;line-height:1.65;max-width:92%">${esc(r.desc||'')}</p>
+    <h1 class="title" style="font-size:27px;margin-top:10px">${roleLabel(r)}</h1>
+    <p class="footnote" style="margin-top:10px;font-size:15px;line-height:1.65;max-width:92%">${esc(r.desc||'')}</p>
   </div>`;
   const errBanner=(G.check&&G.check.info)?`<div class="checkbar i">${G.check.label}</div>`:'';
   let actionUI='';
