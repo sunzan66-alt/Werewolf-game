@@ -589,7 +589,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.20.8</div>
+<div id="verbadge">v3.22.0</div>
 
 <script>
 const ROLES = [
@@ -2821,10 +2821,10 @@ function viewPassPhoneNight(){
   }
   const act=ppPlayerAction(i);
   const r=roleById(effRole(i));
-  const roleCard=`<div class="card" style="text-align:center;padding:20px 16px">
-    <div style="font-size:44px">${iconHTML(r,54)}</div>
-    <h1 class="title" style="font-size:22px;margin-top:6px">${roleLabel(r)}</h1>
-    <p class="footnote" style="margin-top:6px">${esc(r.desc||'')}</p>
+  const roleCard=`<div class="card" style="text-align:center;padding:26px 20px;display:flex;flex-direction:column;justify-content:center;align-items:center">
+    <div>${iconHTML(r,182)}</div>
+    <h1 class="title" style="font-size:30px;margin-top:14px">${roleLabel(r)}</h1>
+    <p class="footnote" style="margin-top:14px;font-size:17px;line-height:1.65;max-width:92%">${esc(r.desc||'')}</p>
   </div>`;
   const errBanner=(G.check&&G.check.info)?`<div class="checkbar i">${G.check.label}</div>`:'';
   let actionUI='';
