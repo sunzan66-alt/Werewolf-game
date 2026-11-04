@@ -644,7 +644,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.23.21</div>
+<div id="verbadge">v3.24.0</div>
 
 <script>
 const ROLES = [
@@ -955,7 +955,7 @@ S.counts.werewolf=1; S.counts.villager=0;
 S._focusName=true;
 S.timerMin=3;
 S.modLevel='beginner';
-S.noMod=true; S.modSubMode='random'; S.modChosenIdx=null;
+S.noMod=true; S.modSubMode='random'; S.modChosenIdx=null; S.cardMode=false;
 S.setupStep=0; // 0=Game Setup (หน้าแรก), 1=Character Setup (หน้าที่สอง) — ค่าเริ่มต้นเข้าหน้าแรกเสมอ
 try{
   S.soundFX=localStorage.getItem('ww_sfx')!=='off';
@@ -1250,7 +1250,18 @@ th:{
   // ===== game over =====
   winnerWolf:'🐺 ฝ่ายมนุษย์หมาป่าชนะ!', winnerLoneWolf:'🐺 หมาป่าเดียวดายชนะ!', winnerWolfAndBeggar:'🐺💔 ฝ่ายมนุษย์หมาป่าและยาจกชนะ!', winnerCult:'👁️ ลัทธิชนะ!', winnerSk:'🔪 ฆาตกรโรคจิตชนะ!',
   winnerVampire:'🧛 ฝ่ายแวมไพร์ชนะ!', winnerVillage:'👥 ฝ่ายหมู่บ้านชนะ!', winnerBeggar:'🏆 ยาจกชนะ!', winnerExtinctTitle:'☠️ ไม่มีผู้ชนะ', winnerExtinctSub:'ผู้เล่นทุกคนเสียชีวิต', backToSummaryBtn:'กลับไปหน้าสรุป',
-  modHasModBtn:'มีผู้ดำเนินรายการ', modNoModBtn:'ไม่มีผู้ดำเนินรายการ (beta)',
+  modHasModBtn:'มีผู้ดำเนินรายการ', modNoModBtn:'ไม่มีผู้ดำเนินรายการ',
+  dealAppBtn:'🎴 แจกไพ่ในแอพ', dealCardBtn:'🃏 ใช้การ์ดจริง',
+  dealAppTooltip:'แอพสุ่มบทบาทให้ แล้วผู้เล่นกดเปิดการ์ดในแอพ',
+  dealCardTooltip:'คุณแจกการ์ดจริงเอง คืนแรกเรียกทีละบทบาทให้ลืมตา แล้วกดใส่ชื่อในแอพ',
+  idTitle:'คืนระบุตัว',
+  idSub:'ทุกคนหลับตา — เรียกทีละบทบาทให้ลืมตา แล้วกดใส่ชื่อ',
+  idProgress:'ระบุแล้ว {a}/{b}', idUnassigned:'ยังไม่ระบุ:',
+  idPickName:'+ เลือกชื่อ', idFillRest:'เติมที่เหลือ',
+  idDoneBtn:'✅ ระบุครบแล้ว — ไปต่อ', idDoneWait:'ยังระบุไม่ครบ',
+  idPickFor:'เลือกชื่อสำหรับ', idClose:'เสร็จ',
+  cardDayNoVote:'คืนระบุตัวผ่านไป — วันนี้คุยกันได้ แต่ยังโหวตไม่ได้',
+  cardToNightBtn:'🌙 เข้าสู่คืน',
   modHasModTooltip:'ผู้ดำเนินเกมถือโทรศัพท์ ดำเนินเกมตามปกติ',
   modNoModTooltip:'ส่งโทรศัพท์ให้ผู้เล่นทีละคนตอนกลางคืน ทุกคนได้เล่น ไม่มีใครต้องเสียสละ',
   modChooseBtn:'เลือกเอง', modChooseTooltip:'เลือกผู้เล่นที่จะเป็นผู้ดำเนินเกมด้วยตัวเอง',
@@ -1530,7 +1541,18 @@ en:{
 
   winnerWolf:'🐺 Werewolves win!', winnerLoneWolf:'🐺 Lone Wolf wins!', winnerWolfAndBeggar:'🐺💔 Werewolf Team & Beggar win!', winnerCult:'👁️ Cult wins!', winnerSk:'🔪 Serial Killer wins!',
   winnerVampire:'🧛 Vampires win!', winnerVillage:'👥 Village wins!', winnerBeggar:'🏆 Beggar Wins!', winnerExtinctTitle:'☠️ Draw', winnerExtinctSub:'Everyone died.', backToSummaryBtn:'Back to summary',
-  modHasModBtn:'With Moderator', modNoModBtn:'Without Moderator (beta)',
+  modHasModBtn:'With Moderator', modNoModBtn:'Without Moderator',
+  dealAppBtn:'🎴 Deal in App', dealCardBtn:'🃏 Physical Cards',
+  dealAppTooltip:'The app assigns roles at random and players flip their card in the app',
+  dealCardTooltip:'You deal real cards yourself. On the first night you call each role and type in who they are',
+  idTitle:'Identify Night',
+  idSub:'Everyone closes their eyes — call one role at a time to open their eyes, then tap in the names',
+  idProgress:'Identified {a}/{b}', idUnassigned:'Not yet identified:',
+  idPickName:'+ Pick name', idFillRest:'Fill the rest',
+  idDoneBtn:'✅ All identified — continue', idDoneWait:'Not all identified yet',
+  idPickFor:'Pick names for', idClose:'Done',
+  cardDayNoVote:'The identify night is over — talk it out today, but no voting yet',
+  cardToNightBtn:'🌙 Go to night',
   modHasModTooltip:'One player manages the game as usual.',
   modNoModTooltip:'Phone passes to each player at night. Everyone plays — no moderator needed.',
   modChooseBtn:'Choose Yourself', modChooseTooltip:'Pick which player you want to be the Moderator.',
@@ -1805,6 +1827,7 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function startGame(){
   G=null; UNDO=null;
   S._revealOrder=[]; // roll ใหม่ -> ลำดับเปิดบทบาทเดิมใช้ไม่ได้แล้ว ต้องเริ่มนับใหม่ (No Moderator Mode เท่านั้นที่ใช้ค่านี้)
+  if(startCardMode()) return;
   const pool=[];
   ROLES.forEach(r=>{for(let k=0;k<S.counts[r.id];k++)pool.push(r.id);});
   if(S.modSubMode==='choose'&&S.modChosenIdx!=null&&S.counts.moderator>0&&S.modChosenIdx<S.players.length){
@@ -1824,6 +1847,7 @@ function startGame(){
 function reshuffle(){
   G=null; UNDO=null;
   S._revealOrder=[]; // roll ใหม่ -> ลำดับเปิดบทบาทเดิมใช้ไม่ได้แล้ว ต้องเริ่มนับใหม่ (No Moderator Mode เท่านั้นที่ใช้ค่านี้)
+  if(startCardMode()) return;
   const pool=[];
   ROLES.forEach(r=>{for(let k=0;k<S.counts[r.id];k++)pool.push(r.id);});
   if(S.modSubMode==='choose'&&S.modChosenIdx!=null&&S.counts.moderator>0&&S.modChosenIdx<S.players.length){
@@ -1976,8 +2000,110 @@ const seerCanRepeat=()=>aliveHas('shapeshifter')||aliveHas('cursed')||aliveHas('
 // นางปีศาจใช้ซ้ำคนเดิมได้ ถ้าฝ่ายชาวบ้านมีผู้สืบทอดเทพพยากรณ์ (Seer ตาย → ผู้สืบทอดกลายเป็น Seer)
 const sorcCanRepeat=()=>aliveHas('apprentice');
 
+/* ===== Physical Cards Mode (โหมดการ์ดจริง) — identify night ===== */
+const IDENTIFY_ORDER=['cupid','cultleader','vampire','shapeshifter','sorcerer','alphawolf','werewolf','wolfcub','minion','lonewolf','serialkiller','seer','apprentice','bodyguard','spellcaster','doppelganger','drunk','cursed','mason','prince','hunter','mayor','toughguy','idiot','lycan','pacifist','ghost','deceased','beggar','villager'];
+function seedRoleDerived(){
+  G.cult=[];
+  S.players.forEach((p,i)=>{ if(p.role==='cultleader') G.cult.push(i); });
+  if(hasRole('drunk')){
+    const pool=S.players.map(p=>p.role).filter(r=>!['drunk','doppelganger','moderator','vampire','cultleader','serialkiller','beggar'].includes(r));
+    G.drunkTrueRole=pool.length?pool[Math.floor(Math.random()*pool.length)]:'villager';
+  }
+}
+function startCardMode(){
+  if(S.noMod || !S.cardMode) return false;
+  S.players.forEach(p=>{ p.role=null; p.revealed=false; });
+  if((S.counts.moderator||0)>0 && S.players.length){
+    const mi=(S.modSubMode==='choose'&&S.modChosenIdx!=null&&S.modChosenIdx<S.players.length)
+      ?S.modChosenIdx:Math.floor(Math.random()*S.players.length);
+    S.players[mi].role='moderator';
+  }
+  S.screen='mod'; S.modUnlocked=true; S.active=null;
+  startRun();
+  return true;
+}
+function idRoleRows(){
+  const rows=[];
+  IDENTIFY_ORDER.forEach(id=>{ if((S.counts[id]||0)>0) rows.push(id); });
+  ROLES.forEach(r=>{ if(r.id!=='moderator'&&(S.counts[r.id]||0)>0&&rows.indexOf(r.id)<0) rows.push(r.id); });
+  return rows;
+}
+function idAssigned(roleId){ const a=[]; S.players.forEach((p,i)=>{ if(p.role===roleId) a.push(i); }); return a; }
+function idFreeNames(){ const a=[]; S.players.forEach((p,i)=>{ if(!p.role) a.push(i); }); return a; }
+function idAdd(i){
+  if(!G||!G.idPick) return;
+  const id=G.idPick, cap=S.counts[id]||0;
+  if(S.players[i].role) return;
+  if(idAssigned(id).length>=cap) return;
+  S.players[i].role=id;
+  haptic('light'); playSound('addRole');
+  if(idAssigned(id).length>=cap) G.idPick=null;
+  render();
+}
+function idRem(i){
+  if(!S.players[i]||S.players[i].role==='moderator') return;
+  S.players[i].role=null;
+  haptic('light'); playSound('removeRole');
+  render();
+}
+function idFill(id){
+  const cap=S.counts[id]||0;
+  const free=idFreeNames();
+  while(idAssigned(id).length<cap && free.length){ S.players[free.shift()].role=id; }
+  haptic('medium'); playSound('addRole');
+  render();
+}
+function identifyDone(){
+  if(S.players.some(p=>!p.role)) return;
+  G.idPick=null;
+  seedRoleDerived();
+  if(hasRole('cupid')){ G.cupidPick=[]; G._cupidResumeMode='identify'; G.phase='cupid'; render(); return; }
+  enterDay();
+}
+function viewIdentify(){
+  const free=idFreeNames();
+  const total=S.players.filter(p=>p.role!=='moderator').length;
+  const done=total-free.length;
+  if(G.idPick){
+    const r=roleById(G.idPick), cur=idAssigned(G.idPick), cap=S.counts[G.idPick]||0;
+    return `<div style="padding-bottom:96px">
+      <div class="card">
+        <p class="eyebrow">${T('idPickFor')}</p>
+        <h1 class="title" style="font-size:22px;margin-top:4px">${iconHTML(r,30)} ${roleLabel(r)} <span style="opacity:.6;font-size:16px">${cur.length}/${cap}</span></h1>
+        <div class="ggrid" style="margin-top:10px;padding-bottom:0">
+          ${free.length?free.map(i=>`<button class="tchip" data-idadd="${i}">${esc(S.players[i].name)}</button>`).join(''):`<p class="footnote" style="margin:0">—</p>`}
+        </div>
+        ${cur.length?`<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px">${cur.map(i=>`<span class="pp-teambadge" data-idrem="${i}"><b>${esc(S.players[i].name)}</b> ✕</span>`).join('')}</div>`:''}
+      </div>
+      <div class="bottombar"><button class="btn block" id="idPickDone">${T('idClose')}</button></div>
+    </div>`;
+  }
+  const rows=idRoleRows().map(id=>{
+    const r=roleById(id), cur=idAssigned(id), cap=S.counts[id]||0;
+    const full=cur.length>=cap;
+    const chips=cur.map(i=>`<span class="pp-teambadge" data-idrem="${i}"><b>${esc(S.players[i].name)}</b> ✕</span>`).join('');
+    const addBtn=full?'':`<button class="tchip" data-idrole="${id}">${T('idPickName')}</button>`;
+    const fillBtn=(!full&&free.length>0&&free.length<=(cap-cur.length))?`<button class="tchip" data-idfill="${id}">${T('idFillRest')}</button>`:'';
+    return `<div class="sumrow" style="align-items:flex-start">
+      <div class="emj">${iconHTML(r,32)}</div>
+      <div class="nm">${roleLabel(r)} <span style="opacity:.55">×${cap}</span>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:5px">${chips}${addBtn}${fillBtn}</div>
+      </div>
+      <div class="rl">${full?'✓':''}</div>
+    </div>`;
+  }).join('');
+  const leftTxt=free.length?`<p class="footnote" style="text-align:left;margin-top:8px">${T('idUnassigned')} ${free.map(i=>esc(S.players[i].name)).join(' · ')}</p>`:'';
+  return `<div style="padding-bottom:96px">
+    <p class="gins">\U0001F319 ${T('idSub')}</p>
+    <div class="countbar"><span class="pill">${T('idProgress',{a:done,b:total})}</span></div>
+    <div class="card">${rows}</div>
+    ${leftTxt}
+    <div class="bottombar"><button class="btn block" id="idDone" ${free.length?'disabled':''}>${free.length?T('idDoneWait'):T('idDoneBtn')}</button></div>
+  </div>`;
+}
 function startRun(){
-  G={running:true, phase:hasRole('cupid')?'cupid':'night', startedAt:Date.now(),
+  const _cardId=(!S.noMod && S.cardMode && S.players.some(p=>!p.role));
+  G={running:true, phase:_cardId?'identify':(hasRole('cupid')?'cupid':'night'), startedAt:Date.now(),
      nightNo:0, dayNo:0, alive:S.players.map(()=>true),
      lovers:null, loverPairs:[], cupidPick:[], silenced:null,
      protectPrev:null, protectThis:null, silencedPrev:null, wolfTargets:[], wolfKillCount:1,
@@ -1992,18 +2118,14 @@ function startRun(){
      pendingCupidGrant:null, _resumeNightAfterCupid:false,
      tool:'kill', check:null, hunterQueue:[], afterHunter:null,
      vampKilledThisDay:null,
-     drunkRevealed:false,
+     drunkRevealed:false, idPick:null,
      deaths:[], banner:null, winner:null, history:[], showHistory:false, historyCollapsed:{}, deathLog:[]};
   // No Moderator Mode: ห้ามเริ่มเกมที่ Cupid Gate เด็ดขาด -- ต้องแก้ก่อน render() ครั้งแรกข้างล่าง ไม่ใช่หลังจากนั้น (แก้ทีหลังทำให้เฟรมแรกที่ผู้ใช้เห็นยังเป็น Cupid Gate ค้างอยู่ก่อนค่อยถูกต้องในเฟรมถัดไป)
   if(S.noMod && G.phase==='cupid'){ G.phase='night'; }
   if(G.phase==='night') G.nightNo=1;
   // playerTurnOrder: ลำดับที่แต่ละคนกด "เปิดดูบทบาท" จริง (No Moderator Mode) — สำรองเป็นลำดับที่นั่ง/index ปกติถ้าข้อมูลไม่ครบ (เช่นเกมเก่าก่อนอัปเดตนี้)
   G.playerTurnOrder=(S._revealOrder&&S._revealOrder.length===S.players.length)?S._revealOrder.slice():S.players.map((p,i)=>i);
-  S.players.forEach((p,i)=>{ if(p.role==='cultleader') G.cult.push(i); });
-  if(hasRole('drunk')){
-    const pool=S.players.map(p=>p.role).filter(r=>!['drunk','doppelganger','moderator','vampire','cultleader','serialkiller','beggar'].includes(r));
-    G.drunkTrueRole=pool.length?pool[Math.floor(Math.random()*pool.length)]:'villager';
-  }
+  if(!_cardId) seedRoleDerived();
   UNDO=null; ACT=[];
   render();
 }
@@ -2376,6 +2498,7 @@ function confirmCupid(){
 }
 function skipCupid(){ if(!G._cupidResumeMode){ G.lovers=null; G.loverPairs=[]; } resumeAfterCupid(); }
 function resumeAfterCupid(){
+  if(G._cupidResumeMode==='identify'){ G._cupidResumeMode=null; enterDay(); return; }
   if(G._cupidResumeMode==='resolution'){ G._cupidResumeMode=null; finishResolution(); return; }
   if(G._cupidResumeMode==='nightBegin'){
     G._cupidResumeMode=null;
@@ -2476,7 +2599,7 @@ function nightTap(i){
   actCommit(b);
   render();
 }
-function dayTap(i){ if(!G.alive[i])return; G.dayVote=(G.dayVote===i)?null:i; render(); }
+function dayTap(i){ if(!G.alive[i])return; if(!S.noMod&&S.cardMode&&G.dayNo===1) return; G.dayVote=(G.dayVote===i)?null:i; render(); }
 function hunterPick(i){
   if(!G.alive[i]||G._hunterAnimBusy) return;
   pushUndo(); // snapshot BEFORE _hunterAnimBusy flips true, so undo restores a re-selectable state
@@ -2559,7 +2682,7 @@ function nightTools(){
   if(roleActiveAlive('spellcaster')) t.push(['silence',T('toolSpellcaster'),false]);
   else if(hideMode&&roleAnyAssigned('spellcaster')) t.push(['silence',T('toolSpellcaster'),true]);
 
-  if(G.nightNo===1 && aliveHas('doppelganger') && !G.doppleAcquired) t.push(['dopplePick',T('toolDoppelganger'),false]);
+  if(G.nightNo===1 && aliveHas('doppelganger') && !G.doppleAcquired && G.doppleTarget==null) t.push(['dopplePick',T('toolDoppelganger'),false]);
   return t;
 }
 function activeNightTool(){
@@ -3226,6 +3349,7 @@ function viewPPPopup(){
 }
 
 function phaseTitle(){
+  if(G.phase==='identify') return T('idTitle');
   if(G.phase==='cupid') return T('phaseCupid');
   if(G.phase==='night') return T('phaseNight',{n:G.nightNo});
   if(G.phase==='day') return T('phaseDay',{n:G.dayNo});
@@ -3448,8 +3572,8 @@ function viewGameSummary(){
   </div>`;
 }
 function viewGame(){
-  const aw=S.players.filter((p,i)=>G.alive[i]&&teamOf(i)==='wolf').length;
-  const av=S.players.filter((p,i)=>G.alive[i]&&teamOf(i)!=='wolf'&&teamOf(i)!=='mod').length;
+  const aw=S.players.filter((p,i)=>G.alive[i]&&p.role&&teamOf(i)==='wolf').length;
+  const av=S.players.filter((p,i)=>G.alive[i]&&p.role&&teamOf(i)!=='wolf'&&teamOf(i)!=='mod').length;
   const top=`<div class="gtopbar">
     <div><div class="phasechip">${phaseTitle()}</div><div class="alivecount">🐺 ${aw} · 👥 ${av} ${T('aliveSuffix')}</div></div>
     <div style="display:flex;gap:8px;align-items:center">
@@ -3457,7 +3581,8 @@ function viewGame(){
       <button class="exitbtn" id="gExit">${T('endGameBtn')}</button>
     </div></div>`;
   let body='';
-  if(G.phase==='cupid'){
+  if(G.phase==='identify'){ body=viewIdentify(); }
+  else if(G.phase==='cupid'){
    if(S.noMod&&!G._ppCupidOk){ body=viewPassPhoneCupidGate(); } else {
     const _cGen=cupidGen(), _cIcon=cupidGenIcon(), _cCls=_cGen===2?' cupid-gen2':(_cGen>=3?' cupid-gen3':'');
     const miniRow=ACT.length?`<div class="mini-row"><button class="mini-btn undo" id="gActUndo" title="${T('undoLastAction')}">↩︎ ${T('undoLabel')}(<b>${ACT.length}</b>)</button></div>`:'';
@@ -3532,8 +3657,9 @@ function viewGame(){
     if(silentAlive) acts.push(`<button class="mini-btn danger" id="gExecSil">${T('executeSilencedBtn')}</button>`);
     if(aliveHas('pacifist')) acts.push(`<button class="mini-btn ${G.pacifistVeto?'on-pac':'pac'}" id="gPacifist">${T('pacifistBtn')}${G.pacifistVeto?' ✓':''}</button>`);
     const actRow=acts.length?`<div class="day-actions">${acts.join('')}</div>`:'';
-    const dayBtnLabel=G.pacifistVeto?T('nightBtnPacifist'):(G.dayVote!=null?T('nightBtnExecute',{name:esc(S.players[G.dayVote].name)}):T('nightBtnNoVote'));
-    body=`${morningScript}${bannerHTML(G.banner, noteExtra)}${tm}${actRow}<p class="gins">${T('dayInstruction')}</p>${ggrid()}
+    const _cardD1=(!S.noMod&&S.cardMode&&G.dayNo===1);
+    const dayBtnLabel=_cardD1?T('cardToNightBtn'):(G.pacifistVeto?T('nightBtnPacifist'):(G.dayVote!=null?T('nightBtnExecute',{name:esc(S.players[G.dayVote].name)}):T('nightBtnNoVote')));
+    body=`${morningScript}${bannerHTML(G.banner, noteExtra)}${tm}${_cardD1?'':actRow}<p class="gins">${_cardD1?T('cardDayNoVote'):T('dayInstruction')}</p>${_cardD1?'':ggrid()}
       <div class="bottombar"><button class="btn block" id="gDay">${dayBtnLabel}</button></div>`;
    }
   } else if(G.phase==='hunter'){
@@ -3638,6 +3764,11 @@ function viewSetupGame(){
     </div>
     <p class="footnote" style="text-align:left;margin-top:8px">${S.modSubMode==='choose'?T('modChooseTooltip'):T('modRandomTooltip')}</p>
     ${S.modSubMode==='choose'?`<div class="ggrid" style="margin-top:8px">${S.players.map((p,i)=>`<button class="tchip ${S.modChosenIdx===i?'on':''}" data-modpick="${i}">${esc(p.name)}</button>`).join('')}</div>`:''}
+    <div class="recmode" style="margin-top:10px">
+      <button class="tchip ${!S.cardMode?'on':''}" id="dealApp">${T('dealAppBtn')}</button>
+      <button class="tchip ${S.cardMode?'on':''}" id="dealCard">${T('dealCardBtn')}</button>
+    </div>
+    <p class="footnote" style="text-align:left;margin-top:8px">${S.cardMode?T('dealCardTooltip'):T('dealAppTooltip')}</p>
     `:''}
   </div>
 
@@ -4471,7 +4602,7 @@ function render(){
   let ph='';
   if(S.screen==='mod'&&G){
     if(G.phase==='day') ph='phase-day';
-    else if(G.phase==='night'||G.phase==='cupid'||G.phase==='hunter') ph='phase-night';
+    else if(G.phase==='night'||G.phase==='cupid'||G.phase==='hunter'||G.phase==='identify') ph='phase-night';
   }
   const fade = (_prevScreen!==S.screen) && ['menu','setup','settings','rules','gamerules','script'].includes(S.screen);
   app.className='wrap'+(ph?' '+ph:'')+(fade?' fade-in':'');
@@ -4547,7 +4678,10 @@ function bind(){
     document.querySelectorAll('[data-recmode]').forEach(el=>el.onclick=()=>{S.recMode=el.dataset.recmode;if(S.players.length>=3){applyRecommendation();}else{render();}});
     const modHM=$('modHasMod'), modNM=$('modNoMod');
     if(modHM) modHM.onclick=()=>{haptic('light');playSound('addRole');S.noMod=false;if(S.modSubMode==='external')S.modSubMode='random';S.counts.moderator=1;render();};
-    if(modNM) modNM.onclick=()=>{haptic('light');playSound('removeRole');S.noMod=true;S.counts.moderator=0;render();};
+    if(modNM) modNM.onclick=()=>{haptic('light');playSound('removeRole');S.noMod=true;S.counts.moderator=0;S.cardMode=false;render();};
+    const dlA=$('dealApp'), dlC=$('dealCard');
+    if(dlA) dlA.onclick=()=>{haptic('light');playSound('addRole');S.cardMode=false;render();};
+    if(dlC) dlC.onclick=()=>{haptic('light');playSound('addRole');S.cardMode=true;render();};
     const modR=$('modRandom'), modCB=$('modChooseBtn');
     if(modR) modR.onclick=()=>{haptic('light');playSound('addRole');S.modSubMode='random';S.counts.moderator=1;S.modChosenIdx=null;render();};
     if(modCB) modCB.onclick=()=>{haptic('light');playSound('addRole');S.modSubMode='choose';S.counts.moderator=1;render();};
@@ -4636,7 +4770,12 @@ function bindGame(){
   document.querySelectorAll('[data-tool]').forEach(el=>el.onclick=()=>{
     G.tool=el.dataset.tool;G.check=null;render();
   });
+  document.querySelectorAll('[data-idrole]').forEach(el=>el.onclick=()=>{ G.idPick=el.dataset.idrole; haptic('light'); render(); });
+  document.querySelectorAll('[data-idadd]').forEach(el=>el.onclick=()=>idAdd(+el.dataset.idadd));
+  document.querySelectorAll('[data-idrem]').forEach(el=>el.onclick=()=>idRem(+el.dataset.idrem));
+  document.querySelectorAll('[data-idfill]').forEach(el=>el.onclick=()=>idFill(el.dataset.idfill));
   const map={gExit:exitGame,gExit2:exitGame,
+    idPickDone:()=>{G.idPick=null;render();}, idDone:identifyDone,
     gNight:()=>{resolveNight();},
     gDay:()=>{resolveDay();},
     gCupidOk:confirmCupid,gCupidSkip:skipCupid,gHunterSkip:hunterSkip,
