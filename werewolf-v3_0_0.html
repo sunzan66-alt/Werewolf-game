@@ -675,7 +675,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.24.2</div>
+<div id="verbadge">v3.24.3</div>
 
 <script>
 const ROLES = [
@@ -2016,7 +2016,7 @@ function seerDied(){
   const si=S.players.findIndex(p=>p.role==='seer');
   return si>=0 && !G.alive[si];
 }
-const teamOf=i=>(G&&G.wolfConverts&&G.wolfConverts.includes(i))?'wolf':roleById(effRole(i)).team;
+const teamOf=i=>(G&&G.wolfConverts&&G.wolfConverts.includes(i))?'wolf':((roleById(effRole(i))||{team:'village'}).team);
 const hasRole=id=>S.players.some(p=>p.role===id);
 const aliveHas=id=>S.players.some((p,i)=>G.alive[i]&&p.role===id);
 // ดัชนีของ "เทพพยากรณ์ที่กำลังทำหน้าที่" (รวมขี้เมา/ผู้เลียนแบบที่กลายเป็น Seer และผู้สืบทอดที่รับช่วงต่อ)
@@ -2032,7 +2032,7 @@ const seerCanRepeat=()=>aliveHas('shapeshifter')||aliveHas('cursed')||aliveHas('
 const sorcCanRepeat=()=>aliveHas('apprentice');
 
 /* ===== Physical Cards Mode (โหมดการ์ดจริง) — identify night ===== */
-const IDENTIFY_ORDER=['cupid','cultleader','vampire','shapeshifter','sorcerer','alphawolf','werewolf','wolfcub','minion','lonewolf','serialkiller','seer','apprentice','bodyguard','spellcaster','doppelganger','drunk','cursed','mason','prince','hunter','mayor','toughguy','idiot','lycan','pacifist','ghost','deceased','beggar','villager'];
+const IDENTIFY_ORDER=['cultleader','vampire','shapeshifter','sorcerer','werewolf','wolfcub','minion','lonewolf','serialkiller','seer','apprentice','bodyguard','spellcaster','drunk','cursed','mason','prince','hunter','mayor','toughguy','idiot','lycan','pacifist','ghost','deceased','beggar','villager','alphawolf','doppelganger','cupid'];
 function seedRoleDerived(){
   G.cult=[];
   S.players.forEach((p,i)=>{ if(p.role==='cultleader') G.cult.push(i); });
@@ -2160,7 +2160,15 @@ function startRun(){
   UNDO=null; ACT=[];
   render();
 }
-function exitGame(){ stopTimer(); G=null; UNDO=null; ACT=[]; fadeTransition(render,250); }
+function exitGame(){
+  stopTimer(); G=null; UNDO=null; ACT=[];
+  // ออกกลางคืนระบุตัว (โหมดการ์ดจริง): ยังระบุไม่ครบ -> ล้างแล้วกลับหน้าตั้งค่า ไม่งั้น viewMod() จะ render บน role ที่เป็น null
+  if(S.players.some(p=>!p.role)){
+    S.players.forEach(p=>{ p.role=null; p.revealed=false; });
+    S._revealOrder=[]; S.screen='setup'; S.active=null; S.modUnlocked=false;
+  }
+  fadeTransition(render,250);
+}
 
 function killChain(seeds){
   const q=[...seeds];
@@ -4071,7 +4079,7 @@ function viewMod(){
   }
   if(G&&G.running) return viewGame();
   const counts={};
-  S.players.forEach(p=>counts[p.role]=(counts[p.role]||0)+1);
+  S.players.forEach(p=>{ if(p.role) counts[p.role]=(counts[p.role]||0)+1; });
   const order=ROLES.filter(r=>counts[r.id]);
   return `
   <button class="back-link" id="backList2">${T('backToList')}</button>
@@ -4082,7 +4090,7 @@ function viewMod(){
     ${order.map(r=>`<span class="pill">${iconHTML(r,20)} ${roleLabel(r)} ×${counts[r.id]}</span>`).join('')}
   </div>
   <div class="card">
-    ${S.players.map(p=>{const r=roleById(p.role);return `
+    ${S.players.filter(p=>p.role).map(p=>{const r=roleById(p.role);return `
       <div class="sumrow">
         <div class="emj">${iconHTML(r,32)}</div>
         <div class="nm">${esc(p.name)}</div>
