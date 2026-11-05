@@ -680,7 +680,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.25.0</div>
+<div id="verbadge">v3.25.1</div>
 
 <script>
 const ROLES = [
@@ -1296,7 +1296,7 @@ th:{
   idProgress:'ระบุแล้ว {a}/{b}', idUnassigned:'ยังไม่ระบุ:',
   idPickName:'+ เลือกชื่อ', idFillRest:'เติมที่เหลือ',
   idDoneBtn:'🎮 เข้าสู่เกม', idDoneWait:'ยังระบุไม่ครบ',
-  idPickFor:'เลือกชื่อสำหรับ', idClose:'เสร็จ',
+  idPickFor:'เลือกชื่อสำหรับ', idClose:'เสร็จ', idUnknownRole:'ยังไม่ระบุ',
   cardDayNoVote:'คืนระบุตัวผ่านไป — วันนี้คุยกันได้ แต่ยังโหวตไม่ได้',
   cardToNightBtn:'🌙 เข้าสู่คืน', sndToggle:'เปิด/ปิดเสียงทั้งหมด',
   modHasModTooltip:'ผู้ดำเนินเกมถือโทรศัพท์ ดำเนินเกมตามปกติ',
@@ -1588,7 +1588,7 @@ en:{
   idProgress:'Identified {a}/{b}', idUnassigned:'Not yet identified:',
   idPickName:'+ Pick name', idFillRest:'Fill the rest',
   idDoneBtn:'🎮 Enter the game', idDoneWait:'Not all identified yet',
-  idPickFor:'Pick names for', idClose:'Done',
+  idPickFor:'Pick names for', idClose:'Done', idUnknownRole:'Not identified yet',
   cardDayNoVote:'The identify night is over — talk it out today, but no voting yet',
   cardToNightBtn:'🌙 Go to night', sndToggle:'Mute / unmute everything',
   modHasModTooltip:'One player manages the game as usual.',
@@ -3469,8 +3469,9 @@ function bannerHTML(b, extra){
   }
   return ex?`<div class="banner">${ex}</div>`:'';
 }
+const _UNKNOWN_ROLE={id:'',team:'village',img:'',emj:'❔',th:'',en:'',_unknown:true};
 function gcell(i){
-  const p=S.players[i], conv=G.wolfConverts&&G.wolfConverts.includes(i), r=conv?roleById('werewolf'):roleById(effRole(i)), dead=!G.alive[i];
+  const p=S.players[i], conv=G.wolfConverts&&G.wolfConverts.includes(i), r=(conv?roleById('werewolf'):roleById(effRole(i)))||_UNKNOWN_ROLE, dead=!G.alive[i];
   let b='';
   if(dead) b+=(effRole(i)==='beggar'?'🏆':'💀');
   if(G.phase!=='day'&&(G.wolfTargets.includes(i)||G.loneWolfTarget===i)) b+='🎯';
@@ -3497,7 +3498,7 @@ function gcell(i){
   if(G.phase!=='day'&&(G.wolfTargets.includes(i)||G.loneWolfTarget===i)) cls+=' target';
   return `<div class="${cls}" data-gp="${i}">
     ${iconHTML(r,30)}
-    <div style="flex:1;min-width:0"><div class="gnm">${esc(p.name)}</div><div class="grole">${roleLabel(r)}</div></div>
+    <div style="flex:1;min-width:0"><div class="gnm">${esc(p.name)}</div><div class="grole">${r._unknown?T('idUnknownRole'):roleLabel(r)}</div></div>
     <span class="gbadge">${b}</span></div>`;
 }
 const ggrid=()=>`<div class="ggrid">${S.players.map((p,i)=>teamOf(i)==='mod'?'':gcell(i)).join('')}</div>`;
