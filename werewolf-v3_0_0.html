@@ -635,6 +635,37 @@
   .tut-stepnum{font-size:10.5px;color:var(--muted);text-align:center;margin-bottom:8px;}
   .tut-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;}
   .tut-skip{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:8px 6px;}
+  /* ===== Responsive: tablet / large screens (iPad) — v3.24.1 ===== */
+  @media (min-width:700px){
+    .wrap{max-width:740px}
+    .bottombar{max-width:740px}
+    .card{padding:20px;border-radius:20px}
+    .btn{font-size:17px;padding:14px 18px;border-radius:14px}
+    .tchip{font-size:16px;padding:12px 10px;border-radius:12px}
+    .tool{font-size:15px;padding:10px 16px}
+    .title{font-size:30px}
+    .gins{font-size:16px;margin:10px 0}
+    .footnote{font-size:14px}
+    .section-label{font-size:14px}
+    .eyebrow{font-size:13px}
+    .phasechip{font-size:24px}
+    .alivecount{font-size:14px}
+    .sumrow{padding:14px 6px;gap:14px}
+    .ggrid{grid-template-columns:repeat(3,1fr);gap:12px;padding-bottom:104px}
+    .gcell{padding:12px 13px;border-radius:16px}
+    .gcell .gnm{font-size:16px}
+    .gcell .grole{font-size:13px}
+    .gcell .gbadge{font-size:15px}
+    .pp-teambadge{font-size:14px;padding:5px 12px}
+    .menu-buttons{max-width:520px}
+    .countbar .pill{font-size:14px}
+  }
+  @media (min-width:1000px){
+    .wrap{max-width:900px}
+    .bottombar{max-width:900px}
+    .ggrid{grid-template-columns:repeat(4,1fr)}
+    .title{font-size:34px}
+  }
 </style>
 </head>
 <body>
@@ -644,7 +675,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.24.0</div>
+<div id="verbadge">v3.24.2</div>
 
 <script>
 const ROLES = [
@@ -2071,7 +2102,7 @@ function viewIdentify(){
         <p class="eyebrow">${T('idPickFor')}</p>
         <h1 class="title" style="font-size:22px;margin-top:4px">${iconHTML(r,30)} ${roleLabel(r)} <span style="opacity:.6;font-size:16px">${cur.length}/${cap}</span></h1>
         <div class="ggrid" style="margin-top:10px;padding-bottom:0">
-          ${free.length?free.map(i=>`<button class="tchip" data-idadd="${i}">${esc(S.players[i].name)}</button>`).join(''):`<p class="footnote" style="margin:0">—</p>`}
+          ${free.length?free.map(i=>`<button class="tchip" style="flex:0 0 auto;min-width:96px" data-idadd="${i}">${esc(S.players[i].name)}</button>`).join(''):`<p class="footnote" style="margin:0">—</p>`}
         </div>
         ${cur.length?`<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px">${cur.map(i=>`<span class="pp-teambadge" data-idrem="${i}"><b>${esc(S.players[i].name)}</b> ✕</span>`).join('')}</div>`:''}
       </div>
@@ -2082,8 +2113,8 @@ function viewIdentify(){
     const r=roleById(id), cur=idAssigned(id), cap=S.counts[id]||0;
     const full=cur.length>=cap;
     const chips=cur.map(i=>`<span class="pp-teambadge" data-idrem="${i}"><b>${esc(S.players[i].name)}</b> ✕</span>`).join('');
-    const addBtn=full?'':`<button class="tchip" data-idrole="${id}">${T('idPickName')}</button>`;
-    const fillBtn=(!full&&free.length>0&&free.length<=(cap-cur.length))?`<button class="tchip" data-idfill="${id}">${T('idFillRest')}</button>`:'';
+    const addBtn=full?'':`<button class="tchip" style="flex:0 0 auto" data-idrole="${id}">${T('idPickName')}</button>`;
+    const fillBtn=(!full&&free.length>0&&free.length<=(cap-cur.length))?`<button class="tchip" style="flex:0 0 auto" data-idfill="${id}">${T('idFillRest')}</button>`:'';
     return `<div class="sumrow" style="align-items:flex-start">
       <div class="emj">${iconHTML(r,32)}</div>
       <div class="nm">${roleLabel(r)} <span style="opacity:.55">×${cap}</span>
@@ -2094,7 +2125,7 @@ function viewIdentify(){
   }).join('');
   const leftTxt=free.length?`<p class="footnote" style="text-align:left;margin-top:8px">${T('idUnassigned')} ${free.map(i=>esc(S.players[i].name)).join(' · ')}</p>`:'';
   return `<div style="padding-bottom:96px">
-    <p class="gins">\U0001F319 ${T('idSub')}</p>
+    <p class="gins">🌙 ${T('idSub')}</p>
     <div class="countbar"><span class="pill">${T('idProgress',{a:done,b:total})}</span></div>
     <div class="card">${rows}</div>
     ${leftTxt}
@@ -3575,7 +3606,7 @@ function viewGame(){
   const aw=S.players.filter((p,i)=>G.alive[i]&&p.role&&teamOf(i)==='wolf').length;
   const av=S.players.filter((p,i)=>G.alive[i]&&p.role&&teamOf(i)!=='wolf'&&teamOf(i)!=='mod').length;
   const top=`<div class="gtopbar">
-    <div><div class="phasechip">${phaseTitle()}</div><div class="alivecount">🐺 ${aw} · 👥 ${av} ${T('aliveSuffix')}</div></div>
+    <div><div class="phasechip">${phaseTitle()}</div>${G.phase==='identify'?'':`<div class="alivecount">🐺 ${aw} · 👥 ${av} ${T('aliveSuffix')}</div>`}</div>
     <div style="display:flex;gap:8px;align-items:center">
       ${UNDO?`<button class="exitbtn" id="gUndo" style="border-color:rgba(224,184,74,.5);color:#f0d486">${T('undoBtn')}</button>`:''}
       <button class="exitbtn" id="gExit">${T('endGameBtn')}</button>
