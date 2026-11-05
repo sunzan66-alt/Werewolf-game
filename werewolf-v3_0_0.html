@@ -680,7 +680,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.24.4</div>
+<div id="verbadge">v3.25.0</div>
 
 <script>
 const ROLES = [
@@ -1077,7 +1077,8 @@ th:{
   scriptCultWake:'"👁️ ผู้นำลัทธิ ลืมตา — ชี้ 1 คนที่จะชวนเข้าลัทธิ แล้วหลับตา"',
   scriptVampireWake:'"🧛 แวมไพร์ ลืมตา — ชี้ 1 คนที่จะกัด แล้วหลับตา"',
   scriptShapeshifterWake:'"🎭 หมาป่าจำแลง ลืมตา — ชี้ 1 คนที่จะจำแลงเป็นคืนนี้ แล้วหลับตา"',
-  scriptSorcererWake:'"🧙 นางปีศาจ ลืมตา — ชี้ 1 คนที่ต้องการตรวจว่าเป็น Seer ไหม แล้วหลับตา (พยักหน้า/ส่ายหัว)"',
+  scriptSorcererWake:'"🐺🧙 หมาป่าและนางปีศาจ ลืมตาพร้อมกัน — นางปีศาจชี้ 1 คนที่ต้องการตรวจว่าเป็น Seer ไหม (พยักหน้า/ส่ายหัว) — ยังไม่ต้องหลับตา"',
+  scriptWolfWakeWithSorc:'"🐺 หมาป่าเลือกเหยื่อ — ชี้ 1 คนที่จะฆ่าคืนนี้ แล้วหมาป่ากับนางปีศาจหลับตา"',
   scriptAlphaWake:'"🩸 หมาป่าจ่าฝูง ลืมตา — คืนแรก: ชี้ 1 คนเพื่อแปลงเป็นหมาป่า (แทนการฆ่า) แล้วหลับตา"',
   scriptWolfWake:'"🐺 หมาป่า ลืมตา — ชี้ 1 คนที่จะฆ่าคืนนี้ แล้วหลับตา"',
   scriptWolfWakeBonus:'"🐺 หมาป่า ลืมตา — คืนนี้ฆ่าได้ 2 คน (โบนัสลูกหมาป่า) ชี้ 2 คนที่จะฆ่า แล้วหลับตา"',
@@ -1294,10 +1295,10 @@ th:{
   idSub:'ทุกคนหลับตา — เรียกทีละบทบาทให้ลืมตา แล้วกดใส่ชื่อ',
   idProgress:'ระบุแล้ว {a}/{b}', idUnassigned:'ยังไม่ระบุ:',
   idPickName:'+ เลือกชื่อ', idFillRest:'เติมที่เหลือ',
-  idDoneBtn:'✅ ระบุครบแล้ว — ไปต่อ', idDoneWait:'ยังระบุไม่ครบ',
+  idDoneBtn:'🎮 เข้าสู่เกม', idDoneWait:'ยังระบุไม่ครบ',
   idPickFor:'เลือกชื่อสำหรับ', idClose:'เสร็จ',
   cardDayNoVote:'คืนระบุตัวผ่านไป — วันนี้คุยกันได้ แต่ยังโหวตไม่ได้',
-  cardToNightBtn:'🌙 เข้าสู่คืน',
+  cardToNightBtn:'🌙 เข้าสู่คืน', sndToggle:'เปิด/ปิดเสียงทั้งหมด',
   modHasModTooltip:'ผู้ดำเนินเกมถือโทรศัพท์ ดำเนินเกมตามปกติ',
   modNoModTooltip:'ส่งโทรศัพท์ให้ผู้เล่นทีละคนตอนกลางคืน ทุกคนได้เล่น ไม่มีใครต้องเสียสละ',
   modChooseBtn:'เลือกเอง', modChooseTooltip:'เลือกผู้เล่นที่จะเป็นผู้ดำเนินเกมด้วยตัวเอง',
@@ -1383,7 +1384,8 @@ en:{
   scriptCultWake:'"👁️ Cult Leader, open your eyes — point to 1 player to recruit, then close your eyes"',
   scriptVampireWake:'"🧛 Vampire, open your eyes — point to 1 player to bite, then close your eyes"',
   scriptShapeshifterWake:'"🎭 Shapeshifter, open your eyes — point to 1 player to disguise as tonight, then close your eyes"',
-  scriptSorcererWake:'"🧙 Sorcerer, open your eyes — point to 1 player to check if they are the Seer, then close your eyes (nod / shake head)"',
+  scriptSorcererWake:'"🐺🧙 Werewolves and Sorcerer, open your eyes together — Sorcerer, point to 1 player to check if they are the Seer (nod / shake head). Keep your eyes open."',
+  scriptWolfWakeWithSorc:'"🐺 Werewolves, choose your victim — point to 1 player to kill tonight, then Werewolves and Sorcerer close your eyes"',
   scriptAlphaWake:'"🩸 Alpha Wolf, open your eyes — Night 1: point to 1 player to convert into a werewolf instead of killing, then close your eyes"',
   scriptWolfWake:'"🐺 Werewolves, open your eyes — point to 1 player to kill tonight, then close your eyes"',
   scriptWolfWakeBonus:'"🐺 Werewolves, open your eyes — Wolf Cub bonus: choose 2 players to kill tonight, then close your eyes"',
@@ -1585,10 +1587,10 @@ en:{
   idSub:'Everyone closes their eyes — call one role at a time to open their eyes, then tap in the names',
   idProgress:'Identified {a}/{b}', idUnassigned:'Not yet identified:',
   idPickName:'+ Pick name', idFillRest:'Fill the rest',
-  idDoneBtn:'✅ All identified — continue', idDoneWait:'Not all identified yet',
+  idDoneBtn:'🎮 Enter the game', idDoneWait:'Not all identified yet',
   idPickFor:'Pick names for', idClose:'Done',
   cardDayNoVote:'The identify night is over — talk it out today, but no voting yet',
-  cardToNightBtn:'🌙 Go to night',
+  cardToNightBtn:'🌙 Go to night', sndToggle:'Mute / unmute everything',
   modHasModTooltip:'One player manages the game as usual.',
   modNoModTooltip:'Phone passes to each player at night. Everyone plays — no moderator needed.',
   modChooseBtn:'Choose Yourself', modChooseTooltip:'Pick which player you want to be the Moderator.',
@@ -2074,10 +2076,16 @@ function idAdd(i){
   S.players[i].role=id;
   haptic('light'); playSound('addRole');
   if(idAssigned(id).length>=cap) G.idPick=null;
+  // กามเทพ: ใส่ชื่อครบ -> เด้งหน้าจับคู่รักทันที แล้วกลับมาหน้าระบุตัว
+  if(id==='cupid' && !G.idCupidDone && idAssigned('cupid').length>=cap){
+    G.idCupidDone=true; G.cupidPick=[]; G._cupidResumeMode='identifyRow';
+    resetPhaseTransitionVisuals(); G.phase='cupid'; render(); return;
+  }
   render();
 }
 function idRem(i){
   if(!S.players[i]||S.players[i].role==='moderator') return;
+  if(S.players[i].role==='cupid') G.idCupidDone=false;   // ถอดกามเทพออก -> ใส่ใหม่แล้วให้เด้งอีก
   S.players[i].role=null;
   haptic('light'); playSound('removeRole');
   render();
@@ -2093,7 +2101,7 @@ function identifyDone(){
   if(S.players.some(p=>!p.role)) return;
   G.idPick=null;
   seedRoleDerived();
-  if(hasRole('cupid')){ G.cupidPick=[]; G._cupidResumeMode='identify'; G.phase='cupid'; render(); return; }
+  if(hasRole('cupid') && !G.idCupidDone){ G.cupidPick=[]; G._cupidResumeMode='identify'; G.phase='cupid'; render(); return; }
   enterDay();
 }
 function viewIdentify(){
@@ -2154,7 +2162,7 @@ function startRun(){
      pendingCupidGrant:null, _resumeNightAfterCupid:false,
      tool:'kill', check:null, hunterQueue:[], afterHunter:null,
      vampKilledThisDay:null,
-     drunkRevealed:false, idPick:null,
+     drunkRevealed:false, idPick:null, idCupidDone:false,
      deaths:[], banner:null, winner:null, history:[], showHistory:false, historyCollapsed:{}, deathLog:[]};
   // No Moderator Mode: ห้ามเริ่มเกมที่ Cupid Gate เด็ดขาด -- ต้องแก้ก่อน render() ครั้งแรกข้างล่าง ไม่ใช่หลังจากนั้น (แก้ทีหลังทำให้เฟรมแรกที่ผู้ใช้เห็นยังเป็น Cupid Gate ค้างอยู่ก่อนค่อยถูกต้องในเฟรมถัดไป)
   if(S.noMod && G.phase==='cupid'){ G.phase='night'; }
@@ -2542,6 +2550,7 @@ function confirmCupid(){
 }
 function skipCupid(){ if(!G._cupidResumeMode){ G.lovers=null; G.loverPairs=[]; } resumeAfterCupid(); }
 function resumeAfterCupid(){
+  if(G._cupidResumeMode==='identifyRow'){ G._cupidResumeMode=null; resetPhaseTransitionVisuals(); G.phase='identify'; render(); return; }
   if(G._cupidResumeMode==='identify'){ G._cupidResumeMode=null; enterDay(); return; }
   if(G._cupidResumeMode==='resolution'){ G._cupidResumeMode=null; finishResolution(); return; }
   if(G._cupidResumeMode==='nightBegin'){
@@ -3621,6 +3630,7 @@ function viewGame(){
   const top=`<div class="gtopbar">
     <div><div class="phasechip">${phaseTitle()}</div>${G.phase==='identify'?'':`<div class="alivecount">🐺 ${aw} · 👥 ${av} ${T('aliveSuffix')}</div>`}</div>
     <div style="display:flex;gap:8px;align-items:center">
+      <button class="exitbtn" id="gSnd" aria-label="${T('sndToggle')}" title="${T('sndToggle')}">${(S.soundFX||S.soundAmbient||S.bgmOn)?'🎵':'🔇'}</button>
       ${UNDO?`<button class="exitbtn" id="gUndo" style="border-color:rgba(224,184,74,.5);color:#f0d486">${T('undoBtn')}</button>`:''}
       <button class="exitbtn" id="gExit">${T('endGameBtn')}</button>
     </div></div>`;
@@ -3670,7 +3680,9 @@ function viewGame(){
     const curLabel=active?(tools.find(t=>t[0]===active)||['',''])[1]:'';
     const stepBlock=active?(()=>{
       const scriptKey=(S.modLevel==='beginner' && SCRIPT_LINE[active])
-        ?(active==='kill'&&G.wolfKillCount>1?T('scriptWolfWakeBonus'):T(SCRIPT_LINE[active]))
+        ?(active==='kill'&&G.wolfKillCount>1?T('scriptWolfWakeBonus')
+          :(active==='kill'&&roleAnyAssigned('sorcerer')?T('scriptWolfWakeWithSorc')
+          :T(SCRIPT_LINE[active])))
         :'';
       return `<div class="step-block"><div class="step-label">▶️ ${curLabel}</div>${scriptKey?`<div class="step-script">${T('scriptLineLabel')} ${scriptKey}</div>`:''}</div>`;
     })():'';
@@ -4820,6 +4832,14 @@ function bindGame(){
   document.querySelectorAll('[data-idfill]').forEach(el=>el.onclick=()=>idFill(el.dataset.idfill));
   const map={gExit:exitGame,gExit2:exitGame,
     idPickDone:()=>{G.idPick=null;render();}, idDone:identifyDone,
+    gSnd:()=>{
+      // ปุ่มเดียว คุมทั้ง 3 อย่าง (เอฟเฟกต์/บรรยากาศ/เพลง) — โหมดไม่มีพิธีกรยังถูก ppNightMuted() กันไว้อีกชั้น
+      const v=!(S.soundFX||S.soundAmbient||S.bgmOn);
+      S.soundFX=v; S.soundAmbient=v; S.bgmOn=v;
+      try{ localStorage.setItem('ww_sfx',v?'on':'off'); localStorage.setItem('ww_amb',v?'on':'off'); localStorage.setItem('ww_bgm',v?'on':'off'); }catch(e){}
+      if(!v) stopBGM(true);
+      haptic('light'); render();
+    },
     gNight:()=>{resolveNight();},
     gDay:()=>{resolveDay();},
     gCupidOk:confirmCupid,gCupidSkip:skipCupid,gHunterSkip:hunterSkip,
