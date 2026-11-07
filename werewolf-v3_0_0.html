@@ -680,7 +680,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.25.3</div>
+<div id="verbadge">v3.25.4</div>
 
 <script>
 const ROLES = [
@@ -2274,7 +2274,12 @@ function checkWin(){
   const oppIdx=idx.filter(i=>!inCult(i)&&!inVamp(i)&&teamOf(i)!=='wolf');
   const oppIsLoneLivingHunter=oppIdx.length===1 && effRole(oppIdx[0])==='hunter';
   const wolfTieBlockedByHunter=(wolfN===(N-wolfN)) && oppIsLoneLivingHunter;
-  if(killerWolves>0 && wolfN >= N-wolfN && !wolfTieBlockedByHunter){ G.winner='wolf'; return true; }
+  // คู่รักต่างฝ่าย: เหลือหมาป่าที่ฆ่าได้ 1 ตัว vs ฝ่ายตรงข้าม 1 คน ที่เป็นคู่รักของหมาป่าตัวนั้นเอง
+  // -> หมาป่าฆ่าคู่รักเมื่อไรก็ตายตาม จึงชนะเดี่ยวไม่ได้ ยังไม่จบเกม (ปล่อยให้เล่นต่อ: ฆ่าคู่รัก = ตายหมด, หรือชาวบ้านโหวตหมาป่าออก)
+  // ไม่บล็อกถ้าหมาป่าเหลือมากกว่า 1 ตัว — ตัวอื่นฆ่าแทนได้ ฝูงยังเหลือคน จึงชนะจริง
+  const wolfTieBlockedByLover=(wolfN===(N-wolfN)) && oppIdx.length===1 && killerWolves===1 &&
+    !!(G.loverPairs||[]).some(pr=>pr.includes(oppIdx[0]) && pr.some(j=>j!==oppIdx[0] && G.alive[j] && teamOf(j)==='wolf'));
+  if(killerWolves>0 && wolfN >= N-wolfN && !wolfTieBlockedByHunter && !wolfTieBlockedByLover){ G.winner='wolf'; return true; }
   if(killerWolves===0 && skN===0 && cultN===0 && vampN===0){ G.winner='village'; return true; }
   return false;
 }
