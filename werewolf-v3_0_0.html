@@ -680,7 +680,7 @@
 <div id="fade-overlay"></div>
 <div id="sunrise-overlay"><div class="duskDarken"></div><div class="duskFog"></div><div class="sunriseGlow"></div><div class="sunDisc"></div><div class="dayCloud dc1"></div><div class="dayCloud dc2"></div><div class="sunRay sunRay1"></div><div class="sunRay sunRay2"></div><div class="bird b1"></div><div class="bird b2"></div><div class="dayMote dm1"></div><div class="dayMote dm2"></div><div class="dayMote dm3"></div><div class="transLabel"></div></div>
 <div id="night-overlay"><div class="duskClouds dc1"></div><div class="duskClouds dc2"></div><div class="moonGlow"></div><div class="bat bt1"></div><div class="bat bt2"></div><div class="nightFog"></div><div class="transLabel"></div></div>
-<div id="verbadge">v3.25.4</div>
+<div id="verbadge">v3.25.5</div>
 
 <script>
 const ROLES = [
@@ -1100,6 +1100,7 @@ th:{
   scriptMorningLine:'"เช้าแล้ว ทุกคนลืมตาได้"',
   scriptMorningDeath:'"เมื่อคืน {names} ตาย"',
   scriptMorningPeace:'"เมื่อคืนสงบสุข ไม่มีใครตาย"',
+  scriptCursedTurnLine:'"เมื่อคืนมีผู้ต้องสาปกลายเป็นหมาป่า — ฝูงหมาป่าโตขึ้นอีกหนึ่ง"',
   scriptSilencedLine:'"[name] ห้ามพูดเช้านี้"',
 
   // ===== Game History (Phase B) =====
@@ -1407,6 +1408,7 @@ en:{
   scriptMorningLine:'"Morning has come. Everyone, open your eyes."',
   scriptMorningDeath:'"Last night, {names} died."',
   scriptMorningPeace:'"Last night was peaceful. No one died"',
+  scriptCursedTurnLine:'"Someone cursed turned into a werewolf last night — the pack is one larger."',
   scriptSilencedLine:'"[name] cannot speak this morning"',
 
   // ===== Game History (Phase B) =====
@@ -3713,7 +3715,9 @@ function viewGame(){
     // morningScript — แสดงเฉพาะ beginner mode
     const hasDead=G.deaths&&G.deaths.length>0;
     const deadNames=G.deaths.map(idx=>S.players[idx]?.name||'').filter(Boolean).join(', ');
-    const morningScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptMorningLine')}</div><div class="step-script">${hasDead?T('scriptMorningDeath',{names:'<b>'+deadNames+'</b>'}):T('scriptMorningPeace')}</div>${silentAlive?`<div class="step-script">${T('scriptSilencedLine').replace('[name]',esc(S.players[G.silenced]?.name||''))}</div>`:''}</div>`:'';
+    // เฉพาะผู้ต้องสาปเท่านั้น — G.banner.converts รวมเหยื่อของ Alpha Wolf ไว้ด้วย ซึ่งต้องเงียบต่อไป
+    const hasCursedTurn=!!(G.banner&&G.banner.converts&&G.banner.converts.some(ci=>S.players[ci]&&S.players[ci].role==='cursed'));
+    const morningScript=S.modLevel==='beginner'?`<div class="script-morning"><div class="step-label">${T('scriptLineLabel')}</div><div class="step-script">${T('scriptMorningLine')}</div><div class="step-script">${hasDead?T('scriptMorningDeath',{names:'<b>'+deadNames+'</b>'}):T('scriptMorningPeace')}</div>${hasCursedTurn?`<div class="step-script">${T('scriptCursedTurnLine')}</div>`:''}${silentAlive?`<div class="step-script">${T('scriptSilencedLine').replace('[name]',esc(S.players[G.silenced]?.name||''))}</div>`:''}</div>`:'';
     // ปุ่มสกิลกลางวัน — เล็ก อยู่แถวเดียวกัน
     const acts=[];
     if(silentAlive) acts.push(`<button class="mini-btn danger" id="gExecSil">${T('executeSilencedBtn')}</button>`);
